@@ -9,6 +9,23 @@ const manrope = Manrope({
   display: 'swap'
 })
 
+import { Inter } from 'next/font/google'
+const inter = Inter({
+  variable: '--font-inter',
+  subsets: ['latin'],
+  weight: ['300', '400', '600', '700', '900'],
+  display: 'swap'
+})
+
+import { Playfair_Display } from 'next/font/google'
+const playfair = Playfair_Display({
+  variable: '--font-playfair',
+  subsets: ['latin'],
+  weight: ['400', '600'],
+  style: ['italic'],
+  display: 'swap'
+})
+
 export const metadata: Metadata = {
   title: {
     template: '%s | Dayane Anastacio',
@@ -32,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${manrope.variable} font-manrope antialiased bg-white text-gray-900 min-h-screen selection:bg-lp-primary selection:text-white`}
+        className={`${manrope.variable} ${inter.variable} ${playfair.variable} font-manrope antialiased bg-white text-gray-900 min-h-screen selection:bg-lp-primary selection:text-white`}
       >
         {children}
       </body>

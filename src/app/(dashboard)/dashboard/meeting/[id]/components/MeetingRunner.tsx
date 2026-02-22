@@ -16,52 +16,52 @@ interface MeetingRunnerProps {
   initialEntrevista: Entrevista | null
 }
 
-const GERAR_STEPS = [
+const MEETING_STEPS = [
   {
-    id: 'gravidade',
-    title: 'GRAVIDADE',
-    description: 'Entender o impacto do problema e por que resolver agora.',
+    id: 'contexto',
+    title: 'CONTEXTO',
+    description: 'Entender o cenário atual e os objetivos do cliente.',
     questions: [
-      'O que te motivou a buscar ajuda jurídica agora?',
-      'Qual o impacto financeiro/operacional desse problema hoje?',
-      'O que acontece se nada for feito nos próximos 3-6 meses?'
+      'Qual o seu principal objetivo com nossa solução hoje?',
+      'Como você resolve esse problema atualmente?',
+      'O que te motivou a buscar uma nova alternativa agora?'
     ]
   },
   {
-    id: 'estrutura',
-    title: 'ESTRUTURA',
-    description: 'Mapear o cenário atual (Equipe, Processos, Tecnologia).',
+    id: 'desafios',
+    title: 'DESAFIOS',
+    description: 'Identificar gargalos e pontos de dor na operação.',
     questions: [
-      'Como sua equipe jurídica está estruturada hoje?',
-      'Quais processos são mais gargalo hoje?',
-      'Vocês usam algum software de gestão? Como é a adoção?'
+      'Quais são os maiores obstáculos para o seu crescimento hoje?',
+      'Quanto tempo/recurso você perde com processos manuais?',
+      'O que falta na sua gestão atual para ter mais clareza?'
     ]
   },
   {
-    id: 'resultado_desejado',
-    title: 'RESULTADO (Desejado)',
-    description: 'Definir onde o cliente quer chegar.',
+    id: 'visao_futuro',
+    title: 'VISÃO DE FUTURO',
+    description: 'Definir o estado desejado e métricas de sucesso.',
     questions: [
-      'Qual seria o cenário ideal daqui a 6 meses?',
-      'Quais métricas indicariam sucesso para você?'
+      'Como seria o cenário ideal daqui a alguns meses?',
+      'Quais resultados concretos você espera alcançar?'
     ]
   },
   {
-    id: 'acao',
-    title: 'AÇÃO (Proposta)',
-    description: 'Apresentar como a consultoria resolve (Pitch).',
+    id: 'solucao',
+    title: 'SOLUÇÃO',
+    description: 'Apresentação da proposta e alinhamento de expectativas.',
     questions: [
-      'Baseado no que falamos, o plano de ação seria...',
-      '(Espaço para anotar reações ao pitch)'
+      'Baseado no que falamos, nossa solução ajudaria em...',
+      '(Anotações sobre o feedback da proposta)'
     ]
   },
   {
-    id: 'resultado_proximos_passos',
-    title: 'RESULTADO (Fechamento)',
+    id: 'proximos_passos',
+    title: 'FECHAMENTO',
     description: 'Definir próximos passos e compromisso.',
     questions: [
-      'Faz sentido para você essa proposta?',
-      'Qual o próximo passo para iniciarmos?'
+      'Ficou alguma dúvida sobre o que conversamos?',
+      'Qual o próximo passo para iniciarmos a implementação?'
     ]
   }
 ]
@@ -103,7 +103,7 @@ export function MeetingRunner({ lead, initialEntrevista }: MeetingRunnerProps) {
     }
   }
 
-  const currentStepData = GERAR_STEPS[activeStep]
+  const currentStepData = MEETING_STEPS[activeStep]
 
   return (
     <div className="flex h-[calc(100vh-64px)] overflow-hidden">
@@ -118,7 +118,7 @@ export function MeetingRunner({ lead, initialEntrevista }: MeetingRunnerProps) {
           </p>
         </div>
         <nav className="p-4 space-y-2 flex-1">
-          {GERAR_STEPS.map((step, index) => (
+          {MEETING_STEPS.map((step, index) => (
             <button
               key={step.id}
               onClick={() => setActiveStep(index)}
@@ -207,19 +207,19 @@ export function MeetingRunner({ lead, initialEntrevista }: MeetingRunnerProps) {
             </Button>
             <Button
               onClick={() => {
-                if (activeStep < GERAR_STEPS.length - 1) {
+                if (activeStep < MEETING_STEPS.length - 1) {
                   setActiveStep((prev) => prev + 1)
                 } else {
                   handleSave(true)
                 }
               }}
               className={
-                activeStep === GERAR_STEPS.length - 1
+                activeStep === MEETING_STEPS.length - 1
                   ? 'bg-green-600 hover:bg-green-700'
                   : ''
               }
             >
-              {activeStep === GERAR_STEPS.length - 1
+              {activeStep === MEETING_STEPS.length - 1
                 ? 'Finalizar Entrevista'
                 : 'Próximo'}
             </Button>

@@ -29,9 +29,9 @@ export interface FooterSectionProps {
 
 export function FooterSection({
   id,
-  companyName = 'Dayane Anastácio',
-  description = 'Transformando carreiras e negócios através da gestão estratégica e liderança humanizada.',
-  email = 'contato@dayaneanastacio.com.br',
+  companyName = 'Sua Empresa',
+  description = 'Descricao curta sobre sua missao ou o objetivo desta pagina.',
+  email = 'contato@seudominio.com',
   phone,
   address,
   facebook,

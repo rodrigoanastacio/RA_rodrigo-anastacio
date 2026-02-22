@@ -6,10 +6,10 @@ export enum AtuacaoType {
 }
 
 export const ATUACAO_LABELS: Record<AtuacaoType, string> = {
-  [AtuacaoType.AUTONOMO]: 'Advogado Autônomo',
-  [AtuacaoType.SOCIO]: 'Sócio de Escritório',
-  [AtuacaoType.ASSOCIADO]: 'Advogado Associado',
-  [AtuacaoType.DEPT_JURIDICO]: 'Departamento Jurídico'
+  [AtuacaoType.AUTONOMO]: 'Profissional Autônomo',
+  [AtuacaoType.SOCIO]: 'Sócio Gestor',
+  [AtuacaoType.ASSOCIADO]: 'Colaborador / Associado',
+  [AtuacaoType.DEPT_JURIDICO]: 'Líder de Departamento'
 }
 
 export const ATUACAO_OPTIONS = [
@@ -21,17 +21,17 @@ export const ATUACAO_OPTIONS = [
   {
     value: AtuacaoType.SOCIO,
     label: ATUACAO_LABELS[AtuacaoType.SOCIO],
-    description: 'Participação societária em escritório de advocacia.'
+    description: 'Participação societária em negócio ou operação.'
   },
   {
     value: AtuacaoType.ASSOCIADO,
     label: ATUACAO_LABELS[AtuacaoType.ASSOCIADO],
-    description: 'Trabalha em escritório sem participação societária.'
+    description: 'Trabalha na operação sem participação societária.'
   },
   {
     value: AtuacaoType.DEPT_JURIDICO,
     label: ATUACAO_LABELS[AtuacaoType.DEPT_JURIDICO],
-    description: 'Atua internamente em empresas ou instituições.'
+    description: 'Atua internamente em empresas ou corporativo.'
   }
 ]
 
@@ -55,17 +55,17 @@ export const REVENUE_OPTIONS = [
   {
     value: RevenueType.LOW,
     label: 'Até R$ 20.000,00',
-    description: 'Escritórios em fase inicial ou reestruturação.'
+    description: 'Negócio em fase inicial ou reestruturação.'
   },
   {
     value: RevenueType.MEDIUM,
     label: 'De R$ 20.000,00 a R$ 40.000,00',
-    description: 'Escritórios em crescimento/expansão.'
+    description: 'Operação em crescimento/expansão.'
   },
   {
     value: RevenueType.HIGH,
     label: 'Acima de R$ 40.000,00',
-    description: 'Escritórios consolidados.'
+    description: 'Negócio consolidado.'
   }
 ]
 
@@ -139,18 +139,18 @@ export function formatExperience(experience: string): string {
 export const TEAM_STRUCTURE_OPTIONS = [
   {
     value: 'clt_associados',
-    label: 'Sim, tenho funcionários CLT/Associados',
-    description: 'Escritório com equipe fixa e estrutura formal'
+    label: 'Sim, tenho funcionários CLT/Parceiros',
+    description: 'Operação com equipe fixa e estrutura formal'
   },
   {
     value: 'solo',
     label: 'Não, atuo sozinho',
-    description: 'Advocacia autônoma ou em parceria pontual'
+    description: 'Profissional autônomo ou em parceria pontual'
   },
   {
     value: 'estagiarios',
-    label: 'Tenho apenas estagiários',
-    description: 'Estrutura enxuta com apoio acadêmico'
+    label: 'Tenho apenas estagiários/apoio',
+    description: 'Estrutura enxuta com apoio auxiliar'
   }
 ]
 

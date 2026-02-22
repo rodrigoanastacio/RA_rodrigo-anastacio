@@ -28,16 +28,16 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Dayane Anastacio',
-    default: 'Dayane Anastacio | Gestão Jurídica e Organização'
+    template: '%s | Rodrigo Anastacio',
+    default: 'Rodrigo Anastacio | Desenvolvimento e Estratégia Digital'
   },
   description:
-    'Consultoria de gestão especializada para escritórios de advocacia.',
+    'Soluções de alta performance e tecnologia em desenvolvimento e estratégia digital.',
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://dayaneanastacio.com.br/',
-    siteName: 'Dayane Anastacio'
+    url: 'https://rodrigoanastacio.com/',
+    siteName: 'Rodrigo Anastacio'
   }
 }
 

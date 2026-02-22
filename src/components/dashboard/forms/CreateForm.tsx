@@ -101,7 +101,7 @@ export function CreateForm() {
               </Label>
               <Input
                 id="name"
-                placeholder="Ex: Contato LP Mentoria"
+                placeholder="Ex: Contato LP Vendas"
                 value={name}
                 onChange={handleNameChange}
                 className="rounded-xl h-12 border-gray-100 bg-gray-50/50 focus:bg-white transition-all font-medium"
@@ -118,7 +118,7 @@ export function CreateForm() {
               </Label>
               <Input
                 id="slug"
-                placeholder="contato-lp-mentoria"
+                placeholder="contato-lp-vendas"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
                 className="rounded-xl h-12 border-gray-100 bg-gray-50/50 focus:bg-white transition-all font-medium"
@@ -138,7 +138,7 @@ export function CreateForm() {
               </Label>
               <Textarea
                 id="description"
-                placeholder="Ex: Captura contatos rápidos para a Landing Page de mentoria jurídica."
+                placeholder="Ex: Captura contatos rápidos para a Landing Page de vendas do SaaS."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 className="rounded-xl min-h-[100px] border-gray-100 bg-gray-50/50 focus:bg-white transition-all font-medium"

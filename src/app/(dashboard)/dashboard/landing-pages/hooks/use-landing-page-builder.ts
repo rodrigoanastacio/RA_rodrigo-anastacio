@@ -91,17 +91,17 @@ export function useLandingPageBuilder({
       }
     } else if (type === 'bio') {
       defaultData = {
-        headline: 'Dayane Anastácio',
-        subheadline: 'Especialista em Gestão Estratégica e Liderança.',
+        headline: 'Nome do Especialista',
+        subheadline: 'Sua expertise e proposta de valor.',
         bio: [
-          'Com mais de 10 anos de experiência transformando negócios, desenvolvi uma metodologia única que une visão estratégica e execução prática.',
-          'Meu objetivo é capacitar líderes e gestores a alcançarem resultados extraordinários, criando culturas organizacionais fortes e processos eficientes.'
+          'Compartilhe sua jornada e autoridade aqui para gerar confiança em seus leads.',
+          'Destaque seus diferenciais e resultados alcançados.'
         ],
         imageSrc:
           'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop',
         alignment: 'left',
         theme: 'light',
-        ctaLabel: 'Conheça minha história'
+        ctaLabel: 'Saiba Mais'
       }
     } else if (type === 'footer') {
       defaultData = {

@@ -1,6 +1,6 @@
 'use client'
 
-import { Scale } from 'lucide-react'
+import { LayoutTemplate } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
@@ -82,7 +82,7 @@ export function TenantLogo({
         </div>
       ) : (
         <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
-          <Scale className="w-5 h-5 text-white" />
+          <LayoutTemplate className="w-5 h-5 text-white" />
         </div>
       )}
 

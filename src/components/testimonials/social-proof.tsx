@@ -4,35 +4,37 @@ const SocialProof = () => {
   const testimonials = [
     {
       quote:
-        'Eu faturava bem, mas não via meus filhos. Depois do acompanhamento da Dayane, recuperei minhas noites e o escritório finalmente parou de depender de cada decisão minha.',
-      authorName: 'Dr. Carlos S.',
-      authorRole: 'Direito Empresarial',
-      authorInitials: 'CS'
+        'A plataforma transformou nossa gestão de leads. Agora temos visibilidade total sobre o ROI de cada canal de aquisição.',
+      authorName: 'Dr. João M.',
+      authorRole: 'Sócio Gestor',
+      authorInitials: 'JM',
+      authorImage: undefined
     },
     {
       quote:
-        'O maior ganho foi a paz. Hoje eu abro o Dashboard e sei exatamente o que está acontecendo sem precisar perguntar nada a ninguém.',
-      authorName: 'Dra. Mariana F.',
-      authorRole: 'Advocacia Cível',
-      authorInitials: 'MF',
-      authorImage: '/assets/dayane-anastacio.jpg'
+        'A facilidade de criar landing pages integradas diretamente ao CRM é um diferencial absurdo para nossa operação.',
+      authorName: 'Dra. Luiza B.',
+      authorRole: 'Marketing Jurídico',
+      authorInitials: 'LB',
+      authorImage: undefined
     },
     {
       quote:
-        'Antes eu passava o dia apagando incêndios. Agora tenho tempo para pensar em estratégia e expansão. A diferença é brutal.',
-      authorName: 'Dr. Roberto L.',
-      authorRole: 'Direito Trabalhista',
-      authorInitials: 'RL'
+        'Nossa produtividade aumentou muito depois que passamos a centralizar todos os leads e automações em um só lugar.',
+      authorName: 'Dr. Ricardo F.',
+      authorRole: 'Diretor Operacional',
+      authorInitials: 'RF',
+      authorImage: undefined
     }
   ]
 
   const reviewSchema = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
-    name: 'Mentoria e Gestão Estratégica para Escritórios de Advocacia - Dayane Anastacio',
+    name: 'SaaS Gestão Leads',
     description:
-      'Consultoria especializada em gestão estratégica, otimização de processos e escalabilidade para escritórios de advocacia.',
-    url: 'https://dayaneanastacio.com.br/p/mentoria-e-gestao-estrategica',
+      'Soluções de alta performance para gestão de presença digital e leads.',
+    url: 'https://rodrigoanastacio.com/',
     telephone: '+55-11-98765-4321',
     address: {
       '@type': 'PostalAddress',
@@ -51,13 +53,13 @@ const SocialProof = () => {
       '@type': 'Review',
       itemReviewed: {
         '@type': 'Service',
-        name: 'Mentoria e Gestão Estratégica para Escritórios de Advocacia',
+        name: 'Plataforma de Gestão de Leads e Presença Digital',
         description:
-          'Programa de mentoria estratégica focado em otimização de processos, implementação de sistemas de gestão e escalabilidade para escritórios de advocacia.',
+          'Software de alta performance para captação, gestão e conversão de leads qualificados.',
         provider: {
           '@type': 'Person',
-          name: 'Dayane Anastacio',
-          jobTitle: 'Consultora de Gestão Estratégica'
+          name: 'Rodrigo Anastacio',
+          jobTitle: 'Especialista em Estratégia Digital'
         }
       },
       author: {

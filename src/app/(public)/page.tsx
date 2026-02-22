@@ -2,9 +2,9 @@ import Hero from '@/components/shared/Hero'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Dayane Anastacio - Consultoria em Gestão Jurídica',
+  title: 'Desenvolvimento e Estratégia Digital',
   description:
-    'Consultoria especializada em gestão de escritórios de advocacia. Soluções de alta performance e tecnologia.'
+    'Desenvolvimento e Estratégia Digital. Soluções de alta performance e tecnologia.'
 }
 
 export default function Home() {

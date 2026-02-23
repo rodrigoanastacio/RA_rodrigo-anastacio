@@ -28,16 +28,16 @@ const playfair = Playfair_Display({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Rodrigo Anastacio',
-    default: 'Rodrigo Anastacio | Desenvolvimento e Estratégia Digital'
+    template: '%s | Plataforma SaaS',
+    default: 'Plataforma SaaS | Gestão de Leads e Performance'
   },
   description:
-    'Soluções de alta performance e tecnologia em desenvolvimento e estratégia digital.',
+    'SaaS para gestão de leads, agendamentos e controle de performance em tempo real.',
   openGraph: {
     type: 'website',
     locale: 'pt_BR',
-    url: 'https://rodrigoanastacio.com/',
-    siteName: 'Rodrigo Anastacio'
+    url: 'https://seusaas.com/',
+    siteName: 'Plataforma SaaS'
   }
 }
 

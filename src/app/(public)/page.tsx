@@ -2,9 +2,8 @@ import Hero from '@/components/shared/Hero'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Desenvolvimento e Estratégia Digital',
-  description:
-    'Desenvolvimento e Estratégia Digital. Soluções de alta performance e tecnologia.'
+  title: 'Gestão Inteligente de Leads',
+  description: 'Plataforma SaaS de alta performance para gestão comercial.'
 }
 
 export default function Home() {

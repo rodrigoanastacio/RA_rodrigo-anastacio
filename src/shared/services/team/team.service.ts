@@ -7,19 +7,28 @@ export const teamService = {
     supabase: SupabaseClient,
     members: TeamMemberResponse[]
   ): Promise<TeamMemberResponse[]> => {
-    const { data: authUsers, error } = await supabase.auth.admin.listUsers()
+    // Busca o status apenas dos membros paginados de forma concorrente
+    const enrichPromises = members.map(async (member) => {
+      try {
+        const { data: authUser, error } = await supabase.auth.admin.getUserById(
+          member.id
+        )
+        if (error) {
+          console.error(`Failed to fetch auth user ${member.id}:`, error)
+          return { ...member, email_confirmed_at: null }
+        }
 
-    if (error) {
-      throw new Error(`Failed to fetch auth users: ${error.message}`)
-    }
-
-    return members.map((member) => {
-      const authUser = authUsers.users.find((u) => u.id === member.id)
-      return {
-        ...member,
-        email_confirmed_at: authUser?.email_confirmed_at || null
+        return {
+          ...member,
+          email_confirmed_at: authUser.user.email_confirmed_at || null
+        }
+      } catch (err) {
+        console.error(`Error processing auth user ${member.id}:`, err)
+        return { ...member, email_confirmed_at: null }
       }
     })
+
+    return Promise.all(enrichPromises)
   },
 
   getMembersWithStatus: async (

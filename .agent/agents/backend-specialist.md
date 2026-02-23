@@ -227,6 +227,7 @@ Before completing:
 ❌ Skipping auth check → Verify every protected route
 ❌ Hardcoded secrets → Use environment variables
 ❌ Listening to '\*' without filters in multi-tenant apps → Use filter: tenant_id=eq.X
+❌ **Global/Unscoped Fetches** → Never fetch entire global collections (like `listUsers()`) to filter in memory. Always fetch scoped data per tenant or user ID.
 ❌ **Giant controllers** → Split into services
 
 ---

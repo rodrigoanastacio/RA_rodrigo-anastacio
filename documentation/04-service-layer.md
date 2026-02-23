@@ -1,40 +1,63 @@
-# 04. Camada de Serviços
+# 04. Camada de Serviços (Application & Client Services)
 
 ## Visão Geral
 
-A **Camada de Serviços** é a única responsável pela comunicação HTTP entre o frontend e a nossa API REST (Next.js Proxy).
+Com a arquitetura focada no **Next.js App Router** e os princípios de **DDD (Domain-Driven Design)**, nossa camada de serviços possui duas frentes primárias:
 
-- **Localização**: `src/services/{module}/*.service.ts`
+1. **Application Services (Backend/Server):** `src/shared/services/{module}/*.service.ts`
+2. **Client Services (Frontend HTTP):** `src/services/{module}/*.service.ts`
 
-## Responsabilidades
+---
 
-1. **Chamadas HTTP**: Executar `GET`, `POST`, `PUT`, `DELETE`.
-2. **Standard Response**: Garantir que o retorno seja tipado e padronizado.
-3. **Tratamento de Erros HTTP**: Lidar com timeouts, 404, 500 antes de passar para o Hook.
+## 1. Application Services (Backend)
 
-### Cliente API Base
+Esta é a camada vital do sistema. Ela atua como **Use Cases** que orquestram a lógica da aplicação no servidor (Server Components ou Server Actions).
 
-Centralizamos a configuração base em `src/services/api.ts`. Isso permite adicionar interceptors de autenticação ou cabeçalhos globais facilmente no futuro.
+### Responsabilidades
+
+- **Encapsulação de Repositórios:** Chamar os _Handlers_ da camada de infraestrutura para buscar dados brutos (DTOs).
+- **Regras de Domínio:** Instanciar as **Entidades de Domínio** com os dados do Handler e aplicar lógica de negócio (ex: checar status, permissões).
+- **Isolamento da UI:** Retornar dados limpos (`.toPlainObj()`) prontos para a Camada de Apresentação (`page.tsx`) renderizar sem precisar saber detalhes do banco de dados (Supabase).
+
+### Exemplo (Team Service)
 
 ```typescript
-// src/services/api.ts
-export const api = {
-  post: async (url: string, body: any) => {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
-    return response.json()
+// src/shared/services/team/team.service.ts
+export const teamService = {
+  listTeamMembers: async (tenantId: string) => {
+    // 1. Fetch raw data (DTO) from Handler (Infra)
+    const profilesData = await teamHandler.list(supabaseAdmin, tenantId)
+
+    // 2. Apply Domain Logic (Status validation, Email verification)
+    const members = await teamService.getMembersWithStatus(
+      supabaseAdmin,
+      profilesData
+    )
+
+    // 3. Return plain objects for the UI
+    return members.map((m) => m.toPlainObj())
   }
 }
 ```
 
-### Exemplo: Diagnóstico Service
+---
+
+## 2. Client Services (Frontend HTTP Fetching)
+
+Apenas utilizados em **Client Components** quando a interatividade exige chamadas dinâmicas para a nossa própria API (`/api/*`).
+
+### Responsabilidades
+
+- Executar requisições de API (`GET`, `POST`, `PUT`, `DELETE`).
+- Garantir respostas tipadas e tratar erros HTTP globais antes de chegar aos Hooks da UI.
+
+### Exemplo (Diagnóstico Client Service)
 
 ```typescript
 // src/services/diagnostico/diagnostico.service.ts
+import { api } from '../api'
+
 export const diagnosticoService = {
-  submit: (data: Diagnostico) => api.post('/api/diagnostico', data)
+  submit: (data: DiagnosticoFormData) => api.post('/api/diagnostico', data)
 }
 ```

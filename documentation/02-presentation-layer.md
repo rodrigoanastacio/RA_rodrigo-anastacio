@@ -12,11 +12,27 @@ A **Camada de Apresentação** deve focar exclusivamente em _como as coisas pare
 
 ### Responsabilidades
 
-- **SIM**: Renderizar componentes UI (buttons, inputs, layouts).
-- **SIM**: Capturar eventos (clicks, inputs).
-- **SIM**: Exibir estados de carregamento (Skeleton, Spinners).
-- **NÃO**: Fazer chamadas diretas ao banco de dados ou APIs.
-- **NÃO**: Conter lógica de negócio complexa ou cálculos pesados.
+#### ✅ MUST DO:
+
+- **UI Rendering**: Exibir elementos visuais (botões, tabelas).
+- **Event Capture**: Capturar eventos (clicks, inputs, submits).
+- **State Display**: Exibir loading states, success, error.
+- **Logic Delegation**: Chamar hooks customizados para a lógica de dados real e passar callbacks via props.
+
+#### ❌ MUST NOT DO:
+
+- **Business Logic**: Cálculos complexos pertencem às Entidades de Domínio.
+- **Direct Service Calls**: Nunca usar `fetch`/`axios` diretamente ou o cliente do Supabase na UI. Pertencem aos Services/Handlers.
+- **Complex State Management**: Nunca manter regras massivas de sincronização no componente. Use Contexts ou Hooks.
+
+### 📐 Layout & Tailwind System (Regras Restritas)
+
+**CRÍTICO:** Use unidades relativas do tema do Tailwind e _design tokens_. **NUNCA** use pixels soltos.
+
+- **Espaçamentos (Spacing):** Utilize `p-2` (8px), `p-4` (16px), `mb-6` ao invés de `padding: 16px`.
+- **Tipografia:** Use a escala semântica: `text-sm`, `text-base`, `text-lg`. Nada de `text-[14px]`.
+- **Cores:** Utilize os tokens do design system `bg-primary`, `text-slate-500`. NUNCA use hexadecimais _hardcoded_ tipo `bg-[#1976D2]`.
+- **Responsividade:** Projete para os _breakpoints_ `sm`, `md`, `lg`. A mentalidade é _Mobile-First_, depois sobrepondo regras maiores (ex: `w-full md:w-1/2`).
 
 ### Exemplo
 
@@ -43,6 +59,7 @@ Componentes reutilizáveis devem ser flexíveis e configuráveis via props, evit
 
 **Exemplo: `InteractiveTable`**
 Localizado em `src/components/dashboard/InteractiveTable.tsx`, este componente gerencia a exibição de dados tabulares, suportando:
+
 - Paginação local
 - Ordenação
 - Seleção múltipla (opcional via `showCheckbox`)

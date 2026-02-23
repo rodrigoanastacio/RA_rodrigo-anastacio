@@ -7,18 +7,15 @@ import {
   formatRevenue,
   getLeadStatusStyle
 } from '@/shared/constants/lead.constants'
-import { Diagnostico } from '@/shared/entities/diagnosticos/diagnostico.types'
 import { Lead } from '@/shared/entities/leads/lead.types'
 import { useState } from 'react'
 
-export function useLeads(initialLeads: (Lead | Diagnostico)[] = []) {
-  const [leads, setLeads] = useState<(Lead | Diagnostico)[]>(initialLeads)
-  const [selectedLead, setSelectedLead] = useState<Lead | Diagnostico | null>(
-    null
-  )
+export function useLeads(initialLeads: Lead[] = []) {
+  const [leads, setLeads] = useState<Lead[]>(initialLeads)
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const handleLeadClick = (lead: Lead | Diagnostico) => {
+  const handleLeadClick = (lead: Lead) => {
     setSelectedLead(lead)
     setIsDrawerOpen(true)
   }
@@ -31,11 +28,9 @@ export function useLeads(initialLeads: (Lead | Diagnostico)[] = []) {
   const handleUpdateStatus = async (status: string) => {
     if (!selectedLead) return
 
-    // Update local state for immediate feedback
     const updatedLead = { ...selectedLead, status }
     setSelectedLead(updatedLead)
 
-    // Update the list as well
     setLeads((prev) =>
       prev.map((l) => (l.id === updatedLead.id ? updatedLead : l))
     )
@@ -43,7 +38,6 @@ export function useLeads(initialLeads: (Lead | Diagnostico)[] = []) {
     const result = await updateLeadStatus(selectedLead.id, status)
 
     if (!result.success) {
-      // Revert if failed
       setSelectedLead(selectedLead)
       setLeads((prev) =>
         prev.map((l) => (l.id === selectedLead.id ? selectedLead : l))

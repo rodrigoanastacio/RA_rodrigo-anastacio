@@ -28,13 +28,13 @@ priority: CRITICAL
 
 > **STRICT RULE:** We use Clean Code. **DO NOT USE COMMENTS** to explain what code does. Instead, create **highly descriptive variable and function names**. If you feel the need to write a comment, your code is not expressive enough. Refactor it.
 
-| Element       | Convention                                                         |
-| ------------- | ------------------------------------------------------------------ |
-| **Variables** | Reveal intent: `activeUserCount` not `n`                           |
-| **Functions** | Verb + noun: `fetchUserById()` not `user()`                        |
-| **Booleans**  | Question form: `isActive`, `hasPermission`, `canEdit`              |
-| **Constants** | SCREAMING_SNAKE: `MAX_RETRY_COUNT`                                 |
-| **Comments**  | **FORBIDDEN** (unless documenting a public API or a complex RegEx) |
+| Element       | Convention                                                                                                               |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| **Variables** | Reveal intent: `activeUserCount` not `n`                                                                                 |
+| **Functions** | Verb + noun: `fetchUserById()` not `user()`                                                                              |
+| **Booleans**  | Question form: `isActive`, `hasPermission`, `canEdit`                                                                    |
+| **Constants** | SCREAMING_SNAKE: `MAX_RETRY_COUNT`                                                                                       |
+| **Comments**  | **ZERO TOLERANCE** (No `// 1. Step`, no `// Fetch data`). **NEVER** write explanatory comments. Code must self-document. |
 
 ---
 

@@ -23,9 +23,7 @@ export async function refreshTeamList(): Promise<TeamMemberRow[]> {
 
   const profiles = await teamHandler.list(supabaseAdmin, tenantId)
 
-  const profilesData = profiles.map((p) => p.toResponse())
-
-  const members = await teamService.getMembersWithStatus(supabase, profilesData)
+  const members = await teamService.getMembersWithStatus(supabase, profiles)
 
   return members.map((m) => m.toPlainObj())
 }

@@ -41,5 +41,25 @@ export const teamService = {
     )
 
     return enrichedProfiles.map((profile) => new TeamMember(profile))
+  },
+
+  listTeamMembers: async (tenantId: string) => {
+    const { createAdminClient } = await import('@/lib/supabase/admin')
+    const { teamHandler } =
+      await import('@/shared/api-handlers/team/team.handler')
+
+    const supabaseAdmin = createAdminClient()
+
+    // 1. Fetch raw profiles via Handler (Repository Layer)
+    const profilesData = await teamHandler.list(supabaseAdmin, tenantId)
+
+    // 2. Enrich with Auth Status (Domain Logic)
+    const members = await teamService.getMembersWithStatus(
+      supabaseAdmin,
+      profilesData
+    )
+
+    // 3. Return Plain Objects suitable for Client Components
+    return members.map((m) => m.toPlainObj())
   }
 }

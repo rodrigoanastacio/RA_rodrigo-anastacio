@@ -1,42 +1,19 @@
-import { createClient } from '@/lib/supabase/server'
-import { leadsHandler } from '@/shared/api-handlers/leads/leads.handler'
+import { leadsService } from '@/shared/services/leads/leads.service'
 import { LeadsHeader } from '../components/LeadsHeader'
 import { LeadsListTable } from '../components/LeadsListTable'
 import { LeadsStats } from '../components/LeadsStats'
 
 export default async function LeadsListPage() {
-  const supabase = await createClient()
-
-  // Buscar leads do banco de dados
-  const { leads, total } = await leadsHandler.list(supabase, {
-    page: 1,
-    perPage: 50,
-    orderBy: 'created_at',
-    orderDirection: 'desc'
-  })
-
-  // Calcular estatísticas
-  const highPotentialCount = leads.filter(
-    (lead) => 'is_high_potential' in lead && lead.is_high_potential
-  ).length
-
-  // Taxa de conversão (mock por enquanto)
-  const conversionRate = '12.4%'
+  const { leads, total, highPotentialCount } =
+    await leadsService.getLeadsSummary()
 
   return (
     <section className="space-y-8 animate-in fade-in duration-700">
       <LeadsHeader totalLeads={total} highPotentialCount={highPotentialCount} />
 
-      <LeadsStats
-        totalLeads={total}
-        highPotentialLeads={highPotentialCount}
-        conversionRate={conversionRate}
-      />
+      <LeadsStats totalLeads={total} highPotentialLeads={highPotentialCount} />
 
-      <LeadsListTable
-        initialLeads={leads}
-        variant="default" // Lista limpa (apenas contatos)
-      />
+      <LeadsListTable initialLeads={leads} />
     </section>
   )
 }

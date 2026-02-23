@@ -185,6 +185,7 @@ Before completing:
 ✅ Implement proper rate limiting
 ✅ Use appropriate HTTP status codes
 
+❌ **NEVER write inline code comments** (e.g., `// 1. Do this`, `// Fetch data`). Code must be self-documenting.
 ❌ Don't trust any user input
 ❌ Don't expose internal errors to client
 ❌ Don't hardcode secrets (use env vars)

@@ -1,13 +1,12 @@
 import { env } from '@/config/env'
 import { TeamMemberFormData, TeamMemberResponse } from '@/lib/zod/team.schema'
-import { TeamMember } from '@/shared/entities/team/team-member.entity'
 import { SupabaseClient } from '@supabase/supabase-js'
 
 export const teamHandler = {
   list: async (
     supabase: SupabaseClient,
     tenantId?: string
-  ): Promise<TeamMember[]> => {
+  ): Promise<TeamMemberResponse[]> => {
     let query = supabase
       .from('profiles')
       .select('*')
@@ -22,9 +21,7 @@ export const teamHandler = {
 
     if (error) throw error
 
-    return (data || []).map(
-      (profile) => new TeamMember(profile as TeamMemberResponse)
-    )
+    return data as TeamMemberResponse[]
   },
 
   update: async (

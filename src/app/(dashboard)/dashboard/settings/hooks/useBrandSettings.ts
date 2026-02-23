@@ -99,6 +99,33 @@ export function useBrandSettings() {
       .catch(() => setLogoPreview(null))
   }
 
+  const removeLogo = async () => {
+    if (file) {
+      cancelUpload()
+      return
+    }
+
+    if (!logoPreview) return
+
+    setUploading(true)
+    try {
+      const res = await fetch('/api/settings/logo', {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) throw new Error('Erro ao remover logo')
+
+      setLogoPreview(null)
+      toast.success('Logo removido com sucesso!')
+      router.refresh()
+    } catch (err) {
+      toast.error('Erro ao remover logo')
+      console.error(err)
+    } finally {
+      setUploading(false)
+    }
+  }
+
   return {
     logoPreview,
     uploading,
@@ -106,6 +133,7 @@ export function useBrandSettings() {
     error,
     handleFileChange,
     uploadLogo,
-    cancelUpload
+    cancelUpload,
+    removeLogo
   }
 }

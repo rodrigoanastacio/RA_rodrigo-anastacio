@@ -22,7 +22,8 @@ export default function ConfiguracoesPage() {
     error,
     handleFileChange,
     uploadLogo,
-    cancelUpload
+    cancelUpload,
+    removeLogo
   } = useBrandSettings()
 
   return (
@@ -48,6 +49,7 @@ export default function ConfiguracoesPage() {
         onFileChange={handleFileChange}
         onUpload={uploadLogo}
         onCancel={cancelUpload}
+        onRemove={removeLogo}
       />
     </div>
   )

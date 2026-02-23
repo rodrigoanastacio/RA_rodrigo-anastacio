@@ -3,6 +3,9 @@ export interface TenantSettings {
     primaryColor?: string
     secondaryColor?: string
     logo?: string
+    logoUrl?: string
+    companyName?: string
+    tagline?: string
   }
   domain?: {
     custom?: string

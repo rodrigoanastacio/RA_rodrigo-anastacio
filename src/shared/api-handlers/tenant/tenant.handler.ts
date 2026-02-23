@@ -1,5 +1,8 @@
 import { Tenant } from '@/shared/entities/tenant/tenant.entity'
-import { TenantRow } from '@/shared/entities/tenant/tenant.types'
+import {
+  TenantRow,
+  TenantSettings
+} from '@/shared/entities/tenant/tenant.types'
 import { SupabaseClient } from '@supabase/supabase-js'
 
 export const tenantHandler = {
@@ -106,7 +109,7 @@ export const tenantHandler = {
   updateSettings: async (
     supabase: SupabaseClient,
     id: string,
-    settings: any
+    settings: TenantSettings
   ) => {
     const { data, error } = await supabase
       .from('tenants')
@@ -144,6 +147,56 @@ export const tenantHandler = {
       .from('tenant-assets')
       .getPublicUrl(fileName)
 
-    return urlData.publicUrl
+    const cacheBuster = Date.now()
+    return `${urlData.publicUrl}?v=${cacheBuster}`
+  },
+
+  deleteLogo: async (supabase: SupabaseClient, tenantId: string) => {
+    const { data: files, error: listError } = await supabase.storage
+      .from('tenant-assets')
+      .list(tenantId)
+
+    if (listError) {
+      console.error('[tenantHandler.deleteLogo] list error:', listError)
+      throw listError
+    }
+
+    if (files && files.length > 0) {
+      const pathsToDelete = files.map((f) => `${tenantId}/${f.name}`)
+      const { error: deleteError } = await supabase.storage
+        .from('tenant-assets')
+        .remove(pathsToDelete)
+
+      if (deleteError) {
+        console.error('[tenantHandler.deleteLogo] delete error:', deleteError)
+        throw deleteError
+      }
+    }
+
+    const { data: tenant, error: fetchError } = await supabase
+      .from('tenants')
+      .select('settings')
+      .eq('id', tenantId)
+      .single()
+
+    if (fetchError) throw fetchError
+
+    const currentSettings = (tenant?.settings || {}) as TenantSettings
+    const updatedSettings: TenantSettings = {
+      ...currentSettings,
+      branding: {
+        ...currentSettings.branding,
+        logoUrl: undefined
+      }
+    }
+
+    const { error: updateError } = await supabase
+      .from('tenants')
+      .update({ settings: updatedSettings })
+      .eq('id', tenantId)
+
+    if (updateError) throw updateError
+
+    return { success: true }
   }
 }

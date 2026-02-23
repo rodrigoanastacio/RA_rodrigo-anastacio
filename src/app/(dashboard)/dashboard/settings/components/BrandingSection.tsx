@@ -3,6 +3,8 @@
 import { Box } from '@/components/ui/box'
 import { Save, Upload, X } from 'lucide-react'
 import Image from 'next/image'
+import { useState } from 'react'
+import { DeleteLogoModal } from './DeleteLogoModal'
 
 interface BrandingSectionProps {
   logoPreview: string | null
@@ -11,6 +13,7 @@ interface BrandingSectionProps {
   onFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   onUpload: () => void
   onCancel: () => void
+  onRemove: () => void
 }
 
 export function BrandingSection({
@@ -19,8 +22,24 @@ export function BrandingSection({
   error,
   onFileChange,
   onUpload,
-  onCancel
+  onCancel,
+  onRemove
 }: BrandingSectionProps) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+
+  const handleRemoveClick = () => {
+    if (logoPreview?.startsWith('data:')) {
+      onRemove()
+    } else {
+      setIsDeleteModalOpen(true)
+    }
+  }
+
+  const handleConfirmRemove = () => {
+    setIsDeleteModalOpen(false)
+    onRemove()
+  }
+
   return (
     <Box>
       <h2 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
@@ -43,8 +62,8 @@ export function BrandingSection({
                   className="object-contain p-4"
                 />
                 <button
-                  onClick={onCancel}
-                  className="absolute top-2 right-2 p-1.5 bg-white shadow-md text-gray-500 rounded-full hover:text-red-500 transition-colors border border-gray-100"
+                  onClick={handleRemoveClick}
+                  className="absolute top-2 right-2 p-1.5 cursor-pointer bg-white shadow-md text-gray-500 rounded-full hover:text-red-500 transition-colors border border-gray-100"
                   title="Remover"
                 >
                   <X size={16} />
@@ -55,7 +74,7 @@ export function BrandingSection({
                 <button
                   onClick={onUpload}
                   disabled={uploading}
-                  className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors shadow-sm"
+                  className="px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 transition-colors shadow-sm cursor-pointer"
                 >
                   <Save size={16} />
                   {uploading ? 'Salvando...' : 'Salvar Logo'}
@@ -64,7 +83,7 @@ export function BrandingSection({
                 <button
                   onClick={onCancel}
                   disabled={uploading}
-                  className="px-4 py-2 border border-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                  className="px-4 py-2 border border-gray-200 text-gray-700 text-sm font-semibold rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -115,6 +134,13 @@ export function BrandingSection({
           </p>
         </div>
       </div>
+
+      <DeleteLogoModal
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        onConfirm={handleConfirmRemove}
+        isLoading={uploading}
+      />
     </Box>
   )
 }

@@ -1,5 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
+import { tenantHandler } from '@/shared/api-handlers/tenant/tenant.handler'
+import { TenantSettings } from '@/shared/entities/tenant/tenant.types'
 import { NextRequest, NextResponse } from 'next/server'
+
+const ALLOWED_TYPES = ['image/png', 'image/jpeg', 'image/svg+xml', 'image/webp']
+const MAX_FILE_SIZE = 5 * 1024 * 1024
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,95 +19,123 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: profile } = await supabase
+    const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('tenant_id')
       .eq('id', user.id)
       .single()
 
-    const tenant_id = profile?.tenant_id
-    if (!tenant_id) {
-      return NextResponse.json({ error: 'No tenant_id found' }, { status: 400 })
+    if (profileError) {
+      console.error('[logo] profile error:', profileError)
+      return NextResponse.json(
+        { error: 'Profile fetch failed', detail: profileError.message },
+        { status: 500 }
+      )
     }
 
+    const tenantId = profile?.tenant_id
+    if (!tenantId) {
+      return NextResponse.json(
+        { error: 'Tenant not found for this user' },
+        { status: 400 }
+      )
+    }
+
+    console.log('[logo] tenantId:', tenantId)
+
     const formData = await req.formData()
-    const file = formData.get('logo') as File
+    const file = formData.get('logo') as File | null
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    const allowedTypes = [
-      'image/png',
-      'image/jpeg',
-      'image/svg+xml',
-      'image/webp'
-    ]
-    if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Invalid file type' }, { status: 400 })
-    }
-
-    if (file.size > 5 * 1024 * 1024) {
+    if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: 'File too large. Maximum 5MB.' },
+        { error: 'Tipo inválido. Use PNG, JPG, SVG ou WebP.' },
         { status: 400 }
       )
     }
 
-    const { data: tenant, error: tenantError } = await supabase
-      .from('tenants')
-      .select('settings')
-      .eq('id', tenant_id)
-      .single()
-
-    if (tenantError) {
+    if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json(
-        { error: 'Failed to fetch tenant' },
+        { error: 'Arquivo muito grande. Máximo 5MB.' },
+        { status: 400 }
+      )
+    }
+
+    console.log('[logo] uploading file:', file.name, file.type, file.size)
+
+    let publicUrl: string
+    try {
+      publicUrl = await tenantHandler.uploadLogo(supabase, tenantId, file)
+      console.log('[logo] uploaded, url:', publicUrl)
+    } catch (uploadErr) {
+      console.error('[logo] uploadLogo failed:', uploadErr)
+      return NextResponse.json(
+        { error: 'Upload storage failed', detail: String(uploadErr) },
         { status: 500 }
       )
     }
 
-    const fileExt = file.type.split('/')[1]
-    const fileName = `${tenant_id}/logo.${fileExt}`
-
-    const { error: uploadError } = await supabase.storage
-      .from('tenant-assets')
-      .upload(fileName, file, { upsert: true, contentType: file.type })
-
-    if (uploadError) {
-      return NextResponse.json(
-        { error: `Upload failed: ${uploadError.message}` },
-        { status: 500 }
-      )
-    }
-
-    const { data: urlData } = supabase.storage
-      .from('tenant-assets')
-      .getPublicUrl(fileName)
-
-    const updatedSettings = {
-      ...tenant.settings,
+    const tenant = await tenantHandler.getById(supabase, tenantId)
+    const currentSettings = (tenant?.settings || {}) as TenantSettings
+    const updatedSettings: TenantSettings = {
+      ...currentSettings,
       branding: {
-        ...tenant.settings?.branding,
-        logoUrl: urlData.publicUrl
+        ...currentSettings.branding,
+        logoUrl: publicUrl
       }
     }
 
-    const { error: updateError } = await supabase
-      .from('tenants')
-      .update({ settings: updatedSettings })
-      .eq('id', tenant_id)
-
-    if (updateError) {
+    try {
+      await tenantHandler.updateSettings(supabase, tenantId, updatedSettings)
+    } catch (updateErr) {
+      console.error('[logo] updateSettings failed:', updateErr)
       return NextResponse.json(
-        { error: 'Failed to update tenant settings' },
+        { error: 'Settings update failed', detail: String(updateErr) },
         { status: 500 }
       )
     }
 
-    return NextResponse.json({ success: true, logoUrl: urlData.publicUrl })
+    return NextResponse.json({ success: true, logoUrl: publicUrl })
   } catch (error) {
-    console.error('Logo upload error:', error)
+    console.error('[POST /api/settings/logo] Unhandled error:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE() {
+  try {
+    const supabase = await createClient()
+
+    const {
+      data: { user },
+      error: authError
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('tenant_id')
+      .eq('id', user.id)
+      .single()
+
+    if (profileError || !profile?.tenant_id) {
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 400 })
+    }
+
+    await tenantHandler.deleteLogo(supabase, profile.tenant_id)
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error('[DELETE /api/settings/logo] Unhandled error:', error)
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

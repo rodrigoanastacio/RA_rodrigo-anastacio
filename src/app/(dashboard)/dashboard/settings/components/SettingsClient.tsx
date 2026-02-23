@@ -21,7 +21,8 @@ export function SettingsClient() {
     error,
     handleFileChange,
     uploadLogo,
-    cancelUpload
+    cancelUpload,
+    removeLogo
   } = useBrandSettings()
 
   return (
@@ -42,6 +43,7 @@ export function SettingsClient() {
         onFileChange={handleFileChange}
         onUpload={uploadLogo}
         onCancel={cancelUpload}
+        onRemove={removeLogo}
       />
     </>
   )

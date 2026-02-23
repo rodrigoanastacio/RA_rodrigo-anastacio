@@ -1,5 +1,6 @@
 'use client'
 
+import { createFormAction } from '@/app/(dashboard)/dashboard/forms/actions'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -12,7 +13,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { formsService } from '@/services/forms/forms.service'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -50,7 +50,7 @@ export function CreateForm() {
 
     setIsSaving(true)
     try {
-      const newForm = await formsService.create({
+      const result = await createFormAction({
         name,
         slug,
         description,
@@ -68,8 +68,10 @@ export function CreateForm() {
         }
       })
 
+      if (!result.success || !result.form) throw new Error(result.error)
+
       toast.success('Capítulo inicial criado!')
-      router.push(`/dashboard/forms/${newForm.id}/builder`)
+      router.push(`/dashboard/forms/${result.form.id}/builder`)
     } catch (error) {
       console.error(error)
       toast.error('Erro ao criar formulário.')

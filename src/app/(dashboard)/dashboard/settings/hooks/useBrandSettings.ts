@@ -11,7 +11,6 @@ export function useBrandSettings() {
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Load initial settings (optional, for pre-filling preview if needed)
   useEffect(() => {
     async function loadSettings() {
       try {
@@ -90,25 +89,12 @@ export function useBrandSettings() {
   }
 
   const cancelUpload = () => {
-    // Revert to original or clear?
-    // If we want to revert to the server logo, we would need to fetch it again or store it.
-    // For now, simpler is to clear the preview/file selection if it was a new selection.
-    // But since we preload the logo now, 'cancel' might mean 'reset to server state'.
-    // Let's reload settings to reset.
     setFile(null)
     setError(null)
-
-    // allow simpler reset for now similar to previous logic,
-    // but ideally we should reset to `serverLogoUrl`.
-    // Let's re-fetch to be safe and simple.
     fetch('/api/settings')
       .then((res) => res.json())
       .then((data) => {
-        if (data?.settings?.branding?.logoUrl) {
-          setLogoPreview(data.settings.branding.logoUrl)
-        } else {
-          setLogoPreview(null)
-        }
+        setLogoPreview(data?.settings?.branding?.logoUrl || null)
       })
       .catch(() => setLogoPreview(null))
   }

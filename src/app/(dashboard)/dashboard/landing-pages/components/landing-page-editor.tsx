@@ -13,7 +13,6 @@ interface Props {
   initialSlug: string
   initialMetaTitle?: string
   initialMetaDescription?: string
-  initialFormId?: string
   availableForms: FormRow[]
 }
 
@@ -25,7 +24,6 @@ export default function LandingPageEditor({
   initialSlug,
   initialMetaTitle,
   initialMetaDescription,
-  initialFormId,
   availableForms
 }: Props) {
   const { update, togglePublish, isSaving } = useLandingPage()
@@ -38,7 +36,6 @@ export default function LandingPageEditor({
       initialSlug={initialSlug}
       initialMetaTitle={initialMetaTitle}
       initialMetaDescription={initialMetaDescription}
-      initialFormId={initialFormId}
       availableForms={availableForms}
       onSave={(sections, pageSettings) =>
         update(id, {
@@ -46,8 +43,7 @@ export default function LandingPageEditor({
           title: pageSettings.title,
           slug: pageSettings.slug,
           meta_title: pageSettings.metaTitle,
-          meta_description: pageSettings.metaDescription,
-          form_id: pageSettings.formId
+          meta_description: pageSettings.metaDescription
         })
       }
       onTogglePublish={(published: boolean) => togglePublish(id, published)}

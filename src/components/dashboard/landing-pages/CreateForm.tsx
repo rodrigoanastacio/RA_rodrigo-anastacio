@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { useLandingPage } from '@/hooks/useLandingPage'
 import { Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -24,7 +23,6 @@ export function CreateLandingPageForm() {
 
   const [title, setTitle] = useState('')
   const [slug, setSlug] = useState('')
-  const [description, setDescription] = useState('')
 
   function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newTitle = e.target.value
@@ -50,8 +48,7 @@ export function CreateLandingPageForm() {
 
     const result = await create({
       title,
-      slug,
-      description
+      slug
     })
 
     if (result.success && result.id) {
@@ -105,16 +102,6 @@ export function CreateLandingPageForm() {
               <p className="text-xs text-muted-foreground">
                 Este será o endereço público da sua página.
               </p>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Descrição (Interna)</Label>
-              <Textarea
-                id="description"
-                placeholder="Ex: Página voltada para captação de leads de SP."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
             </div>
           </CardContent>
           <CardFooter className="flex justify-between border-t pt-6 bg-gray-50/50 rounded-b-lg">

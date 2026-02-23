@@ -10,7 +10,6 @@ export async function POST(req: Request) {
   try {
     const supabase = await createClient()
 
-    // 1. Authenticate user
     const {
       data: { user },
       error: authError
@@ -20,18 +19,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Não autorizado' }, { status: 401 })
     }
 
-    // 2. Parse and validate body
     const body = await req.json()
     const { fullName } = profileSchema.parse(body)
 
-    // 3. Update profiles table
     const { error: updateError } = await supabase
       .from('profiles')
       .update({ full_name: fullName })
       .eq('id', user.id)
 
     if (updateError) {
-      console.error('Error updating profile:', updateError)
       return NextResponse.json(
         { error: 'Erro ao atualizar perfil' },
         { status: 500 }
@@ -46,8 +42,6 @@ export async function POST(req: Request) {
         { status: 400 }
       )
     }
-
-    console.error('Unexpected error:', error)
     return NextResponse.json(
       { error: 'Erro interno do servidor' },
       { status: 500 }

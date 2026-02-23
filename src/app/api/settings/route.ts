@@ -1,44 +1,12 @@
-import { createClient } from '@/lib/supabase/server'
+import { tenantService } from '@/shared/services/tenant/tenant.service'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    const supabase = await createClient()
-    const {
-      data: { user },
-      error: authError
-    } = await supabase.auth.getUser()
+    const tenant = await tenantService.getSettings()
 
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please login' },
-        { status: 401 }
-      )
-    }
-
-    const tenant_id =
-      user.app_metadata?.tenant_id || user.user_metadata?.tenant_id
-
-    if (!tenant_id) {
-      console.warn('Tenant ID missing in settings API')
-      return NextResponse.json(
-        { error: 'No tenant_id found in user metadata' },
-        { status: 400 }
-      )
-    }
-
-    const { data: tenant, error: tenantError } = await supabase
-      .from('tenants')
-      .select('settings, name, slug')
-      .eq('id', tenant_id)
-      .single()
-
-    if (tenantError) {
-      console.error('Tenant fetch error:', tenantError)
-      return NextResponse.json(
-        { error: 'Failed to fetch tenant settings' },
-        { status: 500 }
-      )
+    if (!tenant) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     return NextResponse.json({

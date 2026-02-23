@@ -12,7 +12,6 @@ export function useProfileSettings() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  // Load initial data
   useEffect(() => {
     async function loadData() {
       const supabase = createClient()
@@ -39,7 +38,6 @@ export function useProfileSettings() {
     loadData()
   }, [])
 
-  // Handle save
   const updateProfile = async () => {
     if (!fullName.trim()) {
       toast.error('Nome não pode estar vazio')

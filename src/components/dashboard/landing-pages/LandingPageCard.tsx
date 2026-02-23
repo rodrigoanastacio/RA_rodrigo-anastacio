@@ -1,8 +1,8 @@
 'use client'
 
+import { deleteLandingPageAction } from '@/app/(dashboard)/dashboard/landing-pages/actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { deleteLandingPage } from '@/services/landing-pages/actions'
 import { LandingPage } from '@/services/landing-pages/types'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -23,7 +23,7 @@ export function LandingPageCard({ lp }: LandingPageCardProps) {
   async function handleDelete() {
     setIsDeleting(true)
     try {
-      const result = await deleteLandingPage(lp.id)
+      const result = await deleteLandingPageAction(lp.id)
       if (result.success) {
         toast.success('Landing page excluída com sucesso!')
         setIsDeleteModalOpen(false)

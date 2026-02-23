@@ -1,27 +1,12 @@
 import { PageHeader } from '@/components/dashboard/PageHeader'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { createClient } from '@/lib/supabase/server'
-import { formsHandler } from '@/shared/api-handlers/forms/forms.handler'
+import { formsService } from '@/shared/services/forms/forms.service'
 import { Calendar, FileText, FormInput, Layout, Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function FormsListPage() {
-  const supabase = await createClient()
-
-  // Pegar o tenant_id do usuário logado
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
-  if (!user) return null
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('tenant_id')
-    .eq('id', user.id)
-    .single()
-
-  const { forms } = await formsHandler.list(supabase, profile?.tenant_id || '')
+  const { forms } = await formsService.getFormsSummary()
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">

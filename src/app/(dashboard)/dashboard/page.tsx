@@ -4,20 +4,14 @@ import { RecentLeads } from '@/components/dashboard/RecentLeads'
 import { RevenueChart } from '@/components/dashboard/RevenueChart'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { Summary } from '@/components/dashboard/Summary'
-import { createClient } from '@/lib/supabase/server'
-import { dashboardHandler } from '@/shared/api-handlers/dashboard/dashboard.handler'
+import { dashboardService } from '@/shared/services/dashboard/dashboard.service'
 import { Star, Target, Users } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
 export default async function DashboardPage() {
-  const supabase = await createClient()
-  const [stats, chartData, recentLeads, timelineData] = await Promise.all([
-    dashboardHandler.getStats(supabase),
-    dashboardHandler.getChartData(supabase),
-    dashboardHandler.getRecentLeads(supabase),
-    dashboardHandler.getLeadsTimeline(supabase, 30)
-  ])
+  const { stats, chartData, recentLeads, timelineData } =
+    await dashboardService.getOverview()
 
   const dateString = new Date().toLocaleDateString('pt-BR', {
     day: 'numeric',

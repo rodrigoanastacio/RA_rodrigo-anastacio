@@ -1,12 +1,13 @@
 import { LandingPageCard } from '@/components/dashboard/landing-pages/LandingPageCard'
 import { PageHeader } from '@/components/dashboard/PageHeader'
 import { Button } from '@/components/ui/button'
-import { getLandingPages } from '@/services/landing-pages/actions'
+import { landingPagesService } from '@/shared/services/landing-pages/landing-pages.service'
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function LandingPagesList() {
-  const landingPages = await getLandingPages()
+  const { pages: landingPages } =
+    await landingPagesService.getLandingPagesSummary()
 
   return (
     <div className="flex flex-col gap-6">
@@ -42,7 +43,9 @@ export default async function LandingPagesList() {
             </Link>
           </div>
         ) : (
-          landingPages.map((lp) => <LandingPageCard key={lp.id} lp={lp} />)
+          landingPages.map((lp) => (
+            <LandingPageCard key={lp.id} lp={lp as any} />
+          ))
         )}
       </div>
     </div>

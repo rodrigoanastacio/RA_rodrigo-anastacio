@@ -101,5 +101,49 @@ export const tenantHandler = {
           row.updated_at
         )
     )
+  },
+
+  updateSettings: async (
+    supabase: SupabaseClient,
+    id: string,
+    settings: any
+  ) => {
+    const { data, error } = await supabase
+      .from('tenants')
+      .update({ settings })
+      .eq('id', id)
+      .select('settings')
+      .single()
+
+    if (error) {
+      console.error('[tenantHandler.updateSettings] Error:', error)
+      throw error
+    }
+
+    return data
+  },
+
+  uploadLogo: async (
+    supabase: SupabaseClient,
+    tenantId: string,
+    file: File
+  ) => {
+    const fileExt = file.type.split('/')[1]
+    const fileName = `${tenantId}/logo.${fileExt}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('tenant-assets')
+      .upload(fileName, file, {
+        upsert: true,
+        contentType: file.type
+      })
+
+    if (uploadError) throw uploadError
+
+    const { data: urlData } = supabase.storage
+      .from('tenant-assets')
+      .getPublicUrl(fileName)
+
+    return urlData.publicUrl
   }
 }

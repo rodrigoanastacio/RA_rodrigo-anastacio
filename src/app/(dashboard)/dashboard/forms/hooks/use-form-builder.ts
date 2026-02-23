@@ -7,9 +7,9 @@ import {
   FormStep
 } from '@/components/forms/types'
 import { formSchemaValidator } from '@/lib/zod/forms/form-builder.schema'
-import { formsService } from '@/services/forms/forms.service'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { updateFormSchemaAction } from '../actions'
 
 export function useFormBuilder(formId: string, initialSchema: FormSchema) {
   const [schema, setSchema] = useState<FormSchema>(initialSchema)
@@ -38,7 +38,9 @@ export function useFormBuilder(formId: string, initialSchema: FormSchema) {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await formsService.update(formId, { schema: schema as any })
+      const result = await updateFormSchemaAction(formId, schema as any)
+
+      if (!result.success) throw new Error(result.error)
       toast.success('Alterações salvas com sucesso!')
     } catch (error) {
       console.error(error)

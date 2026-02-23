@@ -1,8 +1,8 @@
 import {
-  createLandingPage,
-  togglePublish as togglePublishAction,
-  updateLandingPage
-} from '@/services/landing-pages/actions'
+  createLandingPageAction,
+  togglePublishAction,
+  updateLandingPageAction
+} from '@/app/(dashboard)/dashboard/landing-pages/actions'
 import {
   CreateLandingPageInput,
   LandingPageContent,
@@ -20,7 +20,6 @@ export interface UseLandingPageReturn {
       slug?: string
       meta_title?: string
       meta_description?: string
-      form_id?: string
     }
   ) => Promise<SaveLandingPageResult>
   togglePublish: (
@@ -38,7 +37,7 @@ export function useLandingPage(): UseLandingPageReturn {
   ): Promise<SaveLandingPageResult> => {
     setIsSaving(true)
     try {
-      const result = await createLandingPage(input)
+      const result = await createLandingPageAction(input)
       if (!result.success) {
         // Optionally trigger toast here or let component handle it
       }
@@ -59,12 +58,11 @@ export function useLandingPage(): UseLandingPageReturn {
       slug?: string
       meta_title?: string
       meta_description?: string
-      form_id?: string
     }
   ): Promise<SaveLandingPageResult> => {
     setIsSaving(true)
     try {
-      const result = await updateLandingPage(id, updates)
+      const result = await updateLandingPageAction(id, updates)
       return result
     } catch (error) {
       console.error(error)

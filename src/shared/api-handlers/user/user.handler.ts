@@ -34,5 +34,19 @@ export const userHandler = {
       role: profile?.role,
       tenant_id: profile?.tenant_id || user.user_metadata?.tenant_id
     }
+  },
+
+  updateProfile: async (
+    supabase: SupabaseClient,
+    id: string,
+    fullName: string
+  ) => {
+    const { error } = await supabase
+      .from('profiles')
+      .update({ full_name: fullName })
+      .eq('id', id)
+
+    if (error) throw error
+    return true
   }
 }

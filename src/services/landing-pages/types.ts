@@ -18,19 +18,15 @@ export interface LandingPage {
   is_published: boolean
   meta_title?: string
   meta_description?: string
-  form_id?: string
   created_at: string
   updated_at: string
   views?: number
   template_id?: string
-  type?: 'builder' | 'custom'
 }
 
 export interface CreateLandingPageInput {
   title: string
   slug: string
-  description?: string
   content?: LandingPageContent
   template_id?: string
-  form_id?: string
 }

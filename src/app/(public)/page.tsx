@@ -1,3 +1,4 @@
+import AboutMe from '@/components/shared/about-me'
 import Hero from '@/components/shared/Hero'
 import { Metadata } from 'next'
 
@@ -11,6 +12,7 @@ export default function Home() {
     <main className="min-h-screen bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Hero />
+        <AboutMe />
       </div>
     </main>
   )

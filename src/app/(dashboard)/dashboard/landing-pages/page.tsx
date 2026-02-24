@@ -5,6 +5,8 @@ import { landingPagesService } from '@/shared/services/landing-pages/landing-pag
 import { Plus } from 'lucide-react'
 import Link from 'next/link'
 
+import { LandingPage } from '@/services/landing-pages/types'
+
 export default async function LandingPagesList() {
   const { pages: landingPages } =
     await landingPagesService.getLandingPagesSummary()
@@ -44,7 +46,7 @@ export default async function LandingPagesList() {
           </div>
         ) : (
           landingPages.map((lp) => (
-            <LandingPageCard key={lp.id} lp={lp as any} />
+            <LandingPageCard key={lp.id} lp={lp as unknown as LandingPage} />
           ))
         )}
       </div>

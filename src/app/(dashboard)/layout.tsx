@@ -1,9 +1,9 @@
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
-import { DashboardSidebar } from '@/components/dashboard/DashboardSidebar'
 import { NotificationProvider } from '@/contexts/NotificationContext'
 import { createClient } from '@/lib/supabase/server'
 import { userHandler } from '@/shared/api-handlers/user/user.handler'
 import { Toaster } from 'sonner'
+import { DashboardHeader } from './components/DashboardHeader'
+import { DashboardSidebar } from './components/DashboardSidebar'
 
 export default async function DashboardLayout({
   children

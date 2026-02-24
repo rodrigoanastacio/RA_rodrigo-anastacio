@@ -1,11 +1,11 @@
-import { LeadsTimelineChart } from '@/components/dashboard/LeadsTimelineChart'
 import { PageHeader } from '@/components/dashboard/PageHeader'
-import { RecentLeads } from '@/components/dashboard/RecentLeads'
-import { RevenueChart } from '@/components/dashboard/RevenueChart'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { Summary } from '@/components/dashboard/Summary'
 import { dashboardService } from '@/shared/services/dashboard/dashboard.service'
 import { Star, Target, Users } from 'lucide-react'
+import { LeadsTimelineChart } from './components/LeadsTimelineChart'
+import { RecentLeads } from './components/RecentLeads'
+import { RevenueChart } from './components/RevenueChart'
 
 export const dynamic = 'force-dynamic'
 

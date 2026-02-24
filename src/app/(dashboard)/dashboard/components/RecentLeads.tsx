@@ -1,5 +1,6 @@
 'use client'
 
+import { useLeadActions } from '@/app/(dashboard)/dashboard/hooks/useLeadActions'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -17,7 +18,6 @@ import {
   TableHeader,
   TableRow
 } from '@/components/ui/table'
-import { useLeadActions } from '@/hooks/useLeadActions'
 import { cn } from '@/lib/utils'
 import {
   LeadStatus,

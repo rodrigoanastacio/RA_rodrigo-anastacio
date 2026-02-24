@@ -64,10 +64,10 @@ export const tenantService = {
 
     const tenant = await tenantHandler.getById(supabase, tenantId)
     const currentSettings = tenant?.settings || {}
-    const updatedSettings = {
+    const updatedSettings: TenantSettings = {
       ...currentSettings,
       branding: {
-        ...(currentSettings as any).branding,
+        ...currentSettings.branding,
         logoUrl: publicUrl
       }
     }

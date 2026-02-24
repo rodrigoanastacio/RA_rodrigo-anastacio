@@ -4,6 +4,8 @@ import { landingPagesService } from '@/shared/services/landing-pages/landing-pag
 import { notFound } from 'next/navigation'
 import LandingPageEditor from '../../components/landing-page-editor'
 
+import { LPSection } from '@/components/lp-renderer/SectionRenderer'
+
 interface PageProps {
   params: Promise<{ id: string }>
 }
@@ -31,7 +33,7 @@ export default async function EditionPage({ params }: PageProps) {
 
       <div className="flex-1 -mx-6 -mb-6 border-t border-gray-200 h-full">
         <LandingPageEditor
-          initialSections={landingPage.content as any}
+          initialSections={landingPage.content as unknown as LPSection[]}
           id={landingPage.id}
           initialPublished={landingPage.is_published ?? false}
           initialTitle={landingPage.title}

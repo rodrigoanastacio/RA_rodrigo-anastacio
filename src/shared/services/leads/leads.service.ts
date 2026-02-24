@@ -13,7 +13,9 @@ export const leadsService = {
     })
 
     const highPotentialCount = leads.filter(
-      (lead) => 'is_high_potential' in lead && (lead as any).is_high_potential
+      (lead) =>
+        lead.answers &&
+        (lead.answers as Record<string, unknown>).is_high_potential
     ).length
 
     return {

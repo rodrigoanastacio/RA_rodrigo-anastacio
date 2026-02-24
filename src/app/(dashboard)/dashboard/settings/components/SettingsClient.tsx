@@ -10,9 +10,14 @@ export function SettingsClient() {
     fullName,
     setFullName,
     email,
+    avatarUrl,
     loading: loadingProfile,
     saving: savingProfile,
-    updateProfile
+    uploadingAvatar,
+    fileInputRef,
+    updateProfile,
+    handleAvatarChange,
+    removeAvatar
   } = useProfileSettings()
 
   const {
@@ -31,9 +36,14 @@ export function SettingsClient() {
         fullName={fullName}
         setFullName={setFullName}
         email={email}
+        avatarUrl={avatarUrl}
         loading={loadingProfile}
         saving={savingProfile}
+        uploadingAvatar={uploadingAvatar}
+        fileInputRef={fileInputRef}
         onSave={updateProfile}
+        onAvatarChange={handleAvatarChange}
+        onRemoveAvatar={removeAvatar}
       />
 
       <BrandingSection

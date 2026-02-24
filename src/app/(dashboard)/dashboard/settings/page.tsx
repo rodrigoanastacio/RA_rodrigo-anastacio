@@ -11,9 +11,14 @@ export default function ConfiguracoesPage() {
     fullName,
     setFullName,
     email,
+    avatarUrl,
     loading: loadingProfile,
     saving: savingProfile,
-    updateProfile
+    uploadingAvatar,
+    fileInputRef,
+    updateProfile,
+    handleAvatarChange,
+    removeAvatar
   } = useProfileSettings()
 
   const {
@@ -37,9 +42,14 @@ export default function ConfiguracoesPage() {
         fullName={fullName}
         setFullName={setFullName}
         email={email}
+        avatarUrl={avatarUrl}
         loading={loadingProfile}
         saving={savingProfile}
+        uploadingAvatar={uploadingAvatar}
+        fileInputRef={fileInputRef}
         onSave={updateProfile}
+        onAvatarChange={handleAvatarChange}
+        onRemoveAvatar={removeAvatar}
       />
 
       <BrandingSection

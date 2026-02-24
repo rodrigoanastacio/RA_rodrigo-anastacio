@@ -40,3 +40,40 @@ export async function uploadLogoAction(formData: FormData) {
     }
   }
 }
+
+export async function uploadAvatarAction(formData: FormData) {
+  try {
+    const file = formData.get('avatar') as File
+    if (!file) {
+      return { success: false, message: 'Nenhum arquivo enviado' }
+    }
+
+    const publicUrl = await userService.uploadAvatar(file)
+    revalidatePath('/dashboard/settings')
+    return { success: true, avatarUrl: publicUrl }
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Erro ao fazer upload da foto'
+    console.error('Failed to upload avatar:', error)
+    return {
+      success: false,
+      message
+    }
+  }
+}
+
+export async function removeAvatarAction() {
+  try {
+    await userService.removeAvatar()
+    revalidatePath('/dashboard/settings')
+    return { success: true }
+  } catch (error: unknown) {
+    const message =
+      error instanceof Error ? error.message : 'Erro ao remover foto'
+    console.error('Failed to remove avatar:', error)
+    return {
+      success: false,
+      message
+    }
+  }
+}

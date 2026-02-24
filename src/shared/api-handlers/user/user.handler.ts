@@ -48,5 +48,76 @@ export const userHandler = {
 
     if (error) throw error
     return true
+  },
+
+  uploadAvatar: async (
+    supabase: SupabaseClient,
+    tenantId: string,
+    userId: string,
+    file: File
+  ) => {
+    const fileExt = file.type.split('/')[1]
+    const fileName = `${tenantId}/avatars/${userId}.${fileExt}`
+
+    const { error: uploadError } = await supabase.storage
+      .from('tenant-assets')
+      .upload(fileName, file, {
+        upsert: true,
+        contentType: file.type
+      })
+
+    if (uploadError) throw uploadError
+
+    const { data: urlData } = supabase.storage
+      .from('tenant-assets')
+      .getPublicUrl(fileName)
+
+    const cacheBuster = Date.now()
+    const publicUrl = `${urlData.publicUrl}?v=${cacheBuster}`
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: publicUrl })
+      .eq('id', userId)
+      .select()
+      .single()
+
+    if (updateError) throw updateError
+
+    return publicUrl
+  },
+
+  removeAvatar: async (
+    supabase: SupabaseClient,
+    tenantId: string,
+    userId: string
+  ) => {
+    const folderPath = `${tenantId}/avatars`
+    const { data: files, error: listError } = await supabase.storage
+      .from('tenant-assets')
+      .list(folderPath)
+
+    if (listError) throw listError
+
+    if (files && files.length > 0) {
+      const userFiles = files.filter((f) => f.name.startsWith(userId))
+      if (userFiles.length > 0) {
+        const pathsToDelete = userFiles.map((f) => `${folderPath}/${f.name}`)
+        const { error: deleteError } = await supabase.storage
+          .from('tenant-assets')
+          .remove(pathsToDelete)
+
+        if (deleteError) throw deleteError
+      }
+    }
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ avatar_url: null })
+      .eq('id', userId)
+
+    if (updateError) throw updateError
+
+    return { success: true }
   }
 }

@@ -1,6 +1,5 @@
 import { LPSection } from '@/components/lp-renderer/SectionRenderer'
 import { FeatureItem } from '@/components/lp-renderer/sections/FeaturesSection'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -13,6 +12,7 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { FormRow } from '@/shared/api-handlers/forms/forms.handler'
+import { Globe, Layers, Loader2, Search, Target } from 'lucide-react'
 import { PageSettings } from '../../hooks/use-landing-page-builder'
 
 interface PropertiesPanelProps {
@@ -39,65 +39,78 @@ export function PropertiesPanel({
   availableForms
 }: PropertiesPanelProps) {
   return (
-    <div className="w-80 bg-white border-l border-gray-200 flex flex-col shadow-[-4px_0_24px_-12px_rgba(0,0,0,0.1)] z-20 h-full">
-      <div className="p-5 border-b border-gray-100 flex flex-col gap-4 bg-white/50 backdrop-blur-sm">
-        <div className="flex justify-between items-center">
-          <h2 className="font-semibold text-gray-900">Propriedades</h2>
-          <Button
-            size="sm"
-            onClick={onSave}
-            disabled={isSaving}
-            className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm disabled:opacity-50"
-          >
-            {isSaving ? 'Salvando...' : 'Salvar'}
-          </Button>
-        </div>
-
-        <div className="flex items-center justify-between p-2 bg-gray-50 rounded-lg border border-gray-100">
-          <div className="flex flex-col">
-            <span className="text-xs font-medium text-gray-700">Status</span>
-            <span
-              className={cn(
-                'text-[10px] font-bold uppercase tracking-wider',
-                isPublished ? 'text-green-600' : 'text-amber-600'
-              )}
-            >
-              {isPublished ? 'Publicada' : 'Rascunho'}
+    <div className="w-72 bg-white border-l border-gray-100 flex flex-col z-20 h-full [&_input]:rounded-none [&_textarea]:rounded-none **:[[role=combobox]]:rounded-none">
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-gray-100">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 bg-gray-900 flex items-center justify-center">
+              <Layers className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="text-xs font-extrabold text-gray-900 uppercase tracking-widest">
+              Propriedades
             </span>
           </div>
-          <Button
-            size="sm"
-            variant={isPublished ? 'outline' : 'default'}
+
+          <button
+            onClick={onSave}
+            disabled={isSaving}
+            className="flex items-center gap-1.5 bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-60 text-white text-[11px] font-bold uppercase tracking-widest px-3 h-7 transition-all duration-200 active:scale-95 cursor-pointer"
+          >
+            {isSaving ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+            {isSaving ? 'Salvando' : 'Salvar'}
+          </button>
+        </div>
+
+        {/* Status row */}
+        <div className="flex items-center justify-between border border-gray-100 px-3 py-2 bg-gray-50">
+          <div>
+            <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+              Status
+            </p>
+            <p
+              className={cn(
+                'text-[11px] font-extrabold uppercase tracking-wide mt-0.5',
+                isPublished ? 'text-emerald-600' : 'text-amber-500'
+              )}
+            >
+              {isPublished ? '● Publicada' : '○ Rascunho'}
+            </p>
+          </div>
+
+          <button
             onClick={onTogglePublish}
             disabled={isSaving}
             className={cn(
-              'h-8 text-xs font-semibold px-4 transition-all duration-300',
+              'text-[10px] font-bold uppercase tracking-widest px-3 h-7 border transition-all duration-200 active:scale-95 disabled:opacity-50 cursor-pointer',
               isPublished
-                ? 'border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300'
-                : 'bg-green-600 hover:bg-green-700 text-white'
+                ? 'border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300'
+                : 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent'
             )}
           >
             {isPublished ? 'Despublicar' : 'Publicar'}
-          </Button>
+          </button>
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
+      {/* Scrollable body */}
+      <div className="flex-1 overflow-y-auto">
         {selectedSection ? (
-          <div className="p-6 space-y-6">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded uppercase tracking-wide">
+          <div className="p-5 space-y-5 animate-in slide-in-from-right-4 duration-300">
+            {/* Section type badge */}
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-1 bg-[#4F46E5]/8 text-[#4F46E5] text-[9px] font-extrabold uppercase tracking-widest border border-[#4F46E5]/20">
                 {selectedSection.type}
-              </div>
-              <span className="text-xs text-gray-400 font-mono">
+              </span>
+              <span className="text-[9px] text-gray-300 font-mono truncate">
                 {selectedSection.id}
               </span>
             </div>
 
+            {/* HERO */}
             {selectedSection.type === 'hero' && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <div className="space-y-2">
-                  <Label htmlFor="headline">Headline</Label>
+              <div className="space-y-4">
+                <FieldGroup label="Headline">
                   <Textarea
                     id="headline"
                     value={(selectedSection.data.headline as string) || ''}
@@ -105,72 +118,46 @@ export function PropertiesPanel({
                       updateSectionData('headline', e.target.value)
                     }
                     rows={2}
-                    className="resize-none"
+                    className="resize-none text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subheadline">Subheadline</Label>
+                <FieldGroup label="Subheadline">
                   <Textarea
                     id="subheadline"
                     value={(selectedSection.data.subheadline as string) || ''}
                     onChange={(e) =>
                       updateSectionData('subheadline', e.target.value)
                     }
-                    rows={4}
-                    className="resize-none"
+                    rows={3}
+                    className="resize-none text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="grid grid-cols-1 gap-4 pt-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="ctaLabel">Texto do Botão</Label>
-                    <Input
-                      id="ctaLabel"
-                      value={(selectedSection.data.ctaLabel as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('ctaLabel', e.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="ctaLink">Link de Destino</Label>
-                    <Input
-                      id="ctaLink"
-                      value={(selectedSection.data.ctaLink as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('ctaLink', e.target.value)
-                      }
-                      placeholder="https://..."
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2">
-                  <Label>Layout</Label>
-                  <Select
-                    value={
-                      (selectedSection.data.layout as string) || 'centered'
+                <FieldGroup label="Texto do Botão">
+                  <Input
+                    id="ctaLabel"
+                    value={(selectedSection.data.ctaLabel as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('ctaLabel', e.target.value)
                     }
-                    onValueChange={(value) =>
-                      updateSectionData('layout', value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o layout" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="centered">Centralizado</SelectItem>
-                      <SelectItem value="split">
-                        Dividido (Formulário à Direita)
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                    className="text-xs"
+                  />
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="benefits">Benefícios (Um por linha)</Label>
+                <FieldGroup label="Link de Destino">
+                  <Input
+                    id="ctaLink"
+                    value={(selectedSection.data.ctaLink as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('ctaLink', e.target.value)
+                    }
+                    placeholder="https://..."
+                    className="text-xs"
+                  />
+                </FieldGroup>
+
+                <FieldGroup label="Benefícios (um por linha)">
                   <Textarea
                     id="benefits"
                     value={(
@@ -180,556 +167,537 @@ export function PropertiesPanel({
                       updateSectionData('benefits', e.target.value.split('\n'))
                     }
                     rows={4}
-                    className="resize-none"
-                    placeholder="Benefício 1&#10;Benefício 2&#10;Benefício 3"
+                    className="resize-none text-xs"
+                    placeholder="Benefício 1&#10;Benefício 2"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2 pt-2">
-                  <Label>Tema Visual</Label>
-                  <Select
-                    value={(selectedSection.data.theme as string) || 'light'}
-                    onValueChange={(value) => updateSectionData('theme', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um tema" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Claro (Light)</SelectItem>
-                      <SelectItem value="dark">Escuro (Dark)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <SectionRow>
+                  <FieldGroup label="Layout">
+                    <SharpSelect
+                      value={
+                        (selectedSection.data.layout as string) || 'centered'
+                      }
+                      onValueChange={(v) => updateSectionData('layout', v)}
+                      items={[
+                        { value: 'centered', label: 'Centralizado' },
+                        { value: 'split', label: 'Dividido' }
+                      ]}
+                    />
+                  </FieldGroup>
+
+                  <FieldGroup label="Tema Visual">
+                    <SharpSelect
+                      value={(selectedSection.data.theme as string) || 'light'}
+                      onValueChange={(v) => updateSectionData('theme', v)}
+                      items={[
+                        { value: 'light', label: 'Claro' },
+                        { value: 'dark', label: 'Escuro' }
+                      ]}
+                    />
+                  </FieldGroup>
+                </SectionRow>
               </div>
             )}
 
+            {/* FEATURES */}
             {selectedSection.type === 'features' && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <div className="space-y-2">
-                  <Label htmlFor="headline">Headline</Label>
+              <div className="space-y-4">
+                <FieldGroup label="Headline">
                   <Textarea
-                    id="headline"
                     value={(selectedSection.data.headline as string) || ''}
                     onChange={(e) =>
                       updateSectionData('headline', e.target.value)
                     }
                     rows={2}
-                    className="resize-none"
+                    className="resize-none text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subheadline">Subheadline</Label>
+                <FieldGroup label="Subheadline">
                   <Textarea
-                    id="subheadline"
                     value={(selectedSection.data.subheadline as string) || ''}
                     onChange={(e) =>
                       updateSectionData('subheadline', e.target.value)
                     }
                     rows={2}
-                    className="resize-none"
+                    className="resize-none text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2 pt-2">
-                  <Label>Colunas</Label>
-                  <Select
-                    value={String(selectedSection.data.columns || 3)}
-                    onValueChange={(val) =>
-                      updateSectionData('columns', Number(val))
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Colunas" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2">2 Colunas</SelectItem>
-                      <SelectItem value="3">3 Colunas</SelectItem>
-                      <SelectItem value="4">4 Colunas</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                <SectionRow>
+                  <FieldGroup label="Colunas">
+                    <SharpSelect
+                      value={String(selectedSection.data.columns || 3)}
+                      onValueChange={(v) =>
+                        updateSectionData('columns', Number(v))
+                      }
+                      items={[
+                        { value: '2', label: '2 Col.' },
+                        { value: '3', label: '3 Col.' },
+                        { value: '4', label: '4 Col.' }
+                      ]}
+                    />
+                  </FieldGroup>
+
+                  <FieldGroup label="Tema Visual">
+                    <SharpSelect
+                      value={(selectedSection.data.theme as string) || 'light'}
+                      onValueChange={(v) => updateSectionData('theme', v)}
+                      items={[
+                        { value: 'light', label: 'Claro' },
+                        { value: 'dark', label: 'Escuro' },
+                        { value: 'gray', label: 'Cinza' }
+                      ]}
+                    />
+                  </FieldGroup>
+                </SectionRow>
 
                 <div className="border-t border-gray-100 pt-4">
-                  <Label className="mb-3 block">Itens (Features)</Label>
-                  <div className="space-y-4">
+                  <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest mb-3">
+                    Itens (Features)
+                  </p>
+                  <div className="space-y-3">
                     {(
                       (selectedSection.data.features as FeatureItem[]) || []
                     ).map((feature, idx) => (
                       <div
                         key={idx}
-                        className="bg-gray-50 p-3 rounded-lg border border-gray-200 space-y-3"
+                        className="border border-gray-100 bg-gray-50/60 p-3 space-y-2"
                       >
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-[10px] font-bold text-gray-400 uppercase">
-                            Item {idx + 1}
-                          </span>
-                        </div>
+                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">
+                          Item {idx + 1}
+                        </span>
 
-                        <div>
-                          <Label className="text-xs">Ícone</Label>
-                          <Select
-                            value={feature.icon}
-                            onValueChange={(val) => {
-                              const newFeatures = [
-                                ...((selectedSection.data
-                                  .features as FeatureItem[]) || [])
-                              ]
-                              newFeatures[idx] = { ...feature, icon: val }
-                              updateSectionData('features', newFeatures)
-                            }}
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue placeholder="Ícone" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="zap">Raio (Zap)</SelectItem>
-                              <SelectItem value="chart">Gráfico</SelectItem>
-                              <SelectItem value="lock">Cadeado</SelectItem>
-                              <SelectItem value="rocket">Foguete</SelectItem>
-                              <SelectItem value="globe">Globo</SelectItem>
-                              <SelectItem value="shield">Escudo</SelectItem>
-                              <SelectItem value="bot">Robô</SelectItem>
-                              <SelectItem value="clock">Relógio</SelectItem>
-                              <SelectItem value="message">Mensagem</SelectItem>
-                              <SelectItem value="check">Check</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
+                        <SharpSelect
+                          value={feature.icon}
+                          onValueChange={(val) => {
+                            const newFeatures = [
+                              ...((selectedSection.data
+                                .features as FeatureItem[]) || [])
+                            ]
+                            newFeatures[idx] = { ...feature, icon: val }
+                            updateSectionData('features', newFeatures)
+                          }}
+                          items={[
+                            { value: 'zap', label: 'Raio' },
+                            { value: 'chart', label: 'Gráfico' },
+                            { value: 'lock', label: 'Cadeado' },
+                            { value: 'rocket', label: 'Foguete' },
+                            { value: 'globe', label: 'Globo' },
+                            { value: 'shield', label: 'Escudo' },
+                            { value: 'bot', label: 'Robô' },
+                            { value: 'clock', label: 'Relógio' },
+                            { value: 'message', label: 'Mensagem' },
+                            { value: 'check', label: 'Check' }
+                          ]}
+                          placeholder="Ícone"
+                        />
 
-                        <div>
-                          <Label className="text-xs">Título</Label>
-                          <Input
-                            value={feature.title}
-                            onChange={(e) => {
-                              const newFeatures = [
-                                ...((selectedSection.data
-                                  .features as FeatureItem[]) || [])
-                              ]
-                              newFeatures[idx] = {
-                                ...feature,
-                                title: e.target.value
-                              }
-                              updateSectionData('features', newFeatures)
-                            }}
-                            className="h-8 text-xs"
-                          />
-                        </div>
+                        <Input
+                          value={feature.title}
+                          onChange={(e) => {
+                            const nf = [
+                              ...((selectedSection.data
+                                .features as FeatureItem[]) || [])
+                            ]
+                            nf[idx] = { ...feature, title: e.target.value }
+                            updateSectionData('features', nf)
+                          }}
+                          placeholder="Título"
+                          className="h-7 text-xs"
+                        />
 
-                        <div>
-                          <Label className="text-xs">Descrição</Label>
-                          <Textarea
-                            value={feature.description}
-                            onChange={(e) => {
-                              const newFeatures = [
-                                ...((selectedSection.data
-                                  .features as FeatureItem[]) || [])
-                              ]
-                              newFeatures[idx] = {
-                                ...feature,
-                                description: e.target.value
-                              }
-                              updateSectionData('features', newFeatures)
-                            }}
-                            className="min-h-[60px] text-xs resize-none"
-                          />
-                        </div>
+                        <Textarea
+                          value={feature.description}
+                          onChange={(e) => {
+                            const nf = [
+                              ...((selectedSection.data
+                                .features as FeatureItem[]) || [])
+                            ]
+                            nf[idx] = {
+                              ...feature,
+                              description: e.target.value
+                            }
+                            updateSectionData('features', nf)
+                          }}
+                          className="min-h-[52px] text-xs resize-none"
+                          placeholder="Descrição"
+                        />
                       </div>
                     ))}
                   </div>
                 </div>
-
-                <div className="space-y-2 pt-2">
-                  <Label>Tema Visual</Label>
-                  <Select
-                    value={(selectedSection.data.theme as string) || 'light'}
-                    onValueChange={(value) => updateSectionData('theme', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um tema" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Claro (Light)</SelectItem>
-                      <SelectItem value="dark">Escuro (Dark)</SelectItem>
-                      <SelectItem value="gray">Cinza (Gray)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             )}
+
+            {/* BIO */}
             {selectedSection.type === 'bio' && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <div className="space-y-2">
-                  <Label htmlFor="headline">Nome / Título</Label>
+              <div className="space-y-4">
+                <FieldGroup label="Nome / Título">
                   <Input
-                    id="headline"
                     value={(selectedSection.data.headline as string) || ''}
                     onChange={(e) =>
                       updateSectionData('headline', e.target.value)
                     }
+                    className="text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="subheadline">Subtítulo / Cargo</Label>
+                <FieldGroup label="Subtítulo / Cargo">
                   <Textarea
-                    id="subheadline"
                     value={(selectedSection.data.subheadline as string) || ''}
                     onChange={(e) =>
                       updateSectionData('subheadline', e.target.value)
                     }
                     rows={2}
-                    className="resize-none"
+                    className="resize-none text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="bio">Biografia (Parágrafos)</Label>
+                <FieldGroup label="Biografia (parágrafos separados por linha em branco)">
                   <Textarea
-                    id="bio"
                     value={((selectedSection.data.bio as string[]) || []).join(
                       '\n\n'
                     )}
                     onChange={(e) =>
                       updateSectionData('bio', e.target.value.split('\n\n'))
                     }
-                    rows={6}
+                    rows={5}
                     className="resize-none text-xs"
                     placeholder="Parágrafo 1&#10;&#10;Parágrafo 2"
                   />
-                  <p className="text-[10px] text-gray-400">
-                    Separe parágrafos com uma linha em branco.
-                  </p>
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="imageSrc">URL da Foto</Label>
+                <FieldGroup label="URL da Foto">
                   <Input
-                    id="imageSrc"
                     value={(selectedSection.data.imageSrc as string) || ''}
                     onChange={(e) =>
                       updateSectionData('imageSrc', e.target.value)
                     }
                     className="text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2 pt-2">
-                  <Label>Alinhamento da Foto</Label>
-                  <Select
-                    value={(selectedSection.data.alignment as string) || 'left'}
-                    onValueChange={(value) =>
-                      updateSectionData('alignment', value)
+                <SectionRow>
+                  <FieldGroup label="Alinhamento">
+                    <SharpSelect
+                      value={
+                        (selectedSection.data.alignment as string) || 'left'
+                      }
+                      onValueChange={(v) => updateSectionData('alignment', v)}
+                      items={[
+                        { value: 'left', label: 'Esquerda' },
+                        { value: 'right', label: 'Direita' }
+                      ]}
+                    />
+                  </FieldGroup>
+
+                  <FieldGroup label="Tema">
+                    <SharpSelect
+                      value={(selectedSection.data.theme as string) || 'light'}
+                      onValueChange={(v) => updateSectionData('theme', v)}
+                      items={[
+                        { value: 'light', label: 'Claro' },
+                        { value: 'dark', label: 'Escuro' },
+                        { value: 'gray', label: 'Cinza' }
+                      ]}
+                    />
+                  </FieldGroup>
+                </SectionRow>
+
+                <div className="border-t border-gray-100 pt-4 space-y-3">
+                  <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest">
+                    Botão (Opcional)
+                  </p>
+                  <Input
+                    value={(selectedSection.data.ctaLabel as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('ctaLabel', e.target.value)
                     }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="left">Esquerda</SelectItem>
-                      <SelectItem value="right">Direita</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4 pt-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="ctaLabel">Texto do Botão (Opcional)</Label>
-                    <Input
-                      id="ctaLabel"
-                      value={(selectedSection.data.ctaLabel as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('ctaLabel', e.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="ctaLink">Link do Botão</Label>
-                    <Input
-                      id="ctaLink"
-                      value={(selectedSection.data.ctaLink as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('ctaLink', e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2">
-                  <Label>Tema Visual</Label>
-                  <Select
-                    value={(selectedSection.data.theme as string) || 'light'}
-                    onValueChange={(value) => updateSectionData('theme', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um tema" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Claro (Light)</SelectItem>
-                      <SelectItem value="dark">Escuro (Dark)</SelectItem>
-                      <SelectItem value="gray">Cinza (Gray)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    placeholder="Texto do botão"
+                    className="text-xs"
+                  />
+                  <Input
+                    value={(selectedSection.data.ctaLink as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('ctaLink', e.target.value)
+                    }
+                    placeholder="https://..."
+                    className="text-xs"
+                  />
                 </div>
               </div>
             )}
+
+            {/* FOOTER */}
             {selectedSection.type === 'footer' && (
-              <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-                <div className="space-y-2">
-                  <Label htmlFor="companyName">Nome da Empresa / Marca</Label>
+              <div className="space-y-4">
+                <FieldGroup label="Nome da Empresa / Marca">
                   <Input
-                    id="companyName"
                     value={(selectedSection.data.companyName as string) || ''}
                     onChange={(e) =>
                       updateSectionData('companyName', e.target.value)
                     }
+                    className="text-xs"
                   />
-                </div>
+                </FieldGroup>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description">Descrição / Missão</Label>
+                <FieldGroup label="Descrição / Missão">
                   <Textarea
-                    id="description"
                     value={(selectedSection.data.description as string) || ''}
                     onChange={(e) =>
                       updateSectionData('description', e.target.value)
                     }
                     rows={3}
-                    className="resize-none"
+                    className="resize-none text-xs"
+                  />
+                </FieldGroup>
+
+                <FieldGroup label="Tema Visual">
+                  <SharpSelect
+                    value={(selectedSection.data.theme as string) || 'light'}
+                    onValueChange={(v) => updateSectionData('theme', v)}
+                    items={[
+                      { value: 'light', label: 'Claro' },
+                      { value: 'dark', label: 'Escuro' },
+                      { value: 'gray', label: 'Cinza' }
+                    ]}
+                  />
+                </FieldGroup>
+
+                <div className="border-t border-gray-100 pt-4 space-y-3">
+                  <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest">
+                    Contato
+                  </p>
+                  <Input
+                    value={(selectedSection.data.email as string) || ''}
+                    onChange={(e) => updateSectionData('email', e.target.value)}
+                    placeholder="Email"
+                    className="text-xs"
+                  />
+                  <Input
+                    value={(selectedSection.data.phone as string) || ''}
+                    onChange={(e) => updateSectionData('phone', e.target.value)}
+                    placeholder="Telefone / WhatsApp"
+                    className="text-xs"
+                  />
+                  <Input
+                    value={(selectedSection.data.address as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('address', e.target.value)
+                    }
+                    placeholder="Endereço (opcional)"
+                    className="text-xs"
                   />
                 </div>
 
-                <div className="space-y-2 pt-2 border-t border-gray-100">
-                  <Label className="text-xs font-bold uppercase text-gray-500">
-                    Contato
-                  </Label>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-xs">
-                      Email
-                    </Label>
-                    <Input
-                      id="email"
-                      value={(selectedSection.data.email as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('email', e.target.value)
-                      }
-                      className="h-8 text-xs"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-xs">
-                      Telefone / WhatsApp
-                    </Label>
-                    <Input
-                      id="phone"
-                      value={(selectedSection.data.phone as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('phone', e.target.value)
-                      }
-                      className="h-8 text-xs"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="address" className="text-xs">
-                      Endereço (Opcional)
-                    </Label>
-                    <Input
-                      id="address"
-                      value={(selectedSection.data.address as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('address', e.target.value)
-                      }
-                      className="h-8 text-xs"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2 border-t border-gray-100">
-                  <Label className="text-xs font-bold uppercase text-gray-500">
-                    Redes Sociais (Links)
-                  </Label>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="instagram" className="text-xs">
-                      Instagram
-                    </Label>
-                    <Input
-                      id="instagram"
-                      value={(selectedSection.data.instagram as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('instagram', e.target.value)
-                      }
-                      className="h-8 text-xs"
-                      placeholder="https://instagram.com/..."
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="linkedin" className="text-xs">
-                      LinkedIn
-                    </Label>
-                    <Input
-                      id="linkedin"
-                      value={(selectedSection.data.linkedin as string) || ''}
-                      onChange={(e) =>
-                        updateSectionData('linkedin', e.target.value)
-                      }
-                      className="h-8 text-xs"
-                      placeholder="https://linkedin.com/in/..."
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2 pt-2 border-t border-gray-100">
-                  <Label>Tema Visual</Label>
-                  <Select
-                    value={(selectedSection.data.theme as string) || 'light'}
-                    onValueChange={(value) => updateSectionData('theme', value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um tema" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="light">Claro (Light)</SelectItem>
-                      <SelectItem value="dark">Escuro (Dark)</SelectItem>
-                      <SelectItem value="gray">Cinza (Gray)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="border-t border-gray-100 pt-4 space-y-3">
+                  <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest">
+                    Redes Sociais
+                  </p>
+                  <Input
+                    value={(selectedSection.data.instagram as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('instagram', e.target.value)
+                    }
+                    placeholder="Instagram URL"
+                    className="text-xs"
+                  />
+                  <Input
+                    value={(selectedSection.data.linkedin as string) || ''}
+                    onChange={(e) =>
+                      updateSectionData('linkedin', e.target.value)
+                    }
+                    placeholder="LinkedIn URL"
+                    className="text-xs"
+                  />
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <div className="p-6 space-y-6">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="px-2 py-1 bg-gray-100 text-gray-700 text-[10px] font-bold rounded uppercase tracking-widest">
-                Configurações Gerais
-              </div>
-            </div>
-
-            <div className="space-y-5 animate-in slide-in-from-right-4 duration-300">
-              <div className="space-y-2">
-                <Label htmlFor="pageTitle">Título da Página</Label>
+          /* PAGE SETTINGS */
+          <div className="p-5 space-y-5 animate-in slide-in-from-right-4 duration-300">
+            {/* General */}
+            <Section icon={<Globe className="w-3 h-3" />} label="Página">
+              <FieldGroup label="Título da Página">
                 <Input
                   id="pageTitle"
                   value={pageSettings.title}
                   onChange={(e) =>
-                    setPageSettings((prev) => ({
-                      ...prev,
-                      title: e.target.value
-                    }))
+                    setPageSettings((p) => ({ ...p, title: e.target.value }))
                   }
-                  placeholder="Ex: Minha Nova Landing Page"
+                  placeholder="Ex: Minha Landing Page"
+                  className="text-xs"
                 />
-              </div>
+              </FieldGroup>
 
-              <div className="space-y-2">
-                <Label htmlFor="pageSlug">URL (Slug)</Label>
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 text-sm">/lp/</span>
-                  <Input
+              <FieldGroup label="URL (Slug)">
+                <div className="flex items-stretch border border-input">
+                  <span className="px-2.5 flex items-center text-[11px] text-gray-400 bg-gray-50 border-r border-input font-mono shrink-0">
+                    /lp/
+                  </span>
+                  <input
                     id="pageSlug"
                     value={pageSettings.slug}
                     onChange={(e) =>
-                      setPageSettings((prev) => ({
-                        ...prev,
-                        slug: e.target.value
-                      }))
+                      setPageSettings((p) => ({ ...p, slug: e.target.value }))
                     }
-                    placeholder="exemplo-de-slug"
+                    placeholder="meu-slug"
+                    className="flex-1 px-2.5 py-1.5 text-xs bg-transparent outline-none placeholder:text-gray-300"
                   />
                 </div>
-                <p className="text-[10px] text-gray-400">
-                  Apenas letras minúsculas, números e hífens.
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Apenas minúsculas, números e hífens.
                 </p>
-              </div>
+              </FieldGroup>
+            </Section>
 
-              <div className="pt-4 border-t border-gray-100">
-                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">
-                  SEO & Metadados
+            {/* SEO */}
+            <Section
+              icon={<Search className="w-3 h-3" />}
+              label="SEO & Metadados"
+            >
+              <FieldGroup label="Título SEO">
+                <Input
+                  id="metaTitle"
+                  value={pageSettings.metaTitle || ''}
+                  onChange={(e) =>
+                    setPageSettings((p) => ({
+                      ...p,
+                      metaTitle: e.target.value
+                    }))
+                  }
+                  placeholder="Título que aparece no Google"
+                  className="text-xs"
+                />
+              </FieldGroup>
+
+              <FieldGroup label="Descrição SEO">
+                <Textarea
+                  id="metaDescription"
+                  value={pageSettings.metaDescription || ''}
+                  onChange={(e) =>
+                    setPageSettings((p) => ({
+                      ...p,
+                      metaDescription: e.target.value
+                    }))
+                  }
+                  rows={3}
+                  placeholder="Breve resumo para buscadores..."
+                  className="resize-none text-xs"
+                />
+              </FieldGroup>
+            </Section>
+
+            {/* Leads */}
+            <Section
+              icon={<Target className="w-3 h-3" />}
+              label="Captação de Leads"
+            >
+              <FieldGroup label="Formulário de Destino">
+                <Select
+                  value={pageSettings.formId || 'none'}
+                  onValueChange={(val) =>
+                    setPageSettings((p) => ({
+                      ...p,
+                      formId: val === 'none' ? undefined : val
+                    }))
+                  }
+                >
+                  <SelectTrigger className="text-xs">
+                    <SelectValue placeholder="Nenhum (Botão padrão)" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nenhum (Botão padrão)</SelectItem>
+                    {availableForms.map((form) => (
+                      <SelectItem key={form.id} value={form.id}>
+                        {form.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Define qual formulário será aberto ao clicar no CTA do Hero.
                 </p>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="metaTitle">Título SEO</Label>
-                    <Input
-                      id="metaTitle"
-                      value={pageSettings.metaTitle || ''}
-                      onChange={(e) =>
-                        setPageSettings((prev) => ({
-                          ...prev,
-                          metaTitle: e.target.value
-                        }))
-                      }
-                      placeholder="Título que aparece no Google"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="metaDescription">Descrição SEO</Label>
-                    <Textarea
-                      id="metaDescription"
-                      value={pageSettings.metaDescription || ''}
-                      onChange={(e) =>
-                        setPageSettings((prev) => ({
-                          ...prev,
-                          metaDescription: e.target.value
-                        }))
-                      }
-                      rows={3}
-                      placeholder="Breve resumo para buscadores..."
-                      className="resize-none"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-gray-100">
-                <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">
-                  Captação de Leads
-                </p>
-
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Formulário de Destino</Label>
-                    <Select
-                      value={pageSettings.formId || 'none'}
-                      onValueChange={(val) =>
-                        setPageSettings((prev) => ({
-                          ...prev,
-                          formId: val === 'none' ? undefined : val
-                        }))
-                      }
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Nenhum (Botão padrão)" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">
-                          Nenhum (Botão padrão)
-                        </SelectItem>
-                        {availableForms.map((form) => (
-                          <SelectItem key={form.id} value={form.id}>
-                            {form.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <p className="text-[10px] text-gray-400">
-                      Define qual formulário será aberto ao clicar no CTA do
-                      Hero.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              </FieldGroup>
+            </Section>
           </div>
         )}
       </div>
     </div>
+  )
+}
+
+/* ─── Helper Components ─────────────────────────────────────────── */
+
+function FieldGroup({
+  label,
+  children
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+        {label}
+      </Label>
+      {children}
+    </div>
+  )
+}
+
+function SectionRow({ children }: { children: React.ReactNode }) {
+  return <div className="grid grid-cols-2 gap-3">{children}</div>
+}
+
+function Section({
+  icon,
+  label,
+  children
+}: {
+  icon: React.ReactNode
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
+        <span className="text-[#4F46E5]">{icon}</span>
+        <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest">
+          {label}
+        </p>
+      </div>
+      {children}
+    </div>
+  )
+}
+
+function SharpSelect({
+  value,
+  onValueChange,
+  items,
+  placeholder
+}: {
+  value: string
+  onValueChange: (v: string) => void
+  items: { value: string; label: string }[]
+  placeholder?: string
+}) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className="text-xs h-8 rounded-none">
+        <SelectValue placeholder={placeholder ?? 'Selecione...'} />
+      </SelectTrigger>
+      <SelectContent>
+        {items.map((item) => (
+          <SelectItem key={item.value} value={item.value} className="text-xs">
+            {item.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   )
 }

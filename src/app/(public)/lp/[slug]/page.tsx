@@ -43,14 +43,13 @@ export default async function LandingPage({ params }: LandingPageProps) {
 
   const { data: page, error } = await supabase
     .from('landing_pages')
-    .select('*, form_id')
+    .select('*')
     .eq('slug', slug)
     .eq('is_published', true)
-    .eq('type', 'builder')
     .single()
 
   if (error) {
-    console.error('❌ [Public LP] Erro Supabase:', error)
+    console.error('[Public LP] Erro Supabase:', error)
   }
 
   if (!page) {

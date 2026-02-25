@@ -102,6 +102,7 @@ export type Database = {
         Row: {
           content: Json
           created_at: string | null
+          form_id: string | null
           id: string
           is_published: boolean | null
           meta_description: string | null
@@ -109,7 +110,6 @@ export type Database = {
           og_image: string | null
           published_at: string | null
           slug: string
-          template_id: string | null
           tenant_id: string
           title: string
           updated_at: string | null
@@ -117,6 +117,7 @@ export type Database = {
         Insert: {
           content?: Json
           created_at?: string | null
+          form_id?: string | null
           id?: string
           is_published?: boolean | null
           meta_description?: string | null
@@ -124,7 +125,6 @@ export type Database = {
           og_image?: string | null
           published_at?: string | null
           slug: string
-          template_id?: string | null
           tenant_id: string
           title: string
           updated_at?: string | null
@@ -132,6 +132,7 @@ export type Database = {
         Update: {
           content?: Json
           created_at?: string | null
+          form_id?: string | null
           id?: string
           is_published?: boolean | null
           meta_description?: string | null
@@ -139,12 +140,18 @@ export type Database = {
           og_image?: string | null
           published_at?: string | null
           slug?: string
-          template_id?: string | null
           tenant_id?: string
           title?: string
           updated_at?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: 'landing_pages_form_id_fkey'
+            columns: ['form_id']
+            isOneToOne: false
+            referencedRelation: 'forms'
+            referencedColumns: ['id']
+          },
           {
             foreignKeyName: 'landing_pages_tenant_id_fkey'
             columns: ['tenant_id']

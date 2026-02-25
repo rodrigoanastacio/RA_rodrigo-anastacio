@@ -1,4 +1,3 @@
-import { Card } from '@/components/ui/card'
 import {
   Grid,
   LayoutTemplate,
@@ -11,87 +10,86 @@ interface SidebarDraggableProps {
   onAddSection: (type: 'hero' | 'features' | 'bio' | 'footer') => void
 }
 
+const SECTIONS = [
+  {
+    type: 'hero' as const,
+    label: 'Hero Section',
+    description: 'Destaque principal',
+    Icon: Type
+  },
+  {
+    type: 'features' as const,
+    label: 'Features',
+    description: 'Lista de benefícios',
+    Icon: Grid
+  },
+  {
+    type: 'bio' as const,
+    label: 'Bio / Sobre',
+    description: 'Autoridade & Perfil',
+    Icon: UserCircle2
+  },
+  {
+    type: 'footer' as const,
+    label: 'Footer',
+    description: 'Rodapé & Contato',
+    Icon: RectangleHorizontal
+  }
+]
+
 export function SidebarDraggable({ onAddSection }: SidebarDraggableProps) {
   return (
-    <div className="w-72 bg-white border-r border-gray-200 flex flex-col shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] z-20 h-full">
-      <div className="p-5 border-b border-gray-100 bg-white/50 backdrop-blur-sm">
-        <h2 className="font-semibold text-gray-900 flex items-center gap-2">
-          <LayoutTemplate className="w-4 h-4 text-blue-600" />
-          Biblioteca
-        </h2>
-        <p className="text-xs text-gray-500 mt-1">Componentes disponíveis</p>
+    <div className="w-64 bg-white border-r border-gray-100 flex flex-col z-20 h-full">
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-gray-100">
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 bg-[#4F46E5] flex items-center justify-center">
+            <LayoutTemplate className="w-3.5 h-3.5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xs font-extrabold text-gray-900 uppercase tracking-widest">
+              Biblioteca
+            </h2>
+            <p className="text-[10px] text-gray-400 font-medium">
+              Componentes disponíveis
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="p-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
-        <div className="space-y-3">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">
-            Essenciais
-          </p>
+      {/* Section list */}
+      <div className="p-4 flex-1 overflow-y-auto space-y-2">
+        <p className="text-[9px] font-extrabold text-gray-300 uppercase tracking-[0.15em] px-1 mb-3">
+          Essenciais
+        </p>
 
-          <Card
-            className="p-3 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group active:scale-95"
-            onClick={() => onAddSection('hero')}
+        {SECTIONS.map(({ type, label, description, Icon }) => (
+          <button
+            key={type}
+            onClick={() => onAddSection(type)}
+            className="group w-full flex items-center gap-3 p-3 border border-gray-100 bg-white hover:border-[#4F46E5]/40 hover:bg-[#4F46E5]/3 transition-all duration-200 active:scale-[0.98] cursor-pointer text-left"
           >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-md group-hover:bg-blue-100 transition-colors">
-                <Type size={18} />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Hero Section
-                </h3>
-                <p className="text-xs text-gray-500">Destaque principal</p>
-              </div>
+            <div className="w-8 h-8 bg-gray-50 group-hover:bg-[#4F46E5] flex items-center justify-center transition-colors duration-200 shrink-0">
+              <Icon
+                size={15}
+                className="text-gray-400 group-hover:text-white transition-colors duration-200"
+              />
             </div>
-          </Card>
+            <div className="min-w-0">
+              <p className="text-xs font-bold text-gray-800 group-hover:text-[#4F46E5] transition-colors duration-200 leading-tight">
+                {label}
+              </p>
+              <p className="text-[10px] text-gray-400 mt-0.5">{description}</p>
+            </div>
+          </button>
+        ))}
+      </div>
 
-          <Card
-            className="p-3 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group active:scale-95"
-            onClick={() => onAddSection('features')}
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-md group-hover:bg-blue-100 transition-colors">
-                <Grid size={18} />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Features</h3>
-                <p className="text-xs text-gray-500">Lista de benefícios</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card
-            className="p-3 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group active:scale-95"
-            onClick={() => onAddSection('bio')}
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-md group-hover:bg-blue-100 transition-colors">
-                <UserCircle2 size={18} />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">
-                  Bio / Sobre
-                </h3>
-                <p className="text-xs text-gray-500">Autoridade & Perfil</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card
-            className="p-3 cursor-pointer hover:border-blue-300 hover:shadow-md transition-all group active:scale-95"
-            onClick={() => onAddSection('footer')}
-          >
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-50 text-blue-600 rounded-md group-hover:bg-blue-100 transition-colors">
-                <RectangleHorizontal size={18} />
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-gray-900">Footer</h3>
-                <p className="text-xs text-gray-500">Rodapé & Contato</p>
-              </div>
-            </div>
-          </Card>
-        </div>
+      {/* Footer hint */}
+      <div className="px-4 py-3 border-t border-gray-100">
+        <p className="text-[9px] text-gray-300 font-medium text-center uppercase tracking-wider">
+          Clique para adicionar
+        </p>
       </div>
     </div>
   )

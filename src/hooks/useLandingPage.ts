@@ -20,6 +20,7 @@ export interface UseLandingPageReturn {
       slug?: string
       meta_title?: string
       meta_description?: string
+      form_id?: string | null
     }
   ) => Promise<SaveLandingPageResult>
   togglePublish: (
@@ -58,6 +59,7 @@ export function useLandingPage(): UseLandingPageReturn {
       slug?: string
       meta_title?: string
       meta_description?: string
+      form_id?: string | null
     }
   ): Promise<SaveLandingPageResult> => {
     setIsSaving(true)

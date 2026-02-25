@@ -28,5 +28,4 @@ export interface CreateLandingPageInput {
   title: string
   slug: string
   content?: LandingPageContent
-  template_id?: string
 }

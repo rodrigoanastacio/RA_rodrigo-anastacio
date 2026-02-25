@@ -8,8 +8,7 @@ import { CanvasPreview } from './builder/canvas-preview'
 import { PropertiesPanel } from './builder/properties-panel'
 import { SidebarDraggable } from './builder/sidebar-draggable'
 
-import { Button } from '@/components/ui/button'
-import { Maximize2, Minimize2 } from 'lucide-react'
+import { Minimize2, Monitor } from 'lucide-react'
 import { useState } from 'react'
 
 interface LandingPageBuilderProps {
@@ -61,36 +60,30 @@ export function LandingPageBuilder(props: LandingPageBuilderProps) {
   })
 
   return (
-    <div className="flex h-full bg-gray-50/50 overflow-hidden font-sans relative">
-      {/* LEFT SIDEBAR: TOOLBOX - Hidden in Fullscreen */}
+    <div className="flex h-full bg-[#f8f9fa] overflow-hidden relative">
+      {/* LEFT SIDEBAR */}
       {!isFullscreen && <SidebarDraggable onAddSection={actions.addSection} />}
 
-      {/* MIDDLE: CANVAS PREVIEW */}
-      {/* We wrap CanvasPreview to position the generic toggle button */}
+      {/* CANVAS */}
       <div className="flex-1 relative flex flex-col min-h-0 overflow-hidden">
-        <div className="absolute top-4 right-6 z-50">
-          <Button
-            variant="outline"
-            size="sm"
+        {/* Fullscreen toggle */}
+        <div className="absolute top-3 right-4 z-50">
+          <button
             onClick={() => setIsFullscreen(!isFullscreen)}
-            className="bg-white/90 backdrop-blur shadow-sm border-gray-200 hover:bg-white text-gray-700 gap-2"
+            className="group flex items-center gap-1.5 border border-gray-200 bg-white hover:border-[#4F46E5]/40 hover:bg-[#4F46E5]/3 text-gray-500 hover:text-[#4F46E5] h-8 px-3 text-[11px] font-bold uppercase tracking-widest transition-all duration-200 shadow-sm cursor-pointer"
           >
             {isFullscreen ? (
               <>
-                <Minimize2 className="w-4 h-4" />
-                <span className="sr-only sm:not-sr-only sm:inline-block">
-                  Sair
-                </span>
+                <Minimize2 className="w-3.5 h-3.5" />
+                Sair
               </>
             ) : (
               <>
-                <Maximize2 className="w-4 h-4" />
-                <span className="sr-only sm:not-sr-only sm:inline-block">
-                  Tela Cheia
-                </span>
+                <Monitor className="w-3.5 h-3.5" />
+                Tela Cheia
               </>
             )}
-          </Button>
+          </button>
         </div>
 
         <CanvasPreview
@@ -107,7 +100,7 @@ export function LandingPageBuilder(props: LandingPageBuilderProps) {
         />
       </div>
 
-      {/* RIGHT SIDEBAR: PROPERTIES */}
+      {/* RIGHT PANEL */}
       <PropertiesPanel
         selectedSection={selectedSection}
         pageSettings={pageSettings}

@@ -9,7 +9,6 @@ interface CreateLandingPageInput {
   title: string
   slug: string
   content?: LPSection[]
-  template_id?: string
   description?: string
 }
 
@@ -20,6 +19,7 @@ interface UpdateLandingPageInput {
   meta_title?: string
   meta_description?: string
   is_published?: boolean
+  form_id?: string | null
 }
 
 export async function createLandingPageAction(input: CreateLandingPageInput) {
@@ -28,7 +28,6 @@ export async function createLandingPageAction(input: CreateLandingPageInput) {
       title: input.title,
       slug: input.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
       content: (input.content || []) as unknown as Json,
-      template_id: input.template_id || 'default',
       meta_title: input.title,
       meta_description: input.description || 'Página criada com o Construtor.'
     })
@@ -36,11 +35,11 @@ export async function createLandingPageAction(input: CreateLandingPageInput) {
     revalidatePath('/dashboard/landing-pages')
     return { success: true, slug: newPage.slug, id: newPage.id }
   } catch (error: unknown) {
-    const dbError = error as { code?: string }
+    const dbError = error as { code?: string; message?: string }
     if (dbError?.code === '23505') {
       return { success: false, message: 'Este slug já está em uso.' }
     }
-    console.error('Erro geral ao criar:', error)
+    console.error('Erro geral ao criar landing page:', JSON.stringify(error))
     return { success: false, message: 'Ocorreu um erro inesperado ao criar.' }
   }
 }

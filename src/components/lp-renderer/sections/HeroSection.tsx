@@ -3,7 +3,7 @@
 import { DynamicForm } from '@/components/forms/dynamic-form'
 import { FormSchema } from '@/components/forms/types'
 import { cn } from '@/lib/utils'
-import { Check, FileText } from 'lucide-react'
+import { Check, ClipboardList, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
@@ -33,17 +33,16 @@ export function HeroSection({
 }: HeroSectionProps) {
   const searchParams = useSearchParams()
 
-  // Helper to render headline with gradient emphasis using *asterisks*
+  /* Render headline — wrap *text* in an indigo gradient accent */
   const renderHeadline = (text: string) => {
     if (!text.includes('*')) return text
-
-    return text.split('*').map((part, index) =>
-      index % 2 === 0 ? (
+    return text.split('*').map((part, i) =>
+      i % 2 === 0 ? (
         part
       ) : (
         <span
-          key={index}
-          className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-cyan-500"
+          key={i}
+          className="text-transparent bg-clip-text bg-linear-to-r from-[#4F46E5] to-[#7C3AED]"
         >
           {part}
         </span>
@@ -51,11 +50,9 @@ export function HeroSection({
     )
   }
 
-  // Centralized submission logic wrapped in useCallback
   const submitLead = useCallback(
     async (data: Record<string, unknown>) => {
       if (!form?.id) throw new Error('ID do formulário não encontrado')
-
       const payload = {
         answers: data,
         form_id: form.id,
@@ -66,22 +63,19 @@ export function HeroSection({
         utm_term: searchParams.get('utm_term'),
         referrer: document.referrer
       }
-
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
-
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
         throw new Error(errorData.error || 'Falha ao enviar formulário')
       }
     },
     [form, searchParams]
-  ) // Dependencies - using 'form' instead of 'form?.id' for React Compiler
+  )
 
-  // Handler for Embedded Form
   const handleEmbeddedSubmit = useCallback(
     async (data: Record<string, unknown>) => {
       try {
@@ -102,24 +96,24 @@ export function HeroSection({
       id={id}
       className={cn(
         'relative min-h-[90vh] flex items-center pt-20 overflow-hidden transition-colors duration-300',
-        isDark ? 'bg-slate-900' : 'bg-gray-50'
+        isDark ? 'bg-gray-950' : 'bg-white'
       )}
     >
-      {/* Background Pattern */}
-      {!backgroundImage && (
-        <>
-          <div
-            className="absolute inset-0 opacity-[0.03] pointer-events-none"
-            style={{
-              backgroundImage: `radial-gradient(${isDark ? '#ffffff' : '#000000'} 1px, transparent 1px)`,
-              backgroundSize: '32px 32px'
-            }}
-          ></div>
-
-          {/* Decorative Gradient Blob */}
-          <div className="absolute top-0 right-0 -translate-y-12 translate-x-1/4 w-[800px] h-[800px] bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        </>
-      )}
+      {/* Decorative background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Dot grid */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(${isDark ? 'rgba(255,255,255,0.04)' : 'rgba(79,70,229,0.05)'} 1px, transparent 1px)`,
+            backgroundSize: '28px 28px'
+          }}
+        />
+        {/* Soft gradient orb — top right */}
+        <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-linear-to-br from-[#4F46E5]/10 via-violet-500/5 to-transparent blur-3xl" />
+        {/* Soft gradient orb — bottom left */}
+        <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full bg-linear-to-tr from-[#4F46E5]/8 to-transparent blur-2xl" />
+      </div>
 
       {backgroundImage && (
         <div className="absolute inset-0 z-0">
@@ -133,189 +127,199 @@ export function HeroSection({
       )}
 
       <div className="@container relative w-full max-w-7xl mx-auto px-4 @xl:px-6 @4xl:px-8 py-8 @4xl:py-20 z-10">
-        <div className="grid grid-cols-1 @3xl:grid-cols-12 gap-8 @4xl:gap-16 items-center">
-          {/* Left Column */}
-          <div className="@3xl:col-span-7 flex flex-col justify-center space-y-6 @4xl:space-y-8 animate-in slide-in-from-left duration-700">
-            <div className="space-y-4 @4xl:space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 w-fit">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wide">
-                  Plataforma #1 em Eficiência
-                </span>
-              </div>
-
-              <h1
-                className={cn(
-                  'text-4xl @2xl:text-5xl @4xl:text-7xl font-extrabold tracking-tight leading-[1.1]',
-                  isDark ? 'text-white' : 'text-gray-900'
-                )}
-              >
-                {renderHeadline(headline)}
-              </h1>
-
-              <p
-                className={cn(
-                  'text-base @2xl:text-lg @4xl:text-xl max-w-2xl leading-relaxed',
-                  isDark ? 'text-gray-400' : 'text-gray-600'
-                )}
-              >
-                {subheadline}
-              </p>
+        <div className="grid grid-cols-1 @3xl:grid-cols-12 gap-10 @4xl:gap-16 items-center">
+          {/* ── LEFT COLUMN ─────────────────────────────────── */}
+          <div className="@3xl:col-span-7 flex flex-col justify-center space-y-7 animate-in slide-in-from-left duration-700">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full border border-[#4F46E5]/25 bg-linear-to-r from-[#4F46E5]/8 to-violet-500/5 px-4 py-2 w-fit shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
+              <span className="text-xs font-semibold text-[#4F46E5] uppercase tracking-wide">
+                Plataforma #1 em Eficiência
+              </span>
             </div>
 
-            {/* Benefits List */}
+            {/* Headline */}
+            <h1
+              className={cn(
+                'text-4xl @2xl:text-5xl @4xl:text-6xl font-extrabold tracking-tight leading-[1.08]',
+                isDark ? 'text-white' : 'text-gray-900'
+              )}
+            >
+              {renderHeadline(headline)}
+            </h1>
+
+            {/* Subheadline */}
+            <p
+              className={cn(
+                'text-base @2xl:text-lg max-w-xl leading-relaxed',
+                isDark ? 'text-gray-400' : 'text-gray-500'
+              )}
+            >
+              {subheadline}
+            </p>
+
+            {/* Benefits */}
             {benefits && benefits.length > 0 && (
-              <div className="flex flex-col gap-4 pt-2">
-                {benefits.map((benefit, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start gap-3 @2xl:gap-4 group"
-                  >
+              <ul className="flex flex-col gap-3 pt-1">
+                {benefits.map((benefit, i) => (
+                  <li key={i} className="flex items-center gap-3 group">
                     <div
                       className={cn(
-                        'shrink-0 flex items-center justify-center w-10 h-10 @2xl:w-12 @2xl:h-12 rounded-xl border shadow-sm group-hover:shadow-md transition-all duration-300',
+                        'shrink-0 w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-200',
                         isDark
-                          ? 'bg-gray-800 border-gray-700 group-hover:border-blue-500/30'
-                          : 'bg-white border-gray-100 group-hover:border-blue-500/30'
+                          ? 'bg-[#4F46E5]/15 border-[#4F46E5]/30 group-hover:bg-[#4F46E5] group-hover:border-[#4F46E5]'
+                          : 'bg-[#4F46E5]/08 border-[#4F46E5]/20 group-hover:bg-[#4F46E5] group-hover:border-[#4F46E5]'
                       )}
                     >
-                      <Check className="text-blue-600 dark:text-blue-400 w-5 h-5 @2xl:w-6 @2xl:h-6" />
+                      <Check className="w-3 h-3 text-[#4F46E5] group-hover:text-white transition-colors duration-200" />
                     </div>
-                    <div>
-                      <h3
-                        className={cn(
-                          'text-base @2xl:text-lg font-bold',
-                          isDark ? 'text-white' : 'text-gray-900'
-                        )}
-                      >
-                        {benefit}
-                      </h3>
-                    </div>
-                  </div>
+                    <span
+                      className={cn(
+                        'text-sm font-medium leading-snug',
+                        isDark ? 'text-gray-300' : 'text-gray-700'
+                      )}
+                    >
+                      {benefit}
+                    </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
 
             {/* Social Proof */}
-            <div className="mt-8 @4xl:mt-16 flex items-center gap-6 @4xl:gap-8 border-t border-graphite/10 pt-6 @4xl:pt-8">
-              <div>
-                <p className="text-primary text-xl @4xl:text-2xl font-bold">
-                  +150
-                </p>
-                <p className="text-gray-400 text-[10px] @4xl:text-xs font-bold uppercase tracking-widest">
-                  Escritórios
-                </p>
-              </div>
-              <div className="w-px h-8 bg-graphite/10"></div>
-              <div>
-                <p className="text-primary text-xl @4xl:text-2xl font-bold">
-                  R$ 50M+
-                </p>
-                <p className="text-gray-400 text-[10px] @4xl:text-xs font-bold uppercase tracking-widest">
-                  Geridos
-                </p>
-              </div>
-              <div className="w-px h-8 bg-graphite/10"></div>
-              <div>
-                <p className="text-primary text-xl @4xl:text-2xl font-bold">
-                  12 Anos
-                </p>
-                <p className="text-gray-400 text-[10px] @4xl:text-xs font-bold uppercase tracking-widest">
-                  Experiência
-                </p>
-              </div>
+            <div
+              className={cn(
+                'flex items-center gap-0 border-t pt-7',
+                isDark ? 'border-white/8' : 'border-gray-100'
+              )}
+            >
+              {[
+                { value: '+150', label: 'Escritórios' },
+                { value: 'R$ 50M+', label: 'Geridos' },
+                { value: '12 Anos', label: 'Experiência' }
+              ].map((stat, i) => (
+                <div key={i} className="flex items-center">
+                  {i > 0 && (
+                    <div
+                      className={cn(
+                        'w-px h-9 mx-6',
+                        isDark ? 'bg-white/10' : 'bg-gray-200'
+                      )}
+                    />
+                  )}
+                  <div>
+                    <p className="text-xl @4xl:text-2xl font-extrabold text-[#4F46E5]">
+                      {stat.value}
+                    </p>
+                    <p
+                      className={cn(
+                        'text-[10px] font-bold uppercase tracking-widest mt-0.5',
+                        isDark ? 'text-gray-500' : 'text-gray-400'
+                      )}
+                    >
+                      {stat.label}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
-          {/* Right Column - Form */}
+          {/* ── RIGHT COLUMN — Form ──────────────────────────── */}
           <div className="@3xl:col-span-5 relative animate-in slide-in-from-right duration-700 delay-100">
-            {/* Glow effect behind card */}
-            <div className="absolute -inset-1 bg-linear-to-r from-blue-600 to-cyan-400 rounded-2xl blur opacity-20 dark:opacity-40"></div>
+            {/* Glow ring behind card */}
+            <div className="absolute -inset-1 rounded-2xl bg-linear-to-br from-[#4F46E5]/20 to-violet-500/10 blur-xl opacity-70 pointer-events-none" />
 
             {form ? (
               <div
                 className={cn(
-                  'relative rounded-2xl p-6 @4xl:p-8 shadow-2xl border',
+                  'relative rounded-2xl overflow-hidden shadow-2xl border',
                   isDark
                     ? 'bg-gray-900 border-gray-800'
-                    : 'bg-white border-gray-100'
+                    : 'bg-white border-gray-100/80'
                 )}
               >
-                <div className="mb-6">
-                  <h2
-                    className={cn(
-                      'text-xl @2xl:text-2xl font-bold mb-2',
-                      isDark ? 'text-white' : 'text-gray-900'
-                    )}
-                  >
-                    {form.name || 'Comece sua avaliação'}
-                  </h2>
+                {/* Indigo accent bar */}
+                <div className="h-1.5 w-full bg-linear-to-r from-[#4F46E5] to-violet-500" />
+
+                <div className="p-6 @4xl:p-8">
+                  <div className="mb-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-5 h-5 rounded-md bg-linear-to-br from-[#4F46E5] to-violet-600 flex items-center justify-center">
+                        <ClipboardList className="w-3 h-3 text-white" />
+                      </div>
+                      <h2
+                        className={cn(
+                          'text-lg font-bold',
+                          isDark ? 'text-white' : 'text-gray-900'
+                        )}
+                      >
+                        {form.name || 'Comece sua avaliação'}
+                      </h2>
+                    </div>
+                    <p
+                      className={cn(
+                        'text-sm leading-relaxed',
+                        isDark ? 'text-gray-400' : 'text-gray-500'
+                      )}
+                    >
+                      {form.description ||
+                        'Preencha o formulário e agende uma demonstração com nossos especialistas.'}
+                    </p>
+                  </div>
+
+                  <DynamicForm
+                    schema={form}
+                    onSubmit={handleEmbeddedSubmit}
+                    className="space-y-4"
+                  />
+
                   <p
                     className={cn(
-                      'text-sm',
-                      isDark ? 'text-gray-400' : 'text-gray-500'
+                      'text-[11px] text-center mt-5',
+                      isDark ? 'text-gray-600' : 'text-gray-400'
                     )}
                   >
-                    {form.description ||
-                      'Preencha o formulário para agendar uma demonstração exclusiva com nossos especialistas.'}
+                    Sem cartão de crédito. Teste grátis por 14 dias.
                   </p>
                 </div>
-
-                <DynamicForm
-                  schema={form}
-                  onSubmit={handleEmbeddedSubmit}
-                  className="space-y-4 @2xl:space-y-5"
-                />
-
-                <p
-                  className={cn(
-                    'text-xs text-center mt-4',
-                    isDark ? 'text-gray-500' : 'text-gray-400'
-                  )}
-                >
-                  Sem cartão de crédito necessário. Teste grátis por 14 dias.
-                </p>
               </div>
             ) : (
-              /* Empty State - Modern & Clean */
+              /* Empty state */
               <div
                 className={cn(
-                  'relative w-full h-full min-h-[400px] rounded-2xl flex flex-col items-center justify-center text-center p-8 transition-all',
-                  'border-2 border-dashed',
+                  'relative rounded-2xl w-full min-h-[380px] flex flex-col items-center justify-center text-center p-8 border-2 border-dashed transition-all',
                   isDark
-                    ? 'border-gray-800 bg-gray-900/50 hover:bg-gray-900/80 hover:border-gray-700'
-                    : 'border-gray-200 bg-gray-50/50 hover:bg-white hover:border-blue-200/50'
+                    ? 'border-gray-700 bg-gray-900/40'
+                    : 'border-gray-200 bg-gray-50/60 hover:bg-white hover:border-[#4F46E5]/30'
                 )}
               >
                 <div
                   className={cn(
-                    'w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110 duration-500',
+                    'w-14 h-14 rounded-2xl flex items-center justify-center mb-4 border',
                     isDark
-                      ? 'bg-gray-800 text-gray-400'
-                      : 'bg-white shadow-sm text-gray-400'
+                      ? 'bg-gray-800 border-gray-700 text-gray-400'
+                      : 'bg-white border-gray-100 shadow-sm text-gray-400'
                   )}
                 >
-                  <FileText className="w-8 h-8 opacity-50" />
+                  <ClipboardList className="w-6 h-6 opacity-50" />
                 </div>
                 <h3
                   className={cn(
-                    'text-lg font-bold mb-2',
-                    isDark ? 'text-gray-200' : 'text-gray-900'
+                    'text-base font-bold mb-2',
+                    isDark ? 'text-gray-300' : 'text-gray-800'
                   )}
                 >
                   Nenhum formulário vinculado
                 </h3>
                 <p
                   className={cn(
-                    'text-sm max-w-[260px]',
+                    'text-sm max-w-[240px] leading-relaxed',
                     isDark ? 'text-gray-500' : 'text-gray-500'
                   )}
                 >
-                  Selecione um formulário existente nas configurações ao lado
-                  para exibi-lo aqui.
+                  Selecione um formulário nas configurações ao lado para
+                  exibi-lo aqui.
                 </p>
               </div>
             )}

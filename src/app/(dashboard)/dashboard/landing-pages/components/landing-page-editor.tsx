@@ -43,7 +43,8 @@ export default function LandingPageEditor({
           title: pageSettings.title,
           slug: pageSettings.slug,
           meta_title: pageSettings.metaTitle,
-          meta_description: pageSettings.metaDescription
+          meta_description: pageSettings.metaDescription,
+          form_id: pageSettings.formId || null
         })
       }
       onTogglePublish={(published: boolean) => togglePublish(id, published)}

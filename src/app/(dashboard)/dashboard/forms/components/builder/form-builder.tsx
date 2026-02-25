@@ -36,7 +36,7 @@ export function FormBuilder({ formId, initialData }: FormBuilderProps) {
   } = useFormBuilder(formId, initialData.schema as FormSchema)
 
   return (
-    <div className="flex flex-col h-[calc(100vh-120px)] bg-white border border-gray-100 overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <BuilderHeader
         schema={schema}
         activeTab={activeTab}

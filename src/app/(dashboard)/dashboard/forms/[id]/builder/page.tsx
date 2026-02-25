@@ -22,7 +22,7 @@ export default async function FormBuilderPage({ params }: BuilderPageProps) {
   }
 
   return (
-    <div className="h-full animate-in fade-in duration-700">
+    <div className="flex flex-col -mx-6 -my-6 h-[calc(100vh-4rem)] animate-in fade-in duration-700">
       <FormBuilder formId={id} initialData={form} />
     </div>
   )

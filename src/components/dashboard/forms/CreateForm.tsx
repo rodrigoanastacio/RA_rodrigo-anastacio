@@ -1,26 +1,21 @@
 'use client'
 
-import { createFormAction } from '@/app/(dashboard)/dashboard/forms/actions'
-import { Button } from '@/components/ui/button'
+import { useCreateForm } from '@/app/(dashboard)/dashboard/forms/hooks/use-create-form'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Loader2 } from 'lucide-react'
+  ArrowLeft,
+  ClipboardList,
+  Loader2,
+  Rocket,
+  Sparkles,
+  Zap
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
 export function CreateForm() {
   const router = useRouter()
-  const [isSaving, setIsSaving] = useState(false)
+  const { create, isSaving } = useCreateForm()
 
   const [name, setName] = useState('')
   const [slug, setSlug] = useState('')
@@ -36,143 +31,221 @@ export function CreateForm() {
       .replace(/[^a-z0-9-]/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '')
-
     setSlug(newSlug)
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-
     if (!name || !slug) {
       toast.error('Preencha os campos obrigatórios.')
       return
     }
-
-    setIsSaving(true)
-    try {
-      const result = await createFormAction({
+    await create({
+      name,
+      slug,
+      description,
+      schema: {
+        id: crypto.randomUUID(),
         name,
-        slug,
-        description,
-        schema: {
-          id: crypto.randomUUID(),
-          name,
-          display_type: 'single',
-          steps: [
-            {
-              id: crypto.randomUUID(),
-              title: 'Informações de Contato',
-              fields: []
-            }
-          ]
-        }
-      })
-
-      if (!result.success || !result.form) throw new Error(result.error)
-
-      toast.success('Capítulo inicial criado!')
-      router.push(`/dashboard/forms/${result.form.id}/builder`)
-    } catch (error) {
-      console.error(error)
-      toast.error('Erro ao criar formulário.')
-    } finally {
-      setIsSaving(false)
-    }
+        display_type: 'single',
+        steps: [
+          {
+            id: crypto.randomUUID(),
+            title: 'Informações de Contato',
+            fields: []
+          }
+        ]
+      }
+    })
   }
 
+  const previewSlug = slug ? `form/${slug}` : 'form/seu-formulario'
+
   return (
-    <div className="flex justify-center items-center py-12">
-      <Card className="w-full max-w-lg shadow-xl rounded-[24px] border-gray-100 overflow-hidden">
-        <CardHeader className="p-8 pb-4">
-          <CardTitle className="text-2xl font-extrabold text-[#111827]">
+    <div className="flex h-full min-h-[calc(100vh-10rem)]">
+      <div className="hidden lg:flex flex-col justify-between w-80 xl:w-96 bg-[#111827] p-10 shrink-0">
+        <div>
+          <div className="w-10 h-10 bg-[#4F46E5] flex items-center justify-center mb-8">
+            <ClipboardList className="w-5 h-5 text-white" />
+          </div>
+
+          <p className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-widest mb-3">
             Novo Formulário
-          </CardTitle>
-          <CardDescription className="text-gray-500 font-medium leading-relaxed">
-            Comece definindo as informações básicas. Você poderá construir os
-            campos na próxima etapa.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="p-8 space-y-6">
-            <div className="space-y-2">
-              <Label
-                htmlFor="name"
-                className="text-sm font-bold text-gray-700 uppercase tracking-wider"
-              >
-                Nome do Formulário <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="name"
-                placeholder="Ex: Contato LP Vendas"
-                value={name}
-                onChange={handleNameChange}
-                className="rounded-xl h-12 border-gray-100 bg-gray-50/50 focus:bg-white transition-all font-medium"
-                required
-              />
-            </div>
+          </p>
+          <h2 className="text-2xl font-extrabold text-white leading-tight mb-4">
+            Capture leads com formulários inteligentes
+          </h2>
+          <p className="text-sm text-gray-400 leading-relaxed">
+            Defina o nome e o identificador do seu formulário. Você construirá
+            os campos no próximo passo.
+          </p>
 
-            <div className="space-y-2">
-              <Label
-                htmlFor="slug"
-                className="text-sm font-bold text-gray-700 uppercase tracking-wider"
-              >
-                Slug Identificador <span className="text-red-500">*</span>
-              </Label>
-              <Input
-                id="slug"
-                placeholder="contato-lp-vendas"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                className="rounded-xl h-12 border-gray-100 bg-gray-50/50 focus:bg-white transition-all font-medium"
-                required
-              />
-              <p className="text-[11px] text-gray-400 font-medium">
-                Identificador único para usar no código ou URL.
+          <div className="my-8 border-t border-white/8" />
+
+          <ul className="space-y-4">
+            {[
+              {
+                icon: Sparkles,
+                label: 'Campos personalizáveis',
+                desc: 'Texto, e-mail, WhatsApp, seleção e mais'
+              },
+              {
+                icon: Zap,
+                label: 'Multi-etapas (Wizard)',
+                desc: 'Divida em passos para maior conversão'
+              },
+              {
+                icon: Rocket,
+                label: 'Integrado às Landing Pages',
+                desc: 'Associe a qualquer página criada'
+              }
+            ].map(({ icon: Icon, label, desc }) => (
+              <li key={label} className="flex items-start gap-3">
+                <div className="w-7 h-7 bg-[#4F46E5]/15 flex items-center justify-center mt-0.5 shrink-0">
+                  <Icon className="w-3.5 h-3.5 text-[#4F46E5]" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-white">{label}</p>
+                  <p className="text-[11px] text-gray-500 mt-0.5">{desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {slug && (
+          <div className="bg-white/5 border border-white/10 p-4">
+            <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">
+              Identificador
+            </p>
+            <p className="font-mono text-xs text-[#4F46E5] break-all">
+              {previewSlug}
+            </p>
+          </div>
+        )}
+      </div>
+
+      <div className="flex-1 flex items-center justify-center p-8 bg-[#f9fafb]">
+        <div className="w-full max-w-lg">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-gray-700 mb-8 transition-colors cursor-pointer group"
+          >
+            <ArrowLeft className="w-3 h-3 transition-transform group-hover:-translate-x-0.5" />
+            Voltar
+          </button>
+
+          <div className="bg-white border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.04)]">
+            <div className="h-0.5 w-full bg-[#4F46E5]" />
+
+            <div className="p-8">
+              <p className="text-[10px] font-bold text-[#4F46E5] uppercase tracking-widest mb-2">
+                Passo 1 de 2
               </p>
-            </div>
+              <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight mb-1">
+                Informações básicas
+              </h1>
+              <p className="text-sm text-gray-400 mb-8">
+                Defina o nome e o slug do seu novo formulário para começar.
+              </p>
 
-            <div className="space-y-2">
-              <Label
-                htmlFor="description"
-                className="text-sm font-bold text-gray-700 uppercase tracking-wider"
-              >
-                Descrição (Interna)
-              </Label>
-              <Textarea
-                id="description"
-                placeholder="Ex: Captura contatos rápidos para a Landing Page de vendas do SaaS."
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                className="rounded-xl min-h-[100px] border-gray-100 bg-gray-50/50 focus:bg-white transition-all font-medium"
-              />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2"
+                  >
+                    Nome do Formulário <span className="text-[#4F46E5]">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    placeholder="Ex: Contato LP Vendas"
+                    value={name}
+                    onChange={handleNameChange}
+                    required
+                    className="w-full h-11 px-4 text-sm text-gray-900 bg-white border border-gray-200 focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-gray-300 font-medium"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="slug"
+                    className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2"
+                  >
+                    Slug Identificador <span className="text-[#4F46E5]">*</span>
+                  </label>
+                  <div className="flex items-stretch border border-gray-200 focus-within:border-[#4F46E5] focus-within:ring-2 focus-within:ring-[#4F46E5]/10 transition-all">
+                    <span className="flex items-center px-4 bg-gray-50 border-r border-gray-200 text-[11px] font-bold text-gray-400 uppercase tracking-wider shrink-0 font-mono">
+                      form/
+                    </span>
+                    <input
+                      id="slug"
+                      type="text"
+                      placeholder="contato-lp-vendas"
+                      value={slug}
+                      onChange={(e) => setSlug(e.target.value)}
+                      required
+                      className="flex-1 h-11 px-4 text-sm text-gray-900 bg-white focus:outline-none placeholder:text-gray-300 font-medium"
+                    />
+                  </div>
+                  <p className="text-[11px] text-gray-400 mt-1.5">
+                    Identificador único para usar no código ou URL.
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="description"
+                    className="block text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2"
+                  >
+                    Descrição Interna{' '}
+                    <span className="text-gray-300 normal-case tracking-normal font-medium">
+                      (opcional)
+                    </span>
+                  </label>
+                  <textarea
+                    id="description"
+                    placeholder="Ex: Captura contatos para a LP de vendas do SaaS."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
+                    className="w-full px-4 py-3 text-sm text-gray-900 bg-white border border-gray-200 focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/10 transition-all placeholder:text-gray-300 font-medium resize-none"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                  <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="h-10 px-5 text-[10px] font-bold uppercase tracking-widest text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 transition-all cursor-pointer"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSaving || !name || !slug}
+                    className="group flex items-center gap-2 h-10 px-6 text-[10px] font-bold uppercase tracking-widest text-white bg-[#4F46E5] hover:bg-[#4338CA] disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-all hover:shadow-[0_4px_12px_rgba(79,70,229,0.35)] cursor-pointer"
+                  >
+                    {isSaving ? (
+                      <>
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        Criando...
+                      </>
+                    ) : (
+                      <>
+                        <Rocket className="h-3.5 w-3.5 transition-transform group-hover:-translate-y-0.5" />
+                        Criar e Construir
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
             </div>
-          </CardContent>
-          <CardFooter className="p-8 border-t border-gray-50 bg-gray-50/30 flex justify-between gap-4">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => router.back()}
-              className="text-gray-500 font-bold uppercase tracking-widest text-[11px] hover:bg-white active:scale-95"
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSaving}
-              className="bg-[#4F46E5] hover:bg-[#4338CA] text-white rounded-xl h-12 px-8 font-extrabold shadow-lg shadow-blue-600/20 active:scale-95 transition-all"
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Criando...
-                </>
-              ) : (
-                'Próximo: Construir Campos'
-              )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

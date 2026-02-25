@@ -1,140 +1,24 @@
 'use client'
 
-import {
-  FieldType,
-  FormField,
-  FormSchema,
-  FormStep
-} from '@/components/forms/types'
-import { formSchemaValidator } from '@/lib/zod/forms/form-builder.schema'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { updateFormSchemaAction } from '../actions'
+import { FormSchema } from '@/components/forms/types'
+import { useFormBuilderNavigation } from './use-form-builder-navigation'
+import { useFormSchemaEditor } from './use-form-schema-editor'
 
 export function useFormBuilder(formId: string, initialSchema: FormSchema) {
-  const [schema, setSchema] = useState<FormSchema>(initialSchema)
-  const [isSaving, setIsSaving] = useState(false)
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>(
-    'desktop'
+  const navigation = useFormBuilderNavigation()
+
+  const editor = useFormSchemaEditor(
+    formId,
+    initialSchema,
+    navigation.activeStepIndex,
+    navigation.selectedField,
+    navigation.setSelectedField,
+    navigation.setActiveStepIndex
   )
-  const [activeTab, setActiveTab] = useState<'editor' | 'preview'>('editor')
-  const [selectedField, setSelectedField] = useState<string | null>(null)
-  const [activeStepIndex, setActiveStepIndex] = useState(0)
-
-  const activeStep = schema.steps[activeStepIndex]
-  const activeFieldData = schema.steps
-    .flatMap((s) => s.fields)
-    .find((f) => f.name === selectedField)
-
-  const handleSave = async () => {
-    setIsSaving(true)
-    try {
-      const validationResult = formSchemaValidator.safeParse(schema)
-
-      if (!validationResult.success) {
-        const firstError = validationResult.error.issues[0]
-        toast.error(`Erro de validação: ${firstError.message}`)
-        return
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = await updateFormSchemaAction(formId, schema as any)
-
-      if (!result.success) throw new Error(result.error)
-      toast.success('Alterações salvas com sucesso!')
-    } catch (error) {
-      console.error(error)
-      toast.error('Erro ao salvar formulário.')
-    } finally {
-      setIsSaving(false)
-    }
-  }
-
-  const addField = (type: FieldType) => {
-    const newField: FormField = {
-      name: `field_${Date.now()}`,
-      label: `Novo Campo de ${type}`,
-      type,
-      required: false,
-      placeholder: ''
-    }
-
-    setSchema((prev) => ({
-      ...prev,
-      steps: prev.steps.map((step, idx) =>
-        idx === activeStepIndex
-          ? { ...step, fields: [...step.fields, newField] }
-          : step
-      )
-    }))
-  }
-
-  const addStep = () => {
-    const newStep: FormStep = {
-      id: crypto.randomUUID(),
-      title: `Nova Etapa ${schema.steps.length + 1}`,
-      fields: []
-    }
-    setSchema((prev) => ({
-      ...prev,
-      steps: [...prev.steps, newStep],
-      display_type: 'wizard'
-    }))
-    setActiveStepIndex(schema.steps.length)
-  }
-
-  const removeStep = (index: number) => {
-    if (schema.steps.length <= 1) return
-    setSchema((prev) => ({
-      ...prev,
-      steps: prev.steps.filter((_, i) => i !== index),
-      display_type: prev.steps.length - 1 <= 1 ? 'single' : 'wizard'
-    }))
-    setActiveStepIndex(Math.max(0, index - 1))
-  }
-
-  const removeField = (fieldName: string) => {
-    if (selectedField === fieldName) setSelectedField(null)
-    setSchema((prev) => ({
-      ...prev,
-      steps: prev.steps.map((step) => ({
-        ...step,
-        fields: step.fields.filter((f) => f.name !== fieldName)
-      }))
-    }))
-  }
-
-  const updateField = (fieldName: string, updates: Partial<FormField>) => {
-    setSchema((prev) => ({
-      ...prev,
-      steps: prev.steps.map((step) => ({
-        ...step,
-        fields: step.fields.map((f) =>
-          f.name === fieldName ? { ...f, ...updates } : f
-        )
-      }))
-    }))
-  }
 
   return {
-    schema,
-    setSchema,
-    isSaving,
-    previewMode,
-    setPreviewMode,
-    activeTab,
-    setActiveTab,
-    selectedField,
-    setSelectedField,
-    activeStepIndex,
-    setActiveStepIndex,
-    activeStep,
-    activeFieldData,
-    handleSave,
-    addField,
-    addStep,
-    removeStep,
-    removeField,
-    updateField
+    ...navigation,
+    ...editor,
+    activeStep: editor.schema.steps[navigation.activeStepIndex]
   }
 }

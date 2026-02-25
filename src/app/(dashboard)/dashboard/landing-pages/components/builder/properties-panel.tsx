@@ -2,6 +2,7 @@ import { LPSection } from '@/components/lp-renderer/SectionRenderer'
 import { FeatureItem } from '@/components/lp-renderer/sections/FeaturesSection'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { SectionHeader } from '@/components/ui/section-header'
 import {
   Select,
   SelectContent,
@@ -519,8 +520,11 @@ export function PropertiesPanel({
         ) : (
           /* PAGE SETTINGS */
           <div className="p-5 space-y-5 animate-in slide-in-from-right-4 duration-300">
-            {/* General */}
-            <Section icon={<Globe className="w-3 h-3" />} label="Página">
+            <div className="space-y-3">
+              <SectionHeader
+                icon={<Globe className="w-3 h-3" />}
+                label="Página"
+              />
               <FieldGroup label="Título da Página">
                 <Input
                   id="pageTitle"
@@ -552,13 +556,13 @@ export function PropertiesPanel({
                   Apenas minúsculas, números e hífens.
                 </p>
               </FieldGroup>
-            </Section>
+            </div>
 
-            {/* SEO */}
-            <Section
-              icon={<Search className="w-3 h-3" />}
-              label="SEO & Metadados"
-            >
+            <div className="space-y-3">
+              <SectionHeader
+                icon={<Search className="w-3 h-3" />}
+                label="SEO &amp; Metadados"
+              />
               <FieldGroup label="Título SEO">
                 <Input
                   id="metaTitle"
@@ -589,13 +593,13 @@ export function PropertiesPanel({
                   className="resize-none text-xs"
                 />
               </FieldGroup>
-            </Section>
+            </div>
 
-            {/* Leads */}
-            <Section
-              icon={<Target className="w-3 h-3" />}
-              label="Captação de Leads"
-            >
+            <div className="space-y-3">
+              <SectionHeader
+                icon={<Target className="w-3 h-3" />}
+                label="Captação de Leads"
+              />
               <FieldGroup label="Formulário de Destino">
                 <Select
                   value={pageSettings.formId || 'none'}
@@ -622,15 +626,13 @@ export function PropertiesPanel({
                   Define qual formulário será aberto ao clicar no CTA do Hero.
                 </p>
               </FieldGroup>
-            </Section>
+            </div>
           </div>
         )}
       </div>
     </div>
   )
 }
-
-/* ─── Helper Components ─────────────────────────────────────────── */
 
 function FieldGroup({
   label,
@@ -651,28 +653,6 @@ function FieldGroup({
 
 function SectionRow({ children }: { children: React.ReactNode }) {
   return <div className="grid grid-cols-2 gap-3">{children}</div>
-}
-
-function Section({
-  icon,
-  label,
-  children
-}: {
-  icon: React.ReactNode
-  label: string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2 pb-2 border-b border-gray-100">
-        <span className="text-[#4F46E5]">{icon}</span>
-        <p className="text-[9px] font-extrabold text-gray-400 uppercase tracking-widest">
-          {label}
-        </p>
-      </div>
-      {children}
-    </div>
-  )
 }
 
 function SharpSelect({

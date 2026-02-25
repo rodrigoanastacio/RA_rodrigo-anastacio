@@ -15,15 +15,15 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 **Read REQUIRED files always, OPTIONAL only when needed:**
 
-| File | Status | When to Read |
-|------|--------|--------------|
-| [ux-psychology.md](ux-psychology.md) | 🔴 **REQUIRED** | Always read first! |
-| [color-system.md](color-system.md) | ⚪ Optional | Color/palette decisions |
-| [typography-system.md](typography-system.md) | ⚪ Optional | Font selection/pairing |
-| [visual-effects.md](visual-effects.md) | ⚪ Optional | Glassmorphism, shadows, gradients |
-| [animation-guide.md](animation-guide.md) | ⚪ Optional | Animation needed |
-| [motion-graphics.md](motion-graphics.md) | ⚪ Optional | Lottie, GSAP, 3D |
-| [decision-trees.md](decision-trees.md) | ⚪ Optional | Context templates |
+| File                                         | Status          | When to Read                      |
+| -------------------------------------------- | --------------- | --------------------------------- |
+| [ux-psychology.md](ux-psychology.md)         | 🔴 **REQUIRED** | Always read first!                |
+| [color-system.md](color-system.md)           | ⚪ Optional     | Color/palette decisions           |
+| [typography-system.md](typography-system.md) | ⚪ Optional     | Font selection/pairing            |
+| [visual-effects.md](visual-effects.md)       | ⚪ Optional     | Glassmorphism, shadows, gradients |
+| [animation-guide.md](animation-guide.md)     | ⚪ Optional     | Animation needed                  |
+| [motion-graphics.md](motion-graphics.md)     | ⚪ Optional     | Lottie, GSAP, 3D                  |
+| [decision-trees.md](decision-trees.md)       | ⚪ Optional     | Context templates                 |
 
 > 🔴 **ux-psychology.md = ALWAYS READ. Others = only if relevant.**
 
@@ -33,8 +33,8 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 **Execute these for audits (don't read, just run):**
 
-| Script | Purpose | Usage |
-|--------|---------|-------|
+| Script                | Purpose                             | Usage                                       |
+| --------------------- | ----------------------------------- | ------------------------------------------- |
 | `scripts/ux_audit.py` | UX Psychology & Accessibility Audit | `python scripts/ux_audit.py <project_path>` |
 
 ---
@@ -46,26 +46,29 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ### When User Prompt is Vague, ASK:
 
 **Color not specified?** Ask:
+
 > "What color palette do you prefer? (blue/green/orange/neutral/other?)"
 
-**Style not specified?** Ask: 
+**Style not specified?** Ask:
+
 > "What style are you going for? (minimal/bold/retro/futuristic/organic?)"
 
 **Layout not specified?** Ask:
+
 > "Do you have a layout preference? (single column/grid/asymmetric/full-width?)"
 
 ### ⛔ DEFAULT TENDENCIES TO AVOID (ANTI-SAFE HARBOR):
 
-| AI Default Tendency | Why It's Bad | Think Instead |
-|---------------------|--------------|---------------|
-| **Bento Grids (Modern Cliché)** | Used in every AI design | Why does this content NEED a grid? |
-| **Hero Split (Left/Right)** | Predictable & Boring | How about Massive Typography or Vertical Narrative? |
-| **Mesh/Aurora Gradients** | The "new" lazy background | What's a radical color pairing? |
-| **Glassmorphism** | AI's idea of "premium" | How about solid, high-contrast flat? |
-| **Deep Cyan / Fintech Blue** | Safe harbor from purple ban | Why not Red, Black, or Neon Green? |
-| **"Orchestrate / Empower"** | AI-generated copywriting | How would a human say this? |
-| Dark background + neon glow | Overused, "AI look" | What does the BRAND actually need? |
-| **Rounded everything** | Generic/Safe | Where can I use sharp, brutalist edges? |
+| AI Default Tendency             | Why It's Bad                | Think Instead                                       |
+| ------------------------------- | --------------------------- | --------------------------------------------------- |
+| **Bento Grids (Modern Cliché)** | Used in every AI design     | Why does this content NEED a grid?                  |
+| **Hero Split (Left/Right)**     | Predictable & Boring        | How about Massive Typography or Vertical Narrative? |
+| **Mesh/Aurora Gradients**       | The "new" lazy background   | What's a radical color pairing?                     |
+| **Glassmorphism**               | AI's idea of "premium"      | How about solid, high-contrast flat?                |
+| **Deep Cyan / Fintech Blue**    | Safe harbor from purple ban | Why not Red, Black, or Neon Green?                  |
+| **"Orchestrate / Empower"**     | AI-generated copywriting    | How would a human say this?                         |
+| Dark background + neon glow     | Overused, "AI look"         | What does the BRAND actually need?                  |
+| **Rounded everything**          | Generic/Safe                | Where can I use sharp, brutalist edges?             |
 
 > 🔴 **"Every 'safe' structure you choose brings you one step closer to a generic template. TAKE RISKS."**
 
@@ -75,24 +78,24 @@ allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 
 Before any design work, ANSWER THESE or ASK USER:
 
-| Constraint | Question | Why It Matters |
-|------------|----------|----------------|
-| **Timeline** | How much time? | Determines complexity |
-| **Content** | Ready or placeholder? | Affects layout flexibility |
-| **Brand** | Existing guidelines? | May dictate colors/fonts |
-| **Tech** | What stack? | Affects capabilities |
-| **Audience** | Who exactly? | Drives all visual decisions |
+| Constraint   | Question              | Why It Matters              |
+| ------------ | --------------------- | --------------------------- |
+| **Timeline** | How much time?        | Determines complexity       |
+| **Content**  | Ready or placeholder? | Affects layout flexibility  |
+| **Brand**    | Existing guidelines?  | May dictate colors/fonts    |
+| **Tech**     | What stack?           | Affects capabilities        |
+| **Audience** | Who exactly?          | Drives all visual decisions |
 
 ### Audience → Design Approach
 
-| Audience | Think About |
-|----------|-------------|
-| **Gen Z** | Bold, fast, mobile-first, authentic |
-| **Millennials** | Clean, minimal, value-driven |
-| **Gen X** | Familiar, trustworthy, clear |
-| **Boomers** | Readable, high contrast, simple |
-| **B2B** | Professional, data-focused, trust |
-| **Luxury** | Restrained elegance, whitespace |
+| Audience        | Think About                         |
+| --------------- | ----------------------------------- |
+| **Gen Z**       | Bold, fast, mobile-first, authentic |
+| **Millennials** | Clean, minimal, value-driven        |
+| **Gen X**       | Familiar, trustworthy, clear        |
+| **Boomers**     | Readable, high contrast, simple     |
+| **B2B**         | Professional, data-focused, trust   |
+| **Luxury**      | Restrained elegance, whitespace     |
 
 ---
 
@@ -100,13 +103,13 @@ Before any design work, ANSWER THESE or ASK USER:
 
 ### Core Laws (Internalize These)
 
-| Law | Principle | Application |
-|-----|-----------|-------------|
-| **Hick's Law** | More choices = slower decisions | Limit options, use progressive disclosure |
-| **Fitts' Law** | Bigger + closer = easier to click | Size CTAs appropriately |
-| **Miller's Law** | ~7 items in working memory | Chunk content into groups |
-| **Von Restorff** | Different = memorable | Make CTAs visually distinct |
-| **Serial Position** | First/last remembered most | Key info at start/end |
+| Law                 | Principle                         | Application                               |
+| ------------------- | --------------------------------- | ----------------------------------------- |
+| **Hick's Law**      | More choices = slower decisions   | Limit options, use progressive disclosure |
+| **Fitts' Law**      | Bigger + closer = easier to click | Size CTAs appropriately                   |
+| **Miller's Law**    | ~7 items in working memory        | Chunk content into groups                 |
+| **Von Restorff**    | Different = memorable             | Make CTAs visually distinct               |
+| **Serial Position** | First/last remembered most        | Key info at start/end                     |
 
 ### Emotional Design Levels
 
@@ -151,13 +154,13 @@ All spacing and sizing in multiples of 8:
 
 ### Key Sizing Principles
 
-| Element | Consideration |
-|---------|---------------|
-| **Touch targets** | Minimum comfortable tap size |
-| **Buttons** | Height based on importance hierarchy |
-| **Inputs** | Match button height for alignment |
-| **Cards** | Consistent padding, breathable |
-| **Reading width** | 45-75 characters optimal |
+| Element           | Consideration                        |
+| ----------------- | ------------------------------------ |
+| **Touch targets** | Minimum comfortable tap size         |
+| **Buttons**       | Height based on importance hierarchy |
+| **Inputs**        | Match button height for alignment    |
+| **Cards**         | Consistent padding, breathable       |
+| **Reading width** | 45-75 characters optimal             |
 
 ---
 
@@ -173,13 +176,13 @@ All spacing and sizing in multiples of 8:
 
 ### Color Psychology (For Decision Making)
 
-| If You Need... | Consider Hues | Avoid |
-|----------------|---------------|-------|
-| Trust, calm | Blue family | Aggressive reds |
-| Growth, nature | Green family | Industrial grays |
-| Energy, urgency | Orange, red | Passive blues |
+| If You Need...     | Consider Hues            | Avoid                 |
+| ------------------ | ------------------------ | --------------------- |
+| Trust, calm        | Blue family              | Aggressive reds       |
+| Growth, nature     | Green family             | Industrial grays      |
+| Energy, urgency    | Orange, red              | Passive blues         |
 | Luxury, creativity | Deep Teal, Gold, Emerald | Cheap-feeling brights |
-| Clean, minimal | Neutrals | Overwhelming color |
+| Clean, minimal     | Neutrals                 | Overwhelming color    |
 
 ### Selection Process
 
@@ -196,12 +199,12 @@ For detailed color theory: [color-system.md](color-system.md)
 
 ### Scale Selection
 
-| Content Type | Scale Ratio | Feel |
-|--------------|-------------|------|
-| Dense UI | 1.125-1.2 | Compact, efficient |
-| General web | 1.25 | Balanced (most common) |
-| Editorial | 1.333 | Readable, spacious |
-| Hero/display | 1.5-1.618 | Dramatic impact |
+| Content Type | Scale Ratio | Feel                   |
+| ------------ | ----------- | ---------------------- |
+| Dense UI     | 1.125-1.2   | Compact, efficient     |
+| General web  | 1.25        | Balanced (most common) |
+| Editorial    | 1.333       | Readable, spacious     |
+| Hero/display | 1.5-1.618   | Dramatic impact        |
 
 ### Pairing Concept
 
@@ -274,12 +277,12 @@ Duration based on:
 
 ### Easing Selection
 
-| Action | Easing | Why |
-|--------|--------|-----|
-| Entering | Ease-out | Decelerate, settle in |
-| Leaving | Ease-in | Accelerate, exit |
-| Emphasis | Ease-in-out | Smooth, deliberate |
-| Playful | Bounce | Fun, energetic |
+| Action   | Easing      | Why                   |
+| -------- | ----------- | --------------------- |
+| Entering | Ease-out    | Decelerate, settle in |
+| Leaving  | Ease-in     | Accelerate, exit      |
+| Emphasis | Ease-in-out | Smooth, deliberate    |
+| Playful  | Bounce      | Fun, energetic        |
 
 ### Performance
 
@@ -390,6 +393,99 @@ For deeper guidance on specific areas:
 - [motion-graphics.md](motion-graphics.md) - Advanced: Lottie, GSAP, SVG, 3D, Particles
 - [decision-trees.md](decision-trees.md) - Context-specific templates
 - [ux-psychology.md](ux-psychology.md) - User psychology deep dive
+
+---
+
+## 11. 🏗️ Project Design System (Dashboard) — MANDATORY
+
+> **This section is project-specific.** When working on ANY dashboard component, apply these rules before adding any class directly.
+
+### Primitive Components (always use, never reinvent)
+
+| Component         | Path                             | Purpose                                                                               |
+| ----------------- | -------------------------------- | ------------------------------------------------------------------------------------- |
+| `<Box>`           | `@/components/ui/box`            | White card shell → `bg-white border border-gray-100`. No padding, no radius.          |
+| `<SectionHeader>` | `@/components/ui/section-header` | Inline section divider → indigo icon + `UPPERCASE` label + `border-b border-gray-100` |
+
+**Rules:**
+
+- ❌ **NEVER** use `rounded-lg`, `rounded-xl`, `rounded-full` on cards, inputs, or buttons — the design system is **sharp (zero radius)**.
+- ❌ **NEVER** recreate inline a `div` that replicates `Box`. Always import and use `<Box>`.
+- ❌ **NEVER** recreate a section label with `div + w-0.5 + text`. Always use `<SectionHeader icon={} label="">`.
+
+### Card Anatomy Pattern
+
+Every dashboard card follows this three-layer pattern:
+
+```tsx
+<Box>
+  {/* 1 — Header: icon + title/subtitle + optional action button */}
+  <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+    <div className="flex items-center gap-2.5">
+      <div className="w-7 h-7 bg-gray-900 flex items-center justify-center">
+        <Icon className="w-3.5 h-3.5 text-white" />
+      </div>
+      <div>
+        <h2 className="text-xs font-extrabold text-gray-900 uppercase tracking-widest">
+          Title
+        </h2>
+        <p className="text-[10px] text-gray-400 font-medium">Subtitle</p>
+      </div>
+    </div>
+    {/* optional: action button */}
+  </div>
+
+  {/* 2 — Body: padding owned by consumer */}
+  <div className="p-6">
+    {/* Sub-sections use SectionHeader */}
+    <div className="space-y-3">
+      <SectionHeader icon={<Icon className="w-3 h-3" />} label="Section Name" />
+      {/* content */}
+    </div>
+  </div>
+</Box>
+```
+
+### Accent Color Token
+
+Use **`#4F46E5`** (indigo-600) for all interactive accents:
+
+- Primary buttons: `bg-[#4F46E5] hover:bg-[#4338CA]`
+- Focus rings: `focus:border-[#4F46E5]/40`
+- Icon squares on sidebar/section headers
+- Hover states on interactive list items: `hover:border-[#4F46E5]/40 hover:bg-[#4F46E5]/3`
+
+### Input Pattern (zero-radius, sharp)
+
+```tsx
+<input className="w-full h-9 px-3 border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-[#4F46E5]/40 focus:outline-none transition-all text-sm text-gray-900" />
+```
+
+### Primary Button Pattern
+
+```tsx
+<button className="flex items-center gap-2 bg-[#4F46E5] hover:bg-[#4338CA] disabled:opacity-60 text-white h-8 px-4 text-[11px] font-bold uppercase tracking-widest transition-all duration-200 active:scale-95 cursor-pointer">
+```
+
+### Info / Error Box Pattern (border-l-2)
+
+```tsx
+{
+  /* info */
+}
+;<div className="border-l-2 border-[#4F46E5] bg-[#4F46E5]/04 px-3 py-2.5 flex items-start gap-2">
+  <Info size={13} className="text-[#4F46E5] shrink-0 mt-0.5" />
+  <p className="text-[10px] text-[#4F46E5]/80 leading-relaxed">Mensagem</p>
+</div>
+
+{
+  /* error */
+}
+;<div className="border-l-2 border-rose-400 bg-rose-50 px-3 py-2.5 flex items-center gap-2">
+  <Info size={13} className="text-rose-500 shrink-0" />
+  <p className="text-[11px] text-rose-700 font-medium">Mensagem de erro</p>
+</div>
+```
 
 ---
 

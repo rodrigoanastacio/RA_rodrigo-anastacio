@@ -31,7 +31,7 @@ export function SettingsClient() {
   } = useBrandSettings()
 
   return (
-    <>
+    <div className="space-y-6">
       <ProfileSection
         fullName={fullName}
         setFullName={setFullName}
@@ -55,6 +55,6 @@ export function SettingsClient() {
         onCancel={cancelUpload}
         onRemove={removeLogo}
       />
-    </>
+    </div>
   )
 }

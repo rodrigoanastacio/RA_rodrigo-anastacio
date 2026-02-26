@@ -104,6 +104,7 @@ export type Database = {
           created_at: string | null
           form_id: string | null
           id: string
+          is_custom: boolean
           is_published: boolean | null
           meta_description: string | null
           meta_title: string | null
@@ -119,6 +120,7 @@ export type Database = {
           created_at?: string | null
           form_id?: string | null
           id?: string
+          is_custom?: boolean
           is_published?: boolean | null
           meta_description?: string | null
           meta_title?: string | null
@@ -134,6 +136,7 @@ export type Database = {
           created_at?: string | null
           form_id?: string | null
           id?: string
+          is_custom?: boolean
           is_published?: boolean | null
           meta_description?: string | null
           meta_title?: string | null

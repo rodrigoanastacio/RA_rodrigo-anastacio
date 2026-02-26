@@ -1,3 +1,4 @@
+import { uploadCustomLpAction } from '@/app/(dashboard)/dashboard/landing-pages/actions'
 import { LPSection } from '@/components/lp-renderer/SectionRenderer'
 import { FeatureItem } from '@/components/lp-renderer/sections/FeaturesSection'
 import { Input } from '@/components/ui/input'
@@ -13,7 +14,9 @@ import {
 import { Textarea } from '@/components/ui/textarea'
 import { cn } from '@/lib/utils'
 import { FormRow } from '@/shared/api-handlers/forms/forms.handler'
-import { Globe, Layers, Loader2, Search, Target } from 'lucide-react'
+import { FileUp, Globe, Layers, Loader2, Search, Target } from 'lucide-react'
+import { useState } from 'react'
+import { toast } from 'sonner'
 import { PageSettings } from '../../hooks/use-landing-page-builder'
 
 interface PropertiesPanelProps {
@@ -39,6 +42,33 @@ export function PropertiesPanel({
   onSave,
   availableForms
 }: PropertiesPanelProps) {
+  const [file, setFile] = useState<File | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
+
+  async function handleUploadZip() {
+    if (!file || !pageSettings.slug) {
+      toast.error('Selecione um arquivo .zip e defina o slug da página.')
+      return
+    }
+    setIsUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      const res = await uploadCustomLpAction(formData, pageSettings.slug)
+      if (res.success) {
+        toast.success('Custom LP publicada com sucesso a partir do ZIP!')
+        setFile(null)
+      } else {
+        toast.error(res.message || 'Erro no upload do ZIP.')
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error('Erro inesperado no upload do arquivo ZIP.')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
   return (
     <div className="w-72 bg-white border-l border-gray-100 flex flex-col z-20 h-full [&_input]:rounded-none [&_textarea]:rounded-none **:[[role=combobox]]:rounded-none">
       {/* Header */}
@@ -626,6 +656,40 @@ export function PropertiesPanel({
                   Define qual formulário será aberto ao clicar no CTA do Hero.
                 </p>
               </FieldGroup>
+            </div>
+
+            <div className="space-y-3 pt-4 border-t border-gray-100">
+              <SectionHeader
+                icon={<FileUp className="w-3 h-3 text-purple-500" />}
+                label="Custom LP (Avançado)"
+              />
+              <div className="space-y-2">
+                <p className="text-[10px] text-gray-500">
+                  Sobrescreve o construtor visual. Faça upload do arquivo{' '}
+                  <b>.zip</b> exportado contendo o <code>index.html</code> e os
+                  assets da sua Custom LP.
+                </p>
+                <div className="flex flex-col gap-2">
+                  <Input
+                    type="file"
+                    accept=".zip"
+                    onChange={(e) => setFile(e.target.files?.[0] || null)}
+                    className="text-[10px] bg-gray-50 cursor-pointer h-8 file:mr-2 file:py-1 file:px-2 file:border-0 file:text-[10px] file:font-semibold file:bg-purple-50 file:text-purple-700 hover:file:bg-purple-100"
+                  />
+                  <button
+                    onClick={handleUploadZip}
+                    disabled={isUploading || !file || !pageSettings.slug}
+                    className="flex w-full items-center justify-center gap-1.5 bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white text-[10px] font-bold uppercase tracking-widest h-8 transition-colors duration-200"
+                  >
+                    {isUploading ? (
+                      <Loader2 className="w-3 h-3 animate-spin" />
+                    ) : (
+                      <FileUp className="w-3 h-3" />
+                    )}
+                    {isUploading ? 'Fazendo Upload...' : 'Fazer Upload HTML'}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -44,7 +44,7 @@ export default function AboutMe() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <span className="text-brand-cyan font-mono text-xs tracking-widest uppercase font-bold">
-                /// O Estrategista
+                {'/// O Estrategista'}
               </span>
               <div className="h-px grow bg-linear-to-r from-brand-cyan/50 to-transparent"></div>
             </div>
@@ -59,9 +59,9 @@ export default function AboutMe() {
           {/* Body Text */}
           <div className="text-gray-400 text-lg leading-relaxed flex flex-col gap-6 font-light max-w-2xl">
             <p>
-              Durante anos, o mercado vendeu sites como "cartões de visita
-              digitais". Eu acredito que sua presença online deve ser sua melhor
-              ferramenta de vendas.
+              Durante anos, o mercado vendeu sites como &quot;cartões de visita
+              digitais&quot;. Eu acredito que sua presença online deve ser sua
+              melhor ferramenta de vendas.
             </p>
             <p>
               Combinando{' '}

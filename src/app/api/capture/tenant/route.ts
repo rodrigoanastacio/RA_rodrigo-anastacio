@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Initialize Supabase Admin (Service Role) to bypass RLS for public insertions
     const supabaseAdmin = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -26,18 +25,10 @@ export async function POST(req: NextRequest) {
       }
     )
 
-    // Extract Metadata
     const clientIp =
       req.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown'
     const userAgent = req.headers.get('user-agent') || 'unknown'
 
-    // Extract known form fields to match LeadFormData
-    // Note: If dynamic fields don't match exactly, they might be dropped by the handler's strict typing
-    // Ideally, we should update the handler to accept extra fields in a metadata column.
-    // For now, we assume the form matches the lead structure.
-
-    // Validate minimally or trust the handler's validation (which uses Zod inside LeadSubmission class)
-    // We cast to LeadFormData for now.
     const leadData = formData as LeadFormData
 
     const metadata = {
@@ -51,7 +42,6 @@ export async function POST(req: NextRequest) {
       referrer: formData.referrer
     }
 
-    // Call Handler with Service Role Client and Explicit Tenant ID
     await leadsHandler.create(supabaseAdmin, leadData, metadata, tenant_id)
 
     return NextResponse.json({ success: true })

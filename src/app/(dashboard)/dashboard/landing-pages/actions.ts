@@ -1,21 +1,17 @@
 'use server'
 
-import { LPSection } from '@/components/lp-renderer/SectionRenderer'
+import type {
+  CreateLandingPageInput,
+  LandingPageContent
+} from '@/services/landing-pages/types'
 import { landingPagesService } from '@/shared/services/landing-pages/landing-pages.service'
 import { Json } from '@/types/supabase'
 import { revalidatePath } from 'next/cache'
 
-interface CreateLandingPageInput {
-  title: string
-  slug: string
-  content?: LPSection[]
-  description?: string
-}
-
 interface UpdateLandingPageInput {
   title?: string
   slug?: string
-  content?: LPSection[]
+  content?: LandingPageContent
   meta_title?: string
   meta_description?: string
   is_published?: boolean
@@ -29,7 +25,8 @@ export async function createLandingPageAction(input: CreateLandingPageInput) {
       slug: input.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
       content: (input.content || []) as unknown as Json,
       meta_title: input.title,
-      meta_description: input.description || 'Página criada com o Construtor.'
+      meta_description: input.description || 'Página criada com o Construtor.',
+      is_custom: input.is_custom ?? false
     })
 
     revalidatePath('/dashboard/landing-pages')
@@ -89,6 +86,7 @@ export async function togglePublishAction(id: string, isPublished: boolean) {
 
     if (updatedPage.slug) {
       revalidatePath(`/lp/${updatedPage.slug}`)
+      revalidatePath(`/lp/custom/${updatedPage.slug}`)
     }
     revalidatePath('/dashboard/landing-pages')
 
@@ -106,6 +104,7 @@ export async function deleteLandingPageAction(id: string) {
 
     if (page?.slug) {
       revalidatePath(`/lp/${page.slug}`)
+      revalidatePath(`/lp/custom/${page.slug}`)
     }
     revalidatePath('/dashboard/landing-pages')
 
@@ -113,5 +112,63 @@ export async function deleteLandingPageAction(id: string) {
   } catch (error) {
     console.error('Erro ao deletar LP:', error)
     return { success: false, message: 'Erro ao deletar página.' }
+  }
+}
+
+export async function uploadCustomLpAction(formData: FormData, lpSlug: string) {
+  try {
+    await landingPagesService.uploadCustomLpZip(formData, lpSlug)
+    revalidatePath('/dashboard/landing-pages')
+    return { success: true }
+  } catch (error) {
+    const msg =
+      error instanceof Error
+        ? error.message
+        : 'Erro ao processar o arquivo ZIP.'
+    console.error('Erro ao fazer upload da Custom LP:', error)
+    return { success: false, message: msg }
+  }
+}
+
+export async function createAndPublishCustomLpAction(
+  input: { title: string; slug: string },
+  formData: FormData
+) {
+  let createdId: string | null = null
+  try {
+    const normalizedSlug = input.slug.toLowerCase().replace(/[^a-z0-9-]/g, '-')
+
+    const newPage = await landingPagesService.createLandingPage({
+      title: input.title,
+      slug: normalizedSlug,
+      content: [] as unknown as import('@/types/supabase').Json,
+      meta_title: input.title,
+      meta_description: 'Página personalizada.',
+      is_custom: true
+    })
+    createdId = newPage.id
+
+    await landingPagesService.uploadCustomLpZip(formData, normalizedSlug)
+
+    await landingPagesService.updateLandingPage(createdId, {
+      is_published: true
+    })
+
+    revalidatePath('/dashboard/landing-pages')
+    return { success: true, id: createdId, slug: normalizedSlug }
+  } catch (error: unknown) {
+    if (createdId) {
+      await landingPagesService.deleteLandingPage(createdId).catch(() => null)
+    }
+    const dbError = error as { code?: string; message?: string }
+    if (dbError?.code === '23505') {
+      return { success: false, message: 'Este slug já está em uso.' }
+    }
+    const msg =
+      error instanceof Error
+        ? error.message
+        : 'Erro inesperado ao criar Custom LP.'
+    console.error('Erro em createAndPublishCustomLpAction:', error)
+    return { success: false, message: msg }
   }
 }

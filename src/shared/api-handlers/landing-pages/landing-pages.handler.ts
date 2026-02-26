@@ -82,5 +82,145 @@ export const landingPagesHandler = {
 
     if (error) throw error
     return true
+  },
+
+  async uploadZip(
+    supabase: SupabaseClient<Database>,
+    tenantId: string,
+    lpSlug: string,
+    file: File | Blob
+  ) {
+    const MAX_UNCOMPRESSED_BYTES = 5 * 1024 * 1024
+
+    const arrayBuffer = await file.arrayBuffer()
+    const buffer = Buffer.from(arrayBuffer)
+
+    const ZIP_MAGIC = [0x50, 0x4b, 0x03, 0x04]
+    const isZip = ZIP_MAGIC.every((byte, i) => buffer[i] === byte)
+    if (!isZip) {
+      throw new Error('O arquivo enviado não é um ZIP válido.')
+    }
+
+    const AdmZip = (await import('adm-zip')).default
+    const zip = new AdmZip(buffer)
+    const zipEntries = zip.getEntries()
+
+    const totalUncompressedBytes = zipEntries.reduce(
+      (acc, entry) => acc + entry.header.size,
+      0
+    )
+    if (totalUncompressedBytes > MAX_UNCOMPRESSED_BYTES) {
+      throw new Error(
+        `O conteúdo do ZIP (${(totalUncompressedBytes / 1024 / 1024).toFixed(1)}MB descompactado) excede o limite de 5MB.`
+      )
+    }
+
+    const getContentType = (filename: string) => {
+      if (filename.endsWith('.html')) return 'text/html; charset=utf-8'
+      if (filename.endsWith('.css')) return 'text/css; charset=utf-8'
+      if (filename.endsWith('.js'))
+        return 'application/javascript; charset=utf-8'
+      if (filename.endsWith('.json')) return 'application/json; charset=utf-8'
+      if (filename.endsWith('.png')) return 'image/png'
+      if (filename.endsWith('.jpg') || filename.endsWith('.jpeg'))
+        return 'image/jpeg'
+      if (filename.endsWith('.svg')) return 'image/svg+xml'
+      if (filename.endsWith('.webp')) return 'image/webp'
+      if (filename.endsWith('.gif')) return 'image/gif'
+      if (filename.endsWith('.woff') || filename.endsWith('.woff2'))
+        return 'font/woff2'
+      return 'application/octet-stream'
+    }
+
+    let commonPrefix = ''
+
+    const allPaths = zipEntries
+      .filter(
+        (e) =>
+          !e.isDirectory &&
+          !e.entryName.includes('__MACOSX') &&
+          !e.entryName.startsWith('.')
+      )
+      .map((e) => e.entryName)
+
+    if (allPaths.length > 0) {
+      const parts = allPaths[0].split('/')
+      if (parts.length > 1) {
+        const potentialPrefix = parts[0] + '/'
+        const allHavePrefix = allPaths.every((p) =>
+          p.startsWith(potentialPrefix)
+        )
+        if (allHavePrefix) {
+          commonPrefix = potentialPrefix
+        }
+      }
+    }
+
+    const strippedPaths = allPaths.map((p) => {
+      let rel = p
+      if (commonPrefix && rel.startsWith(commonPrefix)) {
+        rel = rel.substring(commonPrefix.length)
+      }
+      return rel
+    })
+
+    const hasIndexHtml = strippedPaths.some((p) => p === 'index.html')
+    let htmlAlias: string | null = null
+
+    if (!hasIndexHtml) {
+      const rootHtmlFiles = strippedPaths.filter(
+        (p) => p.endsWith('.html') && !p.includes('/')
+      )
+      if (rootHtmlFiles.length === 1) {
+        htmlAlias = rootHtmlFiles[0]
+        console.info(
+          `[uploadZip] No index.html found. Auto-aliasing "${htmlAlias}" → "index.html"`
+        )
+      } else if (rootHtmlFiles.length > 1) {
+        console.warn(
+          `[uploadZip] Multiple root .html files found and no index.html. ` +
+            `Please rename the main file to index.html.`
+        )
+      }
+    }
+
+    const uploadPromises = zipEntries.map(async (entry) => {
+      if (
+        entry.isDirectory ||
+        entry.entryName.includes('__MACOSX') ||
+        entry.entryName.startsWith('.')
+      ) {
+        return null
+      }
+
+      let relativePath = entry.entryName
+      if (commonPrefix && relativePath.startsWith(commonPrefix)) {
+        relativePath = relativePath.substring(commonPrefix.length)
+      }
+
+      if (htmlAlias && relativePath === htmlAlias) {
+        relativePath = 'index.html'
+      }
+
+      const filePath = `${tenantId}/custom-lps/${lpSlug}/${relativePath}`
+      const fileData = entry.getData()
+      const contentType = getContentType(entry.entryName)
+
+      const { data, error } = await supabase.storage
+        .from('tenant-assets')
+        .upload(filePath, fileData, {
+          upsert: true,
+          contentType
+        })
+
+      if (error) {
+        console.error(`Error uploading ${entry.entryName}:`, error)
+        throw error
+      }
+      return data
+    })
+
+    const results = await Promise.all(uploadPromises.filter(Boolean))
+    return results
   }
 }

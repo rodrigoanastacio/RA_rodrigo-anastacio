@@ -16,6 +16,7 @@ export interface LandingPage {
   slug: string
   content: LandingPageContent
   is_published: boolean
+  is_custom: boolean
   meta_title?: string
   meta_description?: string
   created_at: string
@@ -28,4 +29,6 @@ export interface CreateLandingPageInput {
   title: string
   slug: string
   content?: LandingPageContent
+  description?: string
+  is_custom?: boolean
 }

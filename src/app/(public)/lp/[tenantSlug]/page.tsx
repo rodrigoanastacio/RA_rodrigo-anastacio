@@ -5,23 +5,23 @@ import {
 } from '@/components/lp-renderer/SectionRenderer'
 import { createClient } from '@/lib/supabase/server'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 interface LandingPageProps {
   params: Promise<{
-    slug: string
+    tenantSlug: string
   }>
 }
 
 export async function generateMetadata({
   params
 }: LandingPageProps): Promise<Metadata> {
-  const { slug } = await params
+  const { tenantSlug } = await params
   const supabase = await createClient()
   const { data: page } = await supabase
     .from('landing_pages')
     .select('title, meta_title, meta_description')
-    .eq('slug', slug)
+    .eq('slug', tenantSlug)
     .eq('is_published', true)
     .single()
 
@@ -38,13 +38,13 @@ export async function generateMetadata({
 }
 
 export default async function LandingPage({ params }: LandingPageProps) {
-  const { slug } = await params
+  const { tenantSlug } = await params
   const supabase = await createClient()
 
   const { data: page, error } = await supabase
     .from('landing_pages')
     .select('*')
-    .eq('slug', slug)
+    .eq('slug', tenantSlug)
     .eq('is_published', true)
     .single()
 
@@ -54,6 +54,12 @@ export default async function LandingPage({ params }: LandingPageProps) {
 
   if (!page) {
     notFound()
+  }
+
+  // Custom LPs are served by the dedicated proxy route /lp/custom/[slug]
+  // that uses the service role key internally — no tenant slug needed in the URL.
+  if (page.is_custom) {
+    redirect(`/lp/custom/${page.slug}`)
   }
 
   let formSchema: FormSchema | undefined = undefined

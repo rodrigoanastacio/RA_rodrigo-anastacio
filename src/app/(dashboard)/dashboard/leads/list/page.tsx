@@ -1,6 +1,6 @@
 import { leadsService } from '@/shared/services/leads/leads.service'
+import { LeadsClientView } from '../components/LeadsClientView'
 import { LeadsHeader } from '../components/LeadsHeader'
-import { LeadsListTable } from '../components/LeadsListTable'
 import { LeadsStats } from '../components/LeadsStats'
 
 export default async function LeadsListPage() {
@@ -13,7 +13,7 @@ export default async function LeadsListPage() {
 
       <LeadsStats totalLeads={total} highPotentialLeads={highPotentialCount} />
 
-      <LeadsListTable initialLeads={leads} />
+      <LeadsClientView initialLeads={leads} />
     </section>
   )
 }

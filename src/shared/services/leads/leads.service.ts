@@ -7,7 +7,7 @@ export const leadsService = {
 
     const { leads, total } = await leadsHandler.list(supabase, {
       page: 1,
-      perPage: 50,
+      perPage: 100,
       orderBy: 'created_at',
       orderDirection: 'desc'
     })

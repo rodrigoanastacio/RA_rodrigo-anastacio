@@ -5,26 +5,18 @@ import InteractiveTable, {
 } from '@/components/dashboard/InteractiveTable'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import {
+  formatLeadStatus,
+  getLeadStatusStyle
+} from '@/shared/constants/lead.constants'
 import { Lead } from '@/shared/entities/leads/lead.types'
-import { useLeads } from '../hooks/useLeads'
-import { LeadDetailsDrawer } from './LeadDetailsDrawer'
 
 interface LeadsListTableProps {
-  initialLeads?: Lead[]
+  leads: Lead[]
+  onLeadClick: (lead: Lead) => void
 }
 
-export function LeadsListTable({ initialLeads = [] }: LeadsListTableProps) {
-  const {
-    leads,
-    selectedLead,
-    isDrawerOpen,
-    handleLeadClick,
-    handleCloseDrawer,
-    handleUpdateStatus,
-    formatLeadStatus,
-    getLeadStatusStyle
-  } = useLeads(initialLeads)
-
+export function LeadsListTable({ leads, onLeadClick }: LeadsListTableProps) {
   const columns: Column<Lead>[] = [
     {
       key: 'nome_completo',
@@ -134,16 +126,9 @@ export function LeadsListTable({ initialLeads = [] }: LeadsListTableProps) {
           pagination
           rowsPerPageOptions={[10, 20, 50]}
           initialsKey="nome_completo"
-          onRowClick={handleLeadClick}
+          onRowClick={onLeadClick}
         />
       </div>
-
-      <LeadDetailsDrawer
-        lead={selectedLead}
-        isOpen={isDrawerOpen}
-        onClose={handleCloseDrawer}
-        onUpdateStatus={handleUpdateStatus}
-      />
     </>
   )
 }

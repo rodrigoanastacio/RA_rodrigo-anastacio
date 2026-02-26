@@ -1,6 +1,12 @@
 'use client'
 
+import {
+  getNotifications,
+  markAllAsRead as markAllAsReadAction,
+  markAsRead as markAsReadAction
+} from '@/app/(dashboard)/dashboard/actions/notifications'
 import { env } from '@/config/env'
+import { Notification } from '@/shared/entities/notifications/notification.types'
 import { createBrowserClient } from '@supabase/ssr'
 import {
   createContext,
@@ -11,35 +17,40 @@ import {
 } from 'react'
 import { toast } from 'sonner'
 
-export interface Notification {
-  id: string
-  title: string
-  message: string
-  timestamp: Date
-  read: boolean
-  type: 'lead' | 'system'
-}
-
 interface NotificationContextType {
   notifications: Notification[]
   unreadCount: number
-  markAsRead: (id: string) => void
-  markAllAsRead: () => void
+  markAsRead: (id: string) => Promise<void>
+  markAllAsRead: () => Promise<void>
+  isLoading: boolean
 }
 
 const NotificationContext = createContext<NotificationContextType>({
   notifications: [],
   unreadCount: 0,
-  markAsRead: () => {},
-  markAllAsRead: () => {}
+  markAsRead: async () => {},
+  markAllAsRead: async () => {},
+  isLoading: true
 })
 
 export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const supabase = createBrowserClient(env.supabase.url, env.supabase.anonKey)
 
   useEffect(() => {
+    const fetchNotifications = async () => {
+      setIsLoading(true)
+      const { success, data } = await getNotifications()
+      if (success && data) {
+        setNotifications(data as Notification[])
+      }
+      setIsLoading(false)
+    }
+
+    fetchNotifications()
+
     const channel = supabase
       .channel('global-notifications')
       .on(
@@ -47,19 +58,10 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'leads'
+          table: 'notifications'
         },
         (payload) => {
-          const newLead = payload.new as { name: string; email: string }
-
-          const newNotification: Notification = {
-            id: crypto.randomUUID(),
-            title: 'Novo Lead Capturado! 🚀',
-            message: `${newLead.name} acabou de se cadastrar via formulário.`,
-            timestamp: new Date(),
-            read: false,
-            type: 'lead'
-          }
+          const newNotification = payload.new as Notification
 
           setNotifications((prev) => [newNotification, ...prev])
 
@@ -79,14 +81,28 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     }
   }, [supabase])
 
-  const markAsRead = (id: string) => {
+  const markAsRead = async (id: string) => {
+    const previousNotifications = [...notifications]
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     )
+
+    const result = await markAsReadAction(id)
+    if (!result.success) {
+      setNotifications(previousNotifications)
+      toast.error('Erro ao marcar notificação como lida')
+    }
   }
 
-  const markAllAsRead = () => {
+  const markAllAsRead = async () => {
+    const previousNotifications = [...notifications]
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+
+    const result = await markAllAsReadAction()
+    if (!result.success) {
+      setNotifications(previousNotifications)
+      toast.error('Erro ao marcar notificações como lidas')
+    }
   }
 
   const unreadCount = notifications.filter((n) => !n.read).length
@@ -97,7 +113,8 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
         notifications,
         unreadCount,
         markAsRead,
-        markAllAsRead
+        markAllAsRead,
+        isLoading
       }}
     >
       {children}

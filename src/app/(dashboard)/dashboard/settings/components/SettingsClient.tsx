@@ -9,6 +9,14 @@ export function SettingsClient() {
   const {
     fullName,
     setFullName,
+    businessName,
+    setBusinessName,
+    businessSlogan,
+    setBusinessSlogan,
+    whatsappNumber,
+    setWhatsappNumber,
+    averageTicket,
+    setAverageTicket,
     email,
     avatarUrl,
     loading: loadingProfile,
@@ -35,6 +43,14 @@ export function SettingsClient() {
       <ProfileSection
         fullName={fullName}
         setFullName={setFullName}
+        businessName={businessName}
+        setBusinessName={setBusinessName}
+        businessSlogan={businessSlogan}
+        setBusinessSlogan={setBusinessSlogan}
+        whatsappNumber={whatsappNumber}
+        setWhatsappNumber={setWhatsappNumber}
+        averageTicket={averageTicket}
+        setAverageTicket={setAverageTicket}
         email={email}
         avatarUrl={avatarUrl}
         loading={loadingProfile}

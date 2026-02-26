@@ -16,21 +16,15 @@ interface TenantSettings {
 interface TenantLogoProps {
   className?: string
   showText?: boolean
+  companyName?: string
+  tagline?: string
 }
 
-/**
- * TenantLogo Component
- *
- * Displays tenant logo dynamically from tenant settings.
- * Falls back to default icon if no logo is uploaded.
- *
- * Props:
- * - className: Optional CSS classes for wrapper
- * - showText: Whether to show company name/tagline (default: true)
- */
 export function TenantLogo({
   className = '',
-  showText = true
+  showText = true,
+  companyName: propCompanyName,
+  tagline: propTagline
 }: TenantLogoProps) {
   const [settings, setSettings] = useState<TenantSettings | null>(null)
   const [loading, setLoading] = useState(true)
@@ -65,8 +59,11 @@ export function TenantLogo({
 
   const logoUrl = settings?.branding?.logoUrl
   const companyName =
-    settings?.branding?.companyName || tenantName || 'Sua Empresa'
-  const tagline = settings?.branding?.tagline || ''
+    propCompanyName ||
+    settings?.branding?.companyName ||
+    tenantName ||
+    'Sua Empresa'
+  const tagline = propTagline || settings?.branding?.tagline || ''
 
   return (
     <div className={`flex items-center gap-3 ${className}`}>
@@ -87,12 +84,12 @@ export function TenantLogo({
       )}
 
       {showText && !logoUrl && (
-        <div className="min-w-0">
-          <h2 className="text-sm font-bold leading-tight truncate">
+        <div className="flex flex-col min-w-0">
+          <h2 className="text-sm font-bold leading-tight text-gray-900 truncate">
             {companyName}
           </h2>
           {tagline && (
-            <p className="text-xs opacity-70 uppercase tracking-wider truncate">
+            <p className="text-[9px] text-gray-400 font-bold uppercase tracking-widest truncate mt-1">
               {tagline}
             </p>
           )}

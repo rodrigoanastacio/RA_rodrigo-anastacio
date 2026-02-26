@@ -34,6 +34,8 @@ interface DashboardSidebarProps {
     avatar_url?: string
     role?: string
     tenant_id?: string
+    business_name?: string
+    business_slogan?: string
   }
 }
 
@@ -51,7 +53,11 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
   return (
     <div className="flex h-full flex-col bg-white border-r border-gray-100">
       <div className="flex h-[88px] shrink-0 items-center px-6">
-        <TenantLogo className="w-full" />
+        <TenantLogo
+          className="w-full"
+          companyName={user?.business_name}
+          tagline={user?.business_slogan}
+        />
       </div>
 
       <nav className="flex flex-1 flex-col">

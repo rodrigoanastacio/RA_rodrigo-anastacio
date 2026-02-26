@@ -24,7 +24,7 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
     <header className="sticky top-0 z-40 bg-[#ffffff] px-4 sm:px-6 lg:px-8">
       <div className="flex h-16 items-center justify-between lg:justify-end gap-x-4">
         <div className="flex items-center gap-x-4 lg:hidden">
-          <MobileNav />
+          <MobileNav user={user} />
         </div>
 
         <div className="flex items-center gap-x-2 sm:gap-x-4">

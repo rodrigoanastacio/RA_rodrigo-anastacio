@@ -10,7 +10,17 @@ import {
 import { Menu } from 'lucide-react'
 import { DashboardSidebar } from './DashboardSidebar'
 
-export function MobileNav() {
+interface MobileNavProps {
+  user?: {
+    name?: string
+    email?: string
+    avatar_url?: string
+    role?: string
+    tenant_id?: string
+  }
+}
+
+export function MobileNav({ user }: MobileNavProps) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -21,7 +31,7 @@ export function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="p-0 w-72">
         <SheetTitle className="sr-only">Menu de Navegação</SheetTitle>
-        <DashboardSidebar />
+        <DashboardSidebar user={user} />
       </SheetContent>
     </Sheet>
   )

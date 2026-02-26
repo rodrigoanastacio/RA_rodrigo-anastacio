@@ -162,10 +162,6 @@ export function BrandingSection({
               visualização.
             </p>
           </div>
-
-          <p className="text-[10px] text-gray-300 font-medium uppercase tracking-widest">
-            Em breve: nome da empresa, slogan e cores personalizadas
-          </p>
         </div>
       </div>
 

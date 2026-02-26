@@ -6,6 +6,10 @@ export interface UserProfileResponse {
   avatar_url?: string
   role?: string
   tenant_id?: string
+  business_name?: string
+  business_slogan?: string
+  whatsapp_number?: string
+  average_ticket?: number
 }
 
 export const userHandler = {
@@ -20,7 +24,9 @@ export const userHandler = {
 
     const { data: profile } = await supabase
       .from('profiles')
-      .select('full_name, role, avatar_url, tenant_id')
+      .select(
+        'full_name, role, avatar_url, tenant_id, business_name, business_slogan, whatsapp_number, average_ticket'
+      )
       .eq('id', user.id)
       .single()
 
@@ -32,18 +38,34 @@ export const userHandler = {
       email: user.email || '',
       avatar_url: profile?.avatar_url || user.user_metadata?.avatar_url,
       role: profile?.role,
-      tenant_id: profile?.tenant_id || user.user_metadata?.tenant_id
+      tenant_id: profile?.tenant_id || user.user_metadata?.tenant_id,
+      business_name: profile?.business_name,
+      business_slogan: profile?.business_slogan,
+      whatsapp_number: profile?.whatsapp_number,
+      average_ticket: profile?.average_ticket
     }
   },
 
   updateProfile: async (
     supabase: SupabaseClient,
     id: string,
-    fullName: string
+    data: {
+      fullName: string
+      businessName?: string
+      businessSlogan?: string
+      whatsappNumber?: string
+      averageTicket?: number | null
+    }
   ) => {
     const { error } = await supabase
       .from('profiles')
-      .update({ full_name: fullName })
+      .update({
+        full_name: data.fullName,
+        business_name: data.businessName,
+        business_slogan: data.businessSlogan,
+        whatsapp_number: data.whatsappNumber,
+        average_ticket: data.averageTicket
+      })
       .eq('id', id)
 
     if (error) throw error

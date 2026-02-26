@@ -3,12 +3,27 @@
 import { Box } from '@/components/ui/box'
 import { SectionHeader } from '@/components/ui/section-header'
 import { cn } from '@/lib/utils'
-import { Loader2, Save, Upload, User } from 'lucide-react'
+import {
+  Building2,
+  Loader2,
+  Save,
+  TrendingUp,
+  Upload,
+  User
+} from 'lucide-react'
 import Image from 'next/image'
 
 interface ProfileSectionProps {
   fullName: string
   setFullName: (name: string) => void
+  businessName: string
+  setBusinessName: (name: string) => void
+  businessSlogan: string
+  setBusinessSlogan: (name: string) => void
+  whatsappNumber: string
+  setWhatsappNumber: (name: string) => void
+  averageTicket: string
+  setAverageTicket: (name: string) => void
   email: string
   avatarUrl: string | null
   loading: boolean
@@ -23,6 +38,14 @@ interface ProfileSectionProps {
 export function ProfileSection({
   fullName,
   setFullName,
+  businessName,
+  setBusinessName,
+  businessSlogan,
+  setBusinessSlogan,
+  whatsappNumber,
+  setWhatsappNumber,
+  averageTicket,
+  setAverageTicket,
   email,
   avatarUrl,
   loading,
@@ -74,7 +97,7 @@ export function ProfileSection({
           </div>
         ) : (
           <div className="max-w-md space-y-6">
-            <div className="space-y-3">
+            <section className="space-y-3 mb-10">
               <SectionHeader
                 icon={<Upload className="w-3 h-3" />}
                 label="Foto de Perfil"
@@ -139,9 +162,9 @@ export function ProfileSection({
                   </p>
                 </div>
               </div>
-            </div>
+            </section>
 
-            <div className="space-y-3">
+            <section className="space-y-3 mb-10">
               <SectionHeader
                 icon={<User className="w-3 h-3" />}
                 label="Dados Pessoais"
@@ -174,7 +197,84 @@ export function ProfileSection({
                   O e-mail não pode ser alterado.
                 </p>
               </div>
-            </div>
+            </section>
+
+            <section className="space-y-3 mb-10">
+              <SectionHeader
+                icon={<Building2 className="w-3 h-3" />}
+                label="Identidade do Negócio"
+              />
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                  Nome do Negócio
+                </label>
+                <input
+                  type="text"
+                  value={businessName}
+                  onChange={(e) => setBusinessName(e.target.value)}
+                  className="w-full h-9 px-3 border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-[#4F46E5]/40 focus:outline-none transition-all text-sm text-gray-900"
+                  placeholder="Nome da sua empresa ou escritório"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                  Slogan / Promessa
+                </label>
+                <input
+                  type="text"
+                  value={businessSlogan}
+                  onChange={(e) => setBusinessSlogan(e.target.value)}
+                  className="w-full h-9 px-3 border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-[#4F46E5]/40 focus:outline-none transition-all text-sm text-gray-900"
+                  placeholder="Ex: Soluções jurídicas eficientes"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                  WhatsApp de Atendimento
+                </label>
+                <input
+                  type="text"
+                  value={whatsappNumber}
+                  onChange={(e) => setWhatsappNumber(e.target.value)}
+                  className="w-full h-9 px-3 border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-[#4F46E5]/40 focus:outline-none transition-all text-sm text-gray-900"
+                  placeholder="(00) 00000-0000"
+                />
+                <p className="text-[10px] text-gray-400">
+                  Usado para botões de contato. Ex: (11) 99999-9999
+                </p>
+              </div>
+            </section>
+
+            <section className="space-y-3">
+              <SectionHeader
+                icon={<TrendingUp className="w-3 h-3" />}
+                label="Business Intelligence"
+              />
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                  Ticket Médio (R$)
+                </label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-gray-400">
+                    R$
+                  </span>
+                  <input
+                    type="text"
+                    value={averageTicket}
+                    onChange={(e) => setAverageTicket(e.target.value)}
+                    className="w-full h-9 pl-9 pr-3 border border-gray-200 bg-gray-50/50 focus:bg-white focus:border-[#4F46E5]/40 focus:outline-none transition-all text-sm text-gray-900"
+                    placeholder="0,00"
+                  />
+                </div>
+                <p className="text-[10px] text-gray-400">
+                  Usado para projeções de ganhos no CRM baseados no seu funil.
+                </p>
+              </div>
+            </section>
           </div>
         )}
       </div>

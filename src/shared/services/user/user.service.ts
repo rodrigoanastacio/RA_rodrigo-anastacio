@@ -11,13 +11,19 @@ export const userService = {
     return userHandler.getMe(supabase)
   },
 
-  updateProfile: async (fullName: string) => {
+  updateProfile: async (data: {
+    fullName: string
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+    averageTicket?: number | null
+  }) => {
     const supabase = await createClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) throw new Error('Unauthorized')
 
-    return userHandler.updateProfile(supabase, authUser.user.id, fullName)
+    return userHandler.updateProfile(supabase, authUser.user.id, data)
   },
 
   uploadAvatar: async (file: File) => {

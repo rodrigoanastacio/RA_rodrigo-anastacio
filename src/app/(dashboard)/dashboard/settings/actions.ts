@@ -4,9 +4,15 @@ import { tenantService } from '@/shared/services/tenant/tenant.service'
 import { userService } from '@/shared/services/user/user.service'
 import { revalidatePath } from 'next/cache'
 
-export async function updateProfileAction(fullName: string) {
+export async function updateProfileAction(data: {
+  fullName: string
+  businessName?: string
+  businessSlogan?: string
+  whatsappNumber?: string
+  averageTicket?: number | null
+}) {
   try {
-    await userService.updateProfile(fullName)
+    await userService.updateProfile(data)
     revalidatePath('/dashboard/settings')
     return { success: true }
   } catch (error: unknown) {

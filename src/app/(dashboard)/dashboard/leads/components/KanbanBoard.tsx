@@ -40,6 +40,11 @@ export function KanbanBoard({
 }: KanbanBoardProps) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads)
   const [activeLead, setActiveLead] = useState<Lead | null>(null)
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   useEffect(() => {
     setLeads(initialLeads)
@@ -129,6 +134,10 @@ export function KanbanBoard({
         setLeads(initialLeads)
       }
     }
+  }
+
+  if (!isClient) {
+    return null
   }
 
   return (

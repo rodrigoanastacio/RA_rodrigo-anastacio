@@ -25,23 +25,22 @@ export function useLeads(initialLeads: Lead[] = []) {
     setSelectedLead(null)
   }
 
-  const handleUpdateStatus = async (status: string) => {
-    if (!selectedLead) return
+  const handleUpdateStatus = async (id: string, status: string) => {
+    if (selectedLead && selectedLead.id === id) {
+      setSelectedLead({ ...selectedLead, status })
+    }
 
-    const updatedLead = { ...selectedLead, status }
-    setSelectedLead(updatedLead)
+    const restoreLeads = [...leads]
 
-    setLeads((prev) =>
-      prev.map((l) => (l.id === updatedLead.id ? updatedLead : l))
-    )
+    setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status } : l)))
 
-    const result = await updateLeadStatus(selectedLead.id, status)
+    const result = await updateLeadStatus(id, status)
 
     if (!result.success) {
-      setSelectedLead(selectedLead)
-      setLeads((prev) =>
-        prev.map((l) => (l.id === selectedLead.id ? selectedLead : l))
-      )
+      setLeads(restoreLeads)
+      if (selectedLead && selectedLead.id === id) {
+        setSelectedLead(selectedLead)
+      }
       console.error('Failed to update status')
     }
   }

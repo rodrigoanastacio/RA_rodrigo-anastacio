@@ -79,12 +79,6 @@ export function KanbanBoard({
     if (activeContainer === overContainer) return
 
     setLeads((prev) => {
-      const activeItems = prev.filter((l) => l.status === activeContainer)
-      const overItems = prev.filter((l) => l.status === overContainer)
-
-      const activeIndex = activeItems.findIndex((l) => l.id === activeId)
-      const overIndex = overItems.findIndex((l) => l.id === overId)
-
       const newLeads = [...prev]
       const leadIndex = newLeads.findIndex((l) => l.id === activeId)
 

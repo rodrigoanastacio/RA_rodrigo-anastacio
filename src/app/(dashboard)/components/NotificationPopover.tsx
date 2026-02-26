@@ -9,10 +9,10 @@ import {
 } from '@radix-ui/react-popover'
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Bell, Check } from 'lucide-react'
+import { Bell, Check, Loader2 } from 'lucide-react'
 
 export function NotificationPopover() {
-  const { notifications, unreadCount, markAllAsRead, markAsRead } =
+  const { notifications, unreadCount, markAllAsRead, markAsRead, isLoading } =
     useNotifications()
 
   return (
@@ -40,7 +40,6 @@ export function NotificationPopover() {
         sideOffset={8}
         className="w-[380px] bg-white rounded-2xl shadow-xl border border-gray-100 p-0 animate-in fade-in zoom-in-95 duration-200 z-50 flex flex-col max-h-[85vh] overflow-hidden"
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-50 bg-gray-50/50">
           <div className="flex items-center gap-2">
             <h4 className="font-bold text-sm text-gray-900">Notificações</h4>
@@ -61,29 +60,41 @@ export function NotificationPopover() {
           )}
         </div>
 
-        {/* List */}
         <div className="overflow-y-auto flex-1 p-2 space-y-1 min-h-[100px]">
-          {notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-48 text-gray-400 gap-2">
-              <Bell className="w-8 h-8 opacity-20" />
-              <p className="text-xs font-medium">Nenhuma notificação</p>
+          {isLoading ? (
+            <div className="flex flex-col items-center justify-center h-48 text-gray-400 gap-3">
+              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+              <p className="text-xs font-medium">Carregando notificações...</p>
+            </div>
+          ) : notifications.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-48 text-gray-400 gap-3">
+              <div className="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center">
+                <Bell className="w-6 h-6 text-gray-300" />
+              </div>
+              <p className="text-xs font-medium text-gray-500">
+                Você não tem novas notificações
+              </p>
             </div>
           ) : (
             notifications.map((notification) => (
               <div
                 key={notification.id}
-                onClick={() => markAsRead(notification.id)}
+                onClick={() => {
+                  if (!notification.read) markAsRead(notification.id)
+                }}
                 className={cn(
-                  'flex gap-3 p-3 rounded-xl transition-all cursor-pointer relative group',
+                  'flex gap-3 p-3 rounded-xl transition-all relative group',
                   notification.read
                     ? 'hover:bg-gray-50 opacity-60'
-                    : 'bg-blue-50/30 hover:bg-blue-50'
+                    : 'bg-blue-50/30 hover:bg-blue-50 cursor-pointer'
                 )}
               >
                 <div
                   className={cn(
-                    'w-2 h-2 rounded-full mt-2 shrink-0',
-                    notification.read ? 'bg-transparent' : 'bg-blue-500'
+                    'w-2 h-2 rounded-full mt-2 shrink-0 transition-colors',
+                    notification.read
+                      ? 'bg-transparent'
+                      : 'bg-blue-500 group-hover:bg-blue-600'
                   )}
                 />
 
@@ -102,7 +113,7 @@ export function NotificationPopover() {
                     {notification.message}
                   </p>
                   <p className="text-[10px] text-gray-400 font-medium pt-1">
-                    {formatDistanceToNow(notification.timestamp, {
+                    {formatDistanceToNow(new Date(notification.created_at), {
                       addSuffix: true,
                       locale: ptBR
                     })}

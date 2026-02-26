@@ -33,9 +33,9 @@ priority: CRITICAL
 | **Functions** | Verb + noun: `fetchUserById()` not `user()` |
 | **Booleans** | Question form: `isActive`, `hasPermission`, `canEdit` |
 | **Constants** | SCREAMING_SNAKE: `|
-| **Comments**  | **🔴 ABSOLUTE ZERO TOLERANCE 🔴** (No`// 1. Step`, no `// TODO`, no `// Fetch data`).
+| **Comments**  | **🔴 ABSOLUTE ZERO TOLERANCE 🔴** (No `// 1. Step`, no `// TODO`, no `// Section`). |
 
-**NEVER** write explanatory comments under any circumstances. If the code needs a comment, refactor the code instead. AI models MUST NOT generate inline comments. |
+**NEVER** write explanatory comments. **A comment is a sign of a code fail.** If the logic is not clear enough to be understood without comments, REFACTOR IT. Any existing comments in modified files MUST BE REMOVED. |
 
 ---
 

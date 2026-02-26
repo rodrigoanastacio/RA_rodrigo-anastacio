@@ -1,8 +1,4 @@
----
-description: Create new application command. Triggers App Builder skill and starts interactive dialogue with user.
----
-
-# /create - Create Application
+# /create - Create Application (Rigorous Flow)
 
 $ARGUMENTS
 
@@ -10,30 +6,32 @@ $ARGUMENTS
 
 ## Task
 
-This command starts a new application creation process.
+This command initiates a high-precision application creation process following the **4-Phase Standard**.
 
 ### Steps:
 
-1. **Request Analysis**
-   - Understand what the user wants
-   - If information is missing, use `conversation-manager` skill to ask
+1. **Phase 1: ANALYSIS (The Socratic Gate)**
+   - Research requirements using system tools.
+   - **STOP:** Use `@[skills/brainstorming]` to ask at least 3 strategic questions.
+   - Clarify trade-offs, target users, and critical edge cases.
 
-2. **Project Planning**
-   - Use `project-planner` agent for task breakdown
-   - Determine tech stack
-   - Plan file structure
-   - Create plan file and proceed to building
+2. **Phase 2: PLANNING**
+   - Use `project-planner` to create the `{task-slug}.md` file.
+   - Map dependencies and affected file structures.
 
-3. **Application Building (After Approval)**
-   - Orchestrate with `app-builder` skill
-   - Coordinate expert agents:
-     - `database-architect` → Schema
-     - `backend-specialist` → API
-     - `frontend-specialist` → UI
+3. **Phase 3: SOLUTIONING (Architecture Approval)**
+   - **WAIT:** Define and present the logic contract (Schema, API signatures, State).
+   - Get user approval before writing a single line of component/logic code.
 
-4. **Preview**
-   - Start with `auto_preview.py` when complete
-   - Present URL to user
+4. **Phase 4: IMPLEMENTATION (Clean Code Build)**
+   - Orchestrate expert agents (`backend-specialist`, `frontend-specialist`, `database-architect`).
+   - **STRICT RULE:** Apply `@clean-code` (Zero Tolerance for Comments).
+   - Run domain-specific validation scripts (Audit, Lint, Security).
+
+### Final Checklist:
+
+- Start preview with `auto_preview.py`.
+- Final audit using `checklist.py`.
 
 ---
 
@@ -42,18 +40,13 @@ This command starts a new application creation process.
 ```
 /create blog site
 /create e-commerce app with product listing and cart
-/create todo app
 /create Instagram clone
-/create crm system with customer management
 ```
 
 ---
 
-## Before Starting
+## Performance Standard
 
-If request is unclear, ask these questions:
-- What type of application?
-- What are the basic features?
-- Who will use it?
-
-Use defaults, add details later.
+- **Code:** Highly semantic, small functions, no comments.
+- **Speed:** Non-interactive execution after Solutioning approval.
+- **Safe:** Guard clauses and types everywhere.

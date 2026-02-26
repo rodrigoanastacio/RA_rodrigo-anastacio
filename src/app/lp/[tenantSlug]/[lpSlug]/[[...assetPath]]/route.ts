@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
+import path from 'path'
 
 export async function GET(
   request: NextRequest,
@@ -40,8 +41,17 @@ export async function GET(
     return new NextResponse('Página não encontrada ou inativa', { status: 404 })
   }
 
-  const pathParts = assetPath || []
-  const fileName = pathParts.length > 0 ? pathParts.join('/') : 'index.html'
+  const rawPath = assetPath ? assetPath.join('/') : ''
+  const sanitizedPath = rawPath
+    ? path.posix.normalize(rawPath).replace(/^(\.\.[/\\]?)+/, '')
+    : ''
+
+  if (sanitizedPath.includes('..')) {
+    return new NextResponse('Acesso negado', { status: 403 })
+  }
+
+  const fileName =
+    sanitizedPath && sanitizedPath !== '.' ? sanitizedPath : 'index.html'
   const filePath = `${tenant.id}/custom-lps/${lpSlug}/${fileName}`
 
   const { data: fileData, error: fileError } = await supabase.storage

@@ -69,11 +69,54 @@ export const landingPagesHandler = {
     return data as LandingPageRow
   },
 
+  async deleteAssetsFolder(
+    supabase: SupabaseClient<Database>,
+    folderPath: string
+  ) {
+    const { data: list, error } = await supabase.storage
+      .from('tenant-assets')
+      .list(folderPath, { limit: 100 })
+
+    if (error || !list) {
+      console.warn(
+        '[deleteAssetsFolder] Error listing folder:',
+        folderPath,
+        error
+      )
+      return
+    }
+
+    const filesToRemove: string[] = []
+    for (const item of list) {
+      if (item.id) {
+        filesToRemove.push(`${folderPath}/${item.name}`)
+      } else {
+        await this.deleteAssetsFolder(supabase, `${folderPath}/${item.name}`)
+      }
+    }
+
+    if (filesToRemove.length > 0) {
+      const { error: removeError } = await supabase.storage
+        .from('tenant-assets')
+        .remove(filesToRemove)
+      if (removeError) {
+        console.warn('[deleteAssetsFolder] Error removing files:', removeError)
+      }
+    }
+  },
+
   async delete(
     supabase: SupabaseClient<Database>,
     id: string,
     tenantId: string
   ) {
+    const { data: lp } = await supabase
+      .from('landing_pages')
+      .select('slug, is_custom')
+      .eq('id', id)
+      .eq('tenant_id', tenantId)
+      .single()
+
     const { error } = await supabase
       .from('landing_pages')
       .delete()
@@ -81,6 +124,14 @@ export const landingPagesHandler = {
       .eq('tenant_id', tenantId)
 
     if (error) throw error
+
+    if (lp?.is_custom && lp.slug) {
+      const folderPath = `${tenantId}/custom-lps/${lp.slug}`
+      await this.deleteAssetsFolder(supabase, folderPath).catch((err) => {
+        console.error('[LandingPagesHandler] Error cleaning up storage:', err)
+      })
+    }
+
     return true
   },
 

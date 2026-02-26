@@ -32,15 +32,16 @@ export async function GET(
   }
 
   const rawPath = assetPath ? assetPath.join('/') : ''
-  const sanitizedPath = path.posix
-    .normalize(rawPath)
-    .replace(/^(\.\.[/\\]?)+/, '')
+  const sanitizedPath = rawPath
+    ? path.posix.normalize(rawPath).replace(/^(\.\.[/\\]?)+/, '')
+    : ''
 
   if (sanitizedPath.includes('..')) {
     return new NextResponse('Acesso negado', { status: 403 })
   }
 
-  const fileName = sanitizedPath || 'index.html'
+  const fileName =
+    sanitizedPath && sanitizedPath !== '.' ? sanitizedPath : 'index.html'
   const filePath = `${lp.tenant_id}/custom-lps/${slug}/${fileName}`
 
   const { data: fileData, error: fileError } = await supabase.storage

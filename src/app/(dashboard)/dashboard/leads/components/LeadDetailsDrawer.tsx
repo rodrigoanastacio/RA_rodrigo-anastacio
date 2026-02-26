@@ -34,7 +34,7 @@ interface LeadDetailsDrawerProps {
   lead: Lead | null
   isOpen: boolean
   onClose: () => void
-  onUpdateStatus?: (status: string) => void
+  onUpdateStatus?: (id: string, status: string) => void
 }
 
 export function LeadDetailsDrawer({
@@ -56,7 +56,6 @@ export function LeadDetailsDrawer({
             Visualização completa das informações coletadas no diagnóstico de
             performance e gestão.
           </SheetDescription>
-          {/* Header Section */}
           <div className="p-8 border-b border-gray-50 bg-white sticky top-0 z-10">
             <button
               onClick={onClose}
@@ -115,7 +114,7 @@ export function LeadDetailsDrawer({
                     {Object.values(LeadStatusType).map((status) => (
                       <DropdownMenuItem
                         key={status}
-                        onClick={() => onUpdateStatus?.(status)}
+                        onClick={() => onUpdateStatus?.(lead.id, status)}
                         className="cursor-pointer"
                       >
                         <Badge
@@ -131,7 +130,6 @@ export function LeadDetailsDrawer({
             </div>
           </div>
 
-          {/* Content Section */}
           <div className="p-8 space-y-10">
             <section className="space-y-6">
               <div className="flex items-center gap-3 text-blue-600">
@@ -166,7 +164,6 @@ export function LeadDetailsDrawer({
             </section>
           </div>
 
-          {/* Footer Actions */}
           <div className="p-8 bg-[#f8fafc] border-t border-gray-100 sticky bottom-0 z-10">
             <div className="flex items-center justify-between gap-4">
               <div className="flex gap-2">

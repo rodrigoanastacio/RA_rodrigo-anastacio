@@ -1,35 +1,35 @@
 # 🗺️ Roadmap de Evolução - Projeto Dayane Anastácio
 
-Este documento serve como o **backlog estratégico** do sistema. Aqui registramos ideias, melhorias e novas funcionalidades planejadas para as próximas fases do projeto, garantindo que a visão de longo prazo esteja sempre documentada.
+Este documento serve como o **backlog estratégico** do sistema. Aqui registramos ideias, melhorias e novas funcionalidades planejadas para as próximas fases do projeto.
 
 ---
 
-## 📊 Módulo: Inteligência & Analytics (Próxima Fase)
+## 📊 Módulo: Inteligência & Analytics
 
-Dadas as discussões sobre a maturidade dos dados, as seguintes melhorias estão planejadas:
-
-- [ ] **Definição de Conversão Inteligente**: Implementar lógica para marcar leads como "Convertido" baseado em ações específicas (ex: clicar em Iniciar Consultoria).
-- [ ] **Configuração de ROI**: Criar tela de configurações para o administrador definir o "Ticket Médio" da consultoria, permitindo o cálculo automático de Retorno sobre Investimento.
-- [ ] **Tendências Temporais**: Gráficos comparativos (Mês Atual vs. Mês Anterior) para identificar crescimento ou queda na captação.
-- [ ] **Mapa de Calor Geográfico**: Visualização de demanda por Cidade/Estado para otimização de tráfego pago.
+- [ ] **Definição de Conversão Inteligente**: Implementar lógica para marcar leads como "Convertido" baseado em ações específicas.
+- [ ] **Configuração de ROI**: Tela para definir "Ticket Médio" e cálculo automático de ROI.
+- [ ] **Tendências Temporais**: Gráficos comparativos (Mês Atual vs. Anterior).
+- [ ] **Mapa de Calor Geográfico**: Visualização de demanda por Cidade/Estado.
 
 ---
 
-## 🤝 Módulo: Gestão de Equipe (Melhorias)
+## 🤝 Módulo: Gestão de Equipe
 
-- [ ] **Sistema de Convites por E-mail**: Automatizar o envio de e-mail de boas-vindas para novos colaboradores com link de ativação.
-- [ ] **Log de Atividades (Audit Trail)**: Registrar quem alterou o status de qual lead, trazendo transparência para o time.
-- [ ] **Upload de Avatar Customizado**: Permitir que cada colaborador suba sua própria foto de perfil integrada ao Supabase Storage.
+- [ ] **Sistema de Convites por E-mail**: Automação de envio de convites com link de ativação.
+- [ ] **Log de Atividades (Audit Trail)**: Registro de alterações de status e notas.
+- [ ] **Upload de Avatar Customizado**: Integração com Supabase Storage para fotos de perfil.
 
 ---
 
-## 🚀 Novas Funcionalidades (Visão Futura)
+## 🚀 Próximas Implementações Técnicas
 
-- [ ] **Integração Push Notifications**: Notificar o administrador no celular assim que um novo lead preencher o diagnóstico.
-- [ ] **Exportação de Relatórios**: Gerar PDFs ou Planilhas com os dados filtrados dos leads para reuniões de diretoria.
-- [ ] **Automação de WhatsApp**: Botão para disparar templates pré-definidos de primeira abordagem diretamente pelo sistema.
+- [ ] **Persistência de Notificações**: Migrar o sistema de notificações para o banco de dados (atualmente apenas em memória).
+- [ ] **Auto-limpeza de Notificações**: Script para deletar notificações lidas com mais de 7 dias.
+- [ ] **Integração Push Notifications**: Notificações via Web Push / Mobile.
+- [ ] **Exportação de Relatórios**: Geração de PDFs e Planilhas dos leads.
+- [ ] **Automação de WhatsApp**: Templates pré-definidos para disparos rápidos.
 
 ---
 
 > [!TIP]
-> Este arquivo deve ser atualizado sempre que uma nova ideia estratégica surgir durante o desenvolvimento ou feedback da Dayane.
+> Itens concluídos (como Kanban e Realtime básico) foram removidos para manter o foco no futuro.

@@ -23,7 +23,6 @@ Este documento serve como o **backlog estratégico** do sistema. Aqui registramo
 
 ## 🚀 Próximas Implementações Técnicas
 
-- [ ] **Persistência de Notificações**: Migrar o sistema de notificações para o banco de dados (atualmente apenas em memória).
 - [ ] **Auto-limpeza de Notificações**: Script para deletar notificações lidas com mais de 7 dias.
 - [ ] **Integração Push Notifications**: Notificações via Web Push / Mobile.
 - [ ] **Exportação de Relatórios**: Geração de PDFs e Planilhas dos leads.

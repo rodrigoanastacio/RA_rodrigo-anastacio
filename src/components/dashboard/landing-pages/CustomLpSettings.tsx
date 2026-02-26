@@ -14,7 +14,6 @@ import {
   Upload
 } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -31,7 +30,6 @@ interface CustomLpSettingsProps {
 }
 
 export function CustomLpSettings({ lp }: CustomLpSettingsProps) {
-  const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [file, setFile] = useState<File | null>(null)

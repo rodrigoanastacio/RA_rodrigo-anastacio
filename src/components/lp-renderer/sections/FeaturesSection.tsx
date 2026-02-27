@@ -16,7 +16,6 @@ import {
   Zap
 } from 'lucide-react'
 
-// Map string names to Lucide components
 const ICON_MAP: Record<string, LucideIcon> = {
   rocket: Rocket,
   zap: Zap,
@@ -76,8 +75,7 @@ export function FeaturesSection({
     }
   ],
   columns = 3,
-  theme = 'light',
-  branding
+  theme = 'light'
 }: FeaturesSectionProps) {
   const isDark = theme === 'dark'
   const isGray = theme === 'gray'

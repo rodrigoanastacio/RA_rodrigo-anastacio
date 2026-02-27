@@ -28,6 +28,14 @@ export default async function DashboardPage() {
 
       <Summary>
         <StatCard
+          label="Valor Total do Funil"
+          value={currencyHelpers.format(stats.totalValue)}
+          icon={Banknote}
+          iconColor="text-blue-500"
+          iconBg="bg-blue-50"
+          trend={{ value: 'Potencial total', direction: 'neutral' }}
+        />
+        <StatCard
           label="Valor em Negociação"
           value={currencyHelpers.format(stats.activeValue)}
           icon={Wallet}
@@ -42,14 +50,6 @@ export default async function DashboardPage() {
           iconColor="text-emerald-500"
           iconBg="bg-emerald-50"
           trend={{ value: `${stats.conversionRate} conv.`, direction: 'up' }}
-        />
-        <StatCard
-          label="Valor Total do Funil"
-          value={currencyHelpers.format(stats.totalValue)}
-          icon={Banknote}
-          iconColor="text-blue-500"
-          iconBg="bg-blue-50"
-          trend={{ value: 'Potencial total', direction: 'neutral' }}
         />
       </Summary>
 

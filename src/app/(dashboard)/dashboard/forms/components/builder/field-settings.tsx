@@ -93,7 +93,7 @@ export function FieldSettings({
                 />
                 <div className="space-y-3">
                   <div>
-                    <SectionLabel>Título da Etapa</SectionLabel>
+                    <SectionLabel>Título</SectionLabel>
                     <SharpInput
                       value={activeStep.title || ''}
                       onChange={(e) => {
@@ -104,11 +104,11 @@ export function FieldSettings({
                         }
                         setSchema((prev) => ({ ...prev, steps: newSteps }))
                       }}
-                      placeholder="Ex: Dados Pessoais"
+                      placeholder="Insira o título"
                     />
                   </div>
                   <div>
-                    <SectionLabel>Descrição da Etapa</SectionLabel>
+                    <SectionLabel>Descrição</SectionLabel>
                     <SharpInput
                       value={activeStep.description || ''}
                       onChange={(e) => {
@@ -119,7 +119,7 @@ export function FieldSettings({
                         }
                         setSchema((prev) => ({ ...prev, steps: newSteps }))
                       }}
-                      placeholder="Breve resumo desta etapa"
+                      placeholder="Insira a descrição"
                     />
                   </div>
                 </div>
@@ -144,7 +144,7 @@ export function FieldSettings({
                           submit_label: e.target.value
                         }))
                       }
-                      placeholder="Ex: Enviar Mensagem"
+                      placeholder="Insira o texto"
                     />
                   </div>
 

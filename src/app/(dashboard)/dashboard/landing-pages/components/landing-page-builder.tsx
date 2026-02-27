@@ -28,6 +28,7 @@ interface LandingPageBuilderProps {
       metaTitle?: string
       metaDescription?: string
       formId?: string
+      whatsappFormId?: string
     }
   ) => Promise<{ success: boolean; slug?: string; message?: string }>
   onTogglePublish?: (published: boolean) => Promise<{ success: boolean }>
@@ -95,9 +96,16 @@ export function LandingPageBuilder(props: LandingPageBuilderProps) {
           deleteSection={actions.deleteSection}
           handleDragEnd={actions.handleDragEnd}
           onAddHero={() => actions.addSection('hero')}
+          activeFormId={pageSettings.formId}
           activeForm={
             props.availableForms?.find((f) => f.id === pageSettings.formId)
               ?.schema as unknown as FormSchema
+          }
+          activeWhatsappFormId={pageSettings.whatsappFormId}
+          activeWhatsappForm={
+            props.availableForms?.find(
+              (f) => f.id === pageSettings.whatsappFormId
+            )?.schema as unknown as FormSchema
           }
           branding={props.branding}
         />

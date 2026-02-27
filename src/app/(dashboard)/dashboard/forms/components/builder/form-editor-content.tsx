@@ -142,46 +142,48 @@ export function FormEditorContent({
           }}
         >
           <div className="max-w-2xl mx-auto">
-            <div className="flex items-end gap-0 mb-6">
-              {schema.steps.map((step, index) => (
-                <div key={step.id} className="flex items-end group relative">
-                  <button
-                    onClick={() => {
-                      setActiveStepIndex(index)
-                      setSelectedField(null)
-                    }}
-                    className={cn(
-                      'relative px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-150 border-b-2 whitespace-nowrap cursor-pointer',
-                      activeStepIndex === index
-                        ? 'bg-white text-[#4F46E5] border-[#4F46E5] shadow-[0_-1px_0_0_#fff]'
-                        : 'bg-transparent text-gray-400 border-transparent hover:text-gray-600 hover:bg-white/50'
-                    )}
-                  >
-                    <span className="text-gray-300 mr-1.5">
-                      {String(index + 1).padStart(2, '0')}
-                    </span>
-                    {step.title || 'Sem título'}
-                  </button>
-
-                  {schema.steps.length > 1 && (
+            {schema.display_type === 'wizard' && (
+              <div className="flex items-end gap-0 mb-6">
+                {schema.steps.map((step, index) => (
+                  <div key={step.id} className="flex items-end group relative">
                     <button
-                      onClick={() => removeStep(index)}
-                      className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 text-white items-center justify-center hidden group-hover:flex transition-all cursor-pointer z-10"
+                      onClick={() => {
+                        setActiveStepIndex(index)
+                        setSelectedField(null)
+                      }}
+                      className={cn(
+                        'relative px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-150 border-b-2 whitespace-nowrap cursor-pointer',
+                        activeStepIndex === index
+                          ? 'bg-white text-[#4F46E5] border-[#4F46E5] shadow-[0_-1px_0_0_#fff]'
+                          : 'bg-transparent text-gray-400 border-transparent hover:text-gray-600 hover:bg-white/50'
+                      )}
                     >
-                      <X size={10} />
+                      <span className="text-gray-300 mr-1.5">
+                        {String(index + 1).padStart(2, '0')}
+                      </span>
+                      {step.title || 'Sem título'}
                     </button>
-                  )}
-                </div>
-              ))}
 
-              <button
-                onClick={addStep}
-                className="flex items-center gap-1 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-[#4F46E5] hover:bg-white/60 border-b-2 border-transparent transition-all duration-150 cursor-pointer"
-              >
-                <Plus size={12} />
-                Passo
-              </button>
-            </div>
+                    {schema.steps.length > 1 && (
+                      <button
+                        onClick={() => removeStep(index)}
+                        className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-rose-500 text-white items-center justify-center hidden group-hover:flex transition-all cursor-pointer z-10"
+                      >
+                        <X size={10} />
+                      </button>
+                    )}
+                  </div>
+                ))}
+
+                <button
+                  onClick={addStep}
+                  className="flex items-center gap-1 px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-[#4F46E5] hover:bg-white/60 border-b-2 border-transparent transition-all duration-150 cursor-pointer"
+                >
+                  <Plus size={12} />
+                  Passo
+                </button>
+              </div>
+            )}
 
             <div className="space-y-2">
               {activeStep.fields.length === 0 ? (

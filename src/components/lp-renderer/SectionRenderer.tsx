@@ -22,7 +22,10 @@ export interface LPSection {
 
 interface SectionRendererProps {
   section: LPSection
+  formId?: string
   form?: FormSchema
+  whatsappFormId?: string
+  whatsappForm?: FormSchema
   branding?: {
     businessName?: string
     businessSlogan?: string
@@ -32,7 +35,10 @@ interface SectionRendererProps {
 
 export function SectionRenderer({
   section,
+  formId,
   form,
+  whatsappFormId,
+  whatsappForm,
   branding
 }: SectionRendererProps) {
   const Component = SECTION_COMPONENTS[section.type]
@@ -46,7 +52,10 @@ export function SectionRenderer({
     <Component
       {...section.data}
       id={section.id}
+      formId={formId}
       form={form}
+      whatsappFormId={whatsappFormId}
+      whatsappForm={whatsappForm}
       branding={branding}
     />
   )

@@ -7,8 +7,9 @@ import { cn, resolveMagicLink } from '@/lib/utils'
 import { Check, ClipboardList, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { toast } from 'sonner'
+import { WhatsAppCaptureModal } from '../ui/WhatsAppCaptureModal'
 
 export interface HeroSectionProps {
   id?: string
@@ -20,7 +21,10 @@ export interface HeroSectionProps {
   theme?: 'light' | 'dark'
   layout?: 'centered' | 'split'
   benefits?: string[]
+  formId?: string
   form?: FormSchema
+  whatsappFormId?: string
+  whatsappForm?: FormSchema
   branding?: {
     businessName?: string
     businessSlogan?: string
@@ -37,7 +41,10 @@ export function HeroSection({
   backgroundImage,
   theme = 'light',
   benefits = [],
+  formId,
   form,
+  whatsappFormId,
+  whatsappForm,
   branding
 }: HeroSectionProps) {
   const displayHeadline =
@@ -101,6 +108,8 @@ export function HeroSection({
     },
     [submitLead]
   )
+
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false)
 
   const isDark = theme === 'dark'
 
@@ -192,13 +201,33 @@ export function HeroSection({
 
             {ctaLabel && ctaLink && (
               <div className="pt-2">
-                <Button
-                  size="lg"
-                  className="bg-[#4F46E5] hover:bg-[#4F46E5]/90 text-white rounded-full px-10 h-13 text-base font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#4F46E5]/25"
-                  asChild
-                >
-                  <a href={resolveMagicLink(ctaLink, branding)}>{ctaLabel}</a>
-                </Button>
+                {ctaLink === '#whatsapp' && branding?.whatsappNumber ? (
+                  <>
+                    <Button
+                      size="lg"
+                      className="bg-[#4F46E5] hover:bg-[#4F46E5]/90 text-white rounded-full px-10 h-13 text-base font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#4F46E5]/25"
+                      onClick={() => setIsWhatsAppModalOpen(true)}
+                    >
+                      {ctaLabel}
+                    </Button>
+                    <WhatsAppCaptureModal
+                      isOpen={isWhatsAppModalOpen}
+                      onClose={() => setIsWhatsAppModalOpen(false)}
+                      formId={formId || form?.id || null}
+                      whatsappNumber={branding.whatsappNumber}
+                      whatsappFormId={whatsappFormId}
+                      whatsappForm={whatsappForm}
+                    />
+                  </>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="bg-[#4F46E5] hover:bg-[#4F46E5]/90 text-white rounded-full px-10 h-13 text-base font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#4F46E5]/25"
+                    asChild
+                  >
+                    <a href={resolveMagicLink(ctaLink, branding)}>{ctaLabel}</a>
+                  </Button>
+                )}
               </div>
             )}
 

@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button'
 import { cn, resolveMagicLink } from '@/lib/utils'
 import { BadgeCheck, Instagram, Linkedin } from 'lucide-react'
 import Image from 'next/image'
+import { useState } from 'react'
+import { WhatsAppCaptureModal } from '../ui/WhatsAppCaptureModal'
 
 export interface BioSectionProps {
   id?: string
@@ -20,6 +22,10 @@ export interface BioSectionProps {
     businessSlogan?: string
     whatsappNumber?: string
   }
+  formId?: string
+  form?: import('@/components/forms/types').FormSchema
+  whatsappFormId?: string
+  whatsappForm?: import('@/components/forms/types').FormSchema
 }
 
 export function BioSection({
@@ -35,7 +41,11 @@ export function BioSection({
   theme = 'light',
   ctaLabel,
   ctaLink,
-  branding
+  branding,
+  formId,
+  form,
+  whatsappFormId,
+  whatsappForm
 }: BioSectionProps) {
   const displayHeadline =
     headline || branding?.businessName || 'Titulo da Seção'
@@ -44,6 +54,8 @@ export function BioSection({
 
   const isDark = theme === 'dark'
   const isGray = theme === 'gray'
+
+  const [isWhatsAppModalOpen, setIsWhatsAppModalOpen] = useState(false)
 
   return (
     <section
@@ -163,13 +175,38 @@ export function BioSection({
 
             <div className="pt-4 flex flex-col sm:flex-row gap-4">
               {ctaLabel && ctaLink && (
-                <Button
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
-                  asChild
-                >
-                  <a href={resolveMagicLink(ctaLink, branding)}>{ctaLabel}</a>
-                </Button>
+                <>
+                  {ctaLink === '#whatsapp' && branding?.whatsappNumber ? (
+                    <>
+                      <Button
+                        size="lg"
+                        className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
+                        onClick={() => setIsWhatsAppModalOpen(true)}
+                      >
+                        {ctaLabel}
+                      </Button>
+                      <WhatsAppCaptureModal
+                        isOpen={isWhatsAppModalOpen}
+                        onClose={() => setIsWhatsAppModalOpen(false)}
+                        formId={formId || form?.id || null}
+                        landingPageId={id}
+                        whatsappNumber={branding.whatsappNumber}
+                        whatsappFormId={whatsappFormId}
+                        whatsappForm={whatsappForm}
+                      />
+                    </>
+                  ) : (
+                    <Button
+                      size="lg"
+                      className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
+                      asChild
+                    >
+                      <a href={resolveMagicLink(ctaLink, branding)}>
+                        {ctaLabel}
+                      </a>
+                    </Button>
+                  )}
+                </>
               )}
 
               <div className="flex items-center gap-4 px-4 py-2">

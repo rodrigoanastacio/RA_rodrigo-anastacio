@@ -10,6 +10,7 @@ export interface PageSettings {
   metaTitle?: string
   metaDescription?: string
   formId?: string
+  whatsappFormId?: string
 }
 
 interface UseLandingPageBuilderProps {
@@ -20,6 +21,7 @@ interface UseLandingPageBuilderProps {
   initialMetaTitle?: string
   initialMetaDescription?: string
   initialFormId?: string
+  initialWhatsappFormId?: string
   onSave: (
     sections: LPSection[],
     pageSettings: PageSettings
@@ -35,6 +37,7 @@ export function useLandingPageBuilder({
   initialMetaTitle = '',
   initialMetaDescription = '',
   initialFormId = '',
+  initialWhatsappFormId = '',
   onSave,
   onTogglePublish
 }: UseLandingPageBuilderProps) {
@@ -48,10 +51,9 @@ export function useLandingPageBuilder({
     slug: initialSlug,
     metaTitle: initialMetaTitle,
     metaDescription: initialMetaDescription,
-    formId: initialFormId
+    formId: initialFormId,
+    whatsappFormId: initialWhatsappFormId
   })
-
-  // --- Actions ---
 
   const addSection = (type: 'hero' | 'features' | 'bio' | 'footer') => {
     let defaultData = {}

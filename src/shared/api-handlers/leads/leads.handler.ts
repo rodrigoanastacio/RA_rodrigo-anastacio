@@ -1,4 +1,5 @@
 import { getTenantIdFromJWT } from '@/lib/auth/get-tenant-id'
+import { createAdminClient } from '@/lib/supabase/admin'
 import {
   Lead,
   LeadRow,
@@ -26,19 +27,16 @@ export const leadsHandler = {
   ) => {
     let tenantId: string | null | undefined = overrideTenantId
 
-    // 1. Tentar obter via JWT (usuário logado)
     if (!tenantId) {
       tenantId = await getTenantIdFromJWT()
     }
 
-    // 2. Se não tiver JWT, obrigatório ter form_id para buscar o tenant dono do form
     if (!tenantId) {
       if (!metadata.form_id) {
         throw new Error('Form ID is required for public submissions')
       }
-
-      // Buscar formulário para validar e obter tenant_id
-      const { data: form, error: formError } = await supabase
+      const adminSupabase = createAdminClient()
+      const { data: form, error: formError } = await adminSupabase
         .from('forms')
         .select('tenant_id, is_published')
         .eq('id', metadata.form_id)
@@ -59,7 +57,6 @@ export const leadsHandler = {
       throw new Error('Tenant ID could not be determined')
     }
 
-    // Tentar extrair campos básicos do JSON para conveniência na listagem
     const answers = metadata.answers || data || {}
     const nome =
       (answers.nome as string) ||

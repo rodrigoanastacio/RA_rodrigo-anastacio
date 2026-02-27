@@ -83,5 +83,23 @@ export const formsService = {
     if (!tenantId) throw new Error('Tenant not found')
 
     return formsHandler.update(supabase, id, tenantId, { schema })
+  },
+
+  updateForm: async (id: string, formUpdate: FormUpdate) => {
+    const supabase = await createClient()
+
+    const { data: authUser, error: authError } = await supabase.auth.getUser()
+    if (authError || !authUser?.user) throw new Error('Unauthorized')
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('tenant_id')
+      .eq('id', authUser.user.id)
+      .single()
+
+    const tenantId = profile?.tenant_id || ''
+    if (!tenantId) throw new Error('Tenant not found')
+
+    return formsHandler.update(supabase, id, tenantId, formUpdate)
   }
 }

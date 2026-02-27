@@ -71,13 +71,25 @@ export default async function LandingPage({ params }: LandingPageProps) {
       .single()
 
     if (formData) {
-      formSchema = formData.schema
+      formSchema = formData.schema as unknown as FormSchema
+    }
+  }
+
+  let whatsappFormSchema: FormSchema | undefined = undefined
+  if (page.whatsapp_form_id) {
+    const { data: formData } = await supabase
+      .from('forms')
+      .select('schema')
+      .eq('id', page.whatsapp_form_id)
+      .single()
+
+    if (formData) {
+      whatsappFormSchema = formData.schema as unknown as FormSchema
     }
   }
 
   const sections = page.content as LPSection[]
 
-  // Fetch branding from profiles associated with this tenant
   const { data: profile } = await supabase
     .from('profiles')
     .select('business_name, business_slogan, whatsapp_number')
@@ -97,7 +109,10 @@ export default async function LandingPage({ params }: LandingPageProps) {
         <SectionRenderer
           key={section.id}
           section={section}
+          formId={page.form_id || undefined}
           form={formSchema}
+          whatsappFormId={page.whatsapp_form_id || undefined}
+          whatsappForm={whatsappFormSchema}
           branding={branding}
         />
       ))}

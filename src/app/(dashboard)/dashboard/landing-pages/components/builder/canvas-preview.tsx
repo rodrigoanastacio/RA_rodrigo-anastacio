@@ -30,7 +30,10 @@ interface CanvasPreviewProps {
   deleteSection: (id: string) => void
   handleDragEnd: (event: DragEndEvent) => void
   onAddHero: () => void
+  activeFormId?: string
   activeForm?: FormSchema
+  activeWhatsappFormId?: string
+  activeWhatsappForm?: FormSchema
   branding?: {
     businessName?: string
     businessSlogan?: string
@@ -43,14 +46,20 @@ function SortableSection({
   isSelected,
   onClick,
   onDelete,
+  activeFormId,
   activeForm,
+  activeWhatsappFormId,
+  activeWhatsappForm,
   branding
 }: {
   section: LPSection
   isSelected: boolean
   onClick: () => void
   onDelete: () => void
+  activeFormId?: string
   activeForm?: FormSchema
+  activeWhatsappFormId?: string
+  activeWhatsappForm?: FormSchema
   branding?: {
     businessName?: string
     businessSlogan?: string
@@ -127,7 +136,10 @@ function SortableSection({
       >
         <SectionRenderer
           section={section}
+          formId={activeFormId}
           form={activeForm}
+          whatsappFormId={activeWhatsappFormId}
+          whatsappForm={activeWhatsappForm}
           branding={branding}
         />
       </div>
@@ -142,7 +154,10 @@ export function CanvasPreview({
   deleteSection,
   handleDragEnd,
   onAddHero,
+  activeFormId,
   activeForm,
+  activeWhatsappFormId,
+  activeWhatsappForm,
   branding
 }: CanvasPreviewProps) {
   const sensors = useSensors(
@@ -218,7 +233,10 @@ export function CanvasPreview({
                       isSelected={section.id === selectedId}
                       onClick={() => setSelectedId(section.id)}
                       onDelete={() => deleteSection(section.id)}
+                      activeFormId={activeFormId}
                       activeForm={activeForm}
+                      activeWhatsappFormId={activeWhatsappFormId}
+                      activeWhatsappForm={activeWhatsappForm}
                       branding={branding}
                     />
                   ))

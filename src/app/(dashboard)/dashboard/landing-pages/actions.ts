@@ -16,6 +16,7 @@ interface UpdateLandingPageInput {
   meta_description?: string
   is_published?: boolean
   form_id?: string | null
+  whatsapp_form_id?: string | null
 }
 
 export async function createLandingPageAction(input: CreateLandingPageInput) {

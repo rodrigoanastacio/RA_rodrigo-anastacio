@@ -21,6 +21,7 @@ export interface UseLandingPageReturn {
       meta_title?: string
       meta_description?: string
       form_id?: string | null
+      whatsapp_form_id?: string | null
     }
   ) => Promise<SaveLandingPageResult>
   togglePublish: (
@@ -60,6 +61,7 @@ export function useLandingPage(): UseLandingPageReturn {
       meta_title?: string
       meta_description?: string
       form_id?: string | null
+      whatsapp_form_id?: string | null
     }
   ): Promise<SaveLandingPageResult> => {
     setIsSaving(true)

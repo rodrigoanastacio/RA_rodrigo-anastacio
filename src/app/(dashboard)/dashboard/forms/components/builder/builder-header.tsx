@@ -11,6 +11,8 @@ interface BuilderHeaderProps {
   setActiveTab: (tab: 'editor' | 'preview') => void
   onSave: () => Promise<void>
   isSaving: boolean
+  isPublished: boolean
+  onTogglePublish: (newStatus: boolean) => Promise<void>
 }
 
 export function BuilderHeader({
@@ -18,7 +20,9 @@ export function BuilderHeader({
   activeTab,
   setActiveTab,
   onSave,
-  isSaving
+  isSaving,
+  isPublished,
+  onTogglePublish
 }: BuilderHeaderProps) {
   const router = useRouter()
 
@@ -48,6 +52,15 @@ export function BuilderHeader({
             <p className="text-[10px] text-gray-400 font-mono leading-tight uppercase tracking-wider">
               Form Builder ·{' '}
               {schema.display_type === 'wizard' ? 'Multi-etapas' : 'Simples'}
+              {' · '}
+              <span
+                className={cn(
+                  'font-bold',
+                  isPublished ? 'text-emerald-500' : 'text-amber-500'
+                )}
+              >
+                {isPublished ? 'Publicado' : 'Rascunho'}
+              </span>
             </p>
           </div>
         </div>
@@ -81,6 +94,19 @@ export function BuilderHeader({
             Preview
           </button>
         </div>
+
+        <button
+          onClick={() => onTogglePublish(!isPublished)}
+          disabled={isSaving}
+          className={cn(
+            'flex items-center gap-2 h-8 px-4 text-[11px] font-bold uppercase tracking-widest transition-all duration-200 active:scale-95 disabled:opacity-50 cursor-pointer border',
+            isPublished
+              ? 'border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300'
+              : 'bg-emerald-600 hover:bg-emerald-700 text-white border-transparent'
+          )}
+        >
+          {isPublished ? 'Despublicar' : 'Publicar'}
+        </button>
 
         <button
           onClick={onSave}

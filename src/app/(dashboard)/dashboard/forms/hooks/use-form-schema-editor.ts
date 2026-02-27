@@ -10,17 +10,19 @@ import { formSchemaValidator } from '@/lib/zod/forms/form-builder.schema'
 import { FormUpdate } from '@/shared/api-handlers/forms/forms.handler'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { updateFormSchemaAction } from '../actions'
+import { togglePublishFormAction, updateFormSchemaAction } from '../actions'
 
 export function useFormSchemaEditor(
   formId: string,
   initialSchema: FormSchema,
+  initialPublished: boolean,
   activeStepIndex: number,
   selectedField: string | null,
   setSelectedField: (field: string | null) => void,
   setActiveStepIndex: (index: number) => void
 ) {
   const [schema, setSchema] = useState<FormSchema>(initialSchema)
+  const [isPublished, setIsPublished] = useState(initialPublished)
   const [isSaving, setIsSaving] = useState(false)
 
   const activeFieldData = schema.steps
@@ -46,6 +48,24 @@ export function useFormSchemaEditor(
       toast.success('Alterações salvas com sucesso!')
     } catch {
       toast.error('Erro ao salvar formulário.')
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleTogglePublish = async (newStatus: boolean) => {
+    setIsSaving(true)
+    try {
+      const result = await togglePublishFormAction(formId, newStatus)
+      if (!result.success) throw new Error(result.error)
+      setIsPublished(newStatus)
+      toast.success(
+        newStatus
+          ? 'Formulário publicado com sucesso!'
+          : 'Formulário desativado (Rascunho).'
+      )
+    } catch {
+      toast.error('Erro ao alterar status do formulário.')
     } finally {
       setIsSaving(false)
     }
@@ -119,9 +139,11 @@ export function useFormSchemaEditor(
   return {
     schema,
     setSchema,
+    isPublished,
     isSaving,
     activeFieldData,
     handleSave,
+    handleTogglePublish,
     addField,
     addStep,
     removeStep,

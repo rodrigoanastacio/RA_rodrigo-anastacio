@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const formFieldSchema = z.object({
   name: z.string().min(1, 'Nome do campo é obrigatório'),
-  label: z.string().min(1, 'Label é obrigatório'),
+  label: z.string().optional(),
   type: z.enum([
     'text',
     'email',
@@ -33,7 +33,7 @@ export const formFieldSchema = z.object({
 })
 
 export const formStepSchema = z.object({
-  title: z.string().min(1, 'Título da etapa é obrigatório'),
+  title: z.string().optional(),
   description: z.string().optional(),
   fields: z.array(formFieldSchema).min(1, 'Adicione pelo menos um campo')
 })

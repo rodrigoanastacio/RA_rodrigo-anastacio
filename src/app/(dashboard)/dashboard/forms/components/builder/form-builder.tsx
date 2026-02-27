@@ -28,12 +28,18 @@ export function FormBuilder({ formId, initialData }: FormBuilderProps) {
     setActiveStepIndex,
     activeFieldData,
     handleSave,
+    isPublished,
+    handleTogglePublish,
     addField,
     addStep,
     removeStep,
     removeField,
     updateField
-  } = useFormBuilder(formId, initialData.schema as FormSchema)
+  } = useFormBuilder(
+    formId,
+    initialData.schema as FormSchema,
+    initialData.is_published
+  )
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
@@ -43,6 +49,8 @@ export function FormBuilder({ formId, initialData }: FormBuilderProps) {
         setActiveTab={setActiveTab}
         onSave={handleSave}
         isSaving={isSaving}
+        isPublished={isPublished}
+        onTogglePublish={handleTogglePublish}
       />
 
       <div className="flex flex-1 overflow-hidden">

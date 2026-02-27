@@ -51,7 +51,8 @@ export default function LandingPageEditor({
           slug: pageSettings.slug,
           meta_title: pageSettings.metaTitle,
           meta_description: pageSettings.metaDescription,
-          form_id: pageSettings.formId || null
+          form_id: pageSettings.formId || null,
+          whatsapp_form_id: pageSettings.whatsappFormId || null
         })
       }
       onTogglePublish={(published: boolean) => togglePublish(id, published)}

@@ -18,12 +18,12 @@ export function DynamicForm({
   schema,
   onSubmit,
   defaultValues,
-  className
+  className,
+  hideTitle
 }: DynamicFormProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const isWizard = schema.display_type === 'wizard'
 
-  // Generate Zod Schema dynamically
   const zodSchema = useMemo(() => generateZodSchema(schema), [schema])
 
   const methods = useForm<Record<string, unknown>>({
@@ -39,7 +39,6 @@ export function DynamicForm({
     formState: { errors, isSubmitting }
   } = methods
 
-  // Wizard Logic
   const steps = schema.steps || []
   const currentStepData = steps[currentStep]
   const isLastStep = currentStep === steps.length - 1
@@ -61,7 +60,6 @@ export function DynamicForm({
     await onSubmit(data)
   }
 
-  // Render Field Helper
   const renderField = (field: FormField) => {
     const error = errors[field.name]?.message as string | undefined
 
@@ -235,7 +233,7 @@ export function DynamicForm({
           <div className="flex flex-col gap-6">
             {steps.map((step) => (
               <div key={step.id} className="grid gap-4">
-                {step.title && (
+                {!hideTitle && step.title && (
                   <h3 className="text-lg font-bold text-gray-900 border-b pb-2 mb-2">
                     {step.title}
                   </h3>

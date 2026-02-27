@@ -114,6 +114,7 @@ export type Database = {
           tenant_id: string
           title: string
           updated_at: string | null
+          whatsapp_form_id: string | null
         }
         Insert: {
           content?: Json
@@ -130,6 +131,7 @@ export type Database = {
           tenant_id: string
           title: string
           updated_at?: string | null
+          whatsapp_form_id?: string | null
         }
         Update: {
           content?: Json
@@ -146,6 +148,7 @@ export type Database = {
           tenant_id?: string
           title?: string
           updated_at?: string | null
+          whatsapp_form_id?: string | null
         }
         Relationships: [
           {
@@ -160,6 +163,13 @@ export type Database = {
             columns: ['tenant_id']
             isOneToOne: false
             referencedRelation: 'tenants'
+            referencedColumns: ['id']
+          },
+          {
+            foreignKeyName: 'landing_pages_whatsapp_form_id_fkey'
+            columns: ['whatsapp_form_id']
+            isOneToOne: false
+            referencedRelation: 'forms'
             referencedColumns: ['id']
           }
         ]

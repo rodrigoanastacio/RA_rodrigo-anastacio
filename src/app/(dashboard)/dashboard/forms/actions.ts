@@ -21,6 +21,18 @@ export async function updateFormSchemaAction(
   }
 }
 
+export async function togglePublishFormAction(id: string, published: boolean) {
+  try {
+    await formsService.updateForm(id, { is_published: published })
+    revalidatePath(`/dashboard/forms/${id}/builder`)
+    revalidatePath('/dashboard/forms')
+    return { success: true }
+  } catch (error) {
+    console.error(error)
+    return { success: false, error: 'Falha ao alterar status de publicação' }
+  }
+}
+
 export async function createFormAction(data: Omit<FormInsert, 'tenant_id'>) {
   try {
     const newForm = await formsService.createForm(data)

@@ -644,7 +644,7 @@ export function PropertiesPanel({
                 icon={<Target className="w-3 h-3" />}
                 label="Captação de Leads"
               />
-              <FieldGroup label="Formulário de Destino">
+              <FieldGroup label="Formulário de Destino Principal">
                 <Select
                   value={pageSettings.formId || 'none'}
                   onValueChange={(val) =>
@@ -667,7 +667,34 @@ export function PropertiesPanel({
                   </SelectContent>
                 </Select>
                 <p className="text-[10px] text-gray-400 mt-1">
-                  Define qual formulário será aberto ao clicar no CTA do Hero.
+                  Exibido diretamente na Hero Section (Opção A).
+                </p>
+              </FieldGroup>
+
+              <FieldGroup label="Formulário do WhatsApp">
+                <Select
+                  value={pageSettings.whatsappFormId || 'none'}
+                  onValueChange={(val) =>
+                    setPageSettings((p) => ({
+                      ...p,
+                      whatsappFormId: val === 'none' ? undefined : val
+                    }))
+                  }
+                >
+                  <SelectTrigger className="text-xs">
+                    <SelectValue placeholder="Nenhum" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="none">Nenhum</SelectItem>
+                    {availableForms.map((form) => (
+                      <SelectItem key={`wa-${form.id}`} value={form.id}>
+                        {form.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <p className="text-[10px] text-gray-400 mt-1">
+                  Exibido no modal ao clicar no botão de WhatsApp (Opção B).
                 </p>
               </FieldGroup>
             </div>

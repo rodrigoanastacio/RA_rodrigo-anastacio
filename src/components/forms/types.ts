@@ -51,4 +51,5 @@ export interface DynamicFormProps {
   onSubmit: (data: Record<string, unknown>) => Promise<void>
   defaultValues?: Record<string, unknown>
   className?: string
+  hideTitle?: boolean
 }

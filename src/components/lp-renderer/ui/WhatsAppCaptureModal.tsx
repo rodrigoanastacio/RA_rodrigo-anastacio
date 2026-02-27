@@ -140,11 +140,9 @@ export function WhatsAppCaptureModal({
         throw new Error(msg)
       }
 
-      // Sucesso! Registrou o lead, agora redireciona pro WA.
       handleOpenWhatsApp()
     } catch (err) {
       console.error('Erro ao enviar lead do modal WA:', err)
-      // Mesmo com erro no CRM, vamos tentar mandar pro WA para não perder o contato do cliente final
       handleOpenWhatsApp()
     } finally {
       setIsSubmitting(false)

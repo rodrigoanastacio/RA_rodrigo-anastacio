@@ -3,7 +3,7 @@ import { StatCard } from '@/components/dashboard/StatCard'
 import { Summary } from '@/components/dashboard/Summary'
 import { currencyHelpers } from '@/lib/utils/currency-helpers'
 import { dashboardService } from '@/shared/services/dashboard/dashboard.service'
-import { Banknote, Star, Users, Wallet } from 'lucide-react'
+import { Banknote, Star, Wallet } from 'lucide-react'
 import { LeadsTimelineChart } from './components/LeadsTimelineChart'
 import { RecentLeads } from './components/RecentLeads'
 import { RevenueChart } from './components/RevenueChart'
@@ -27,12 +27,6 @@ export default async function DashboardPage() {
       />
 
       <Summary>
-        <StatCard
-          label="Total de Leads"
-          value={stats.totalLeads}
-          icon={Users}
-          trend={{ value: 'Base total', direction: 'neutral' }}
-        />
         <StatCard
           label="Valor em Negociação"
           value={currencyHelpers.format(stats.activeValue)}

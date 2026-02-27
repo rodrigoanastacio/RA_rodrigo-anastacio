@@ -48,11 +48,8 @@ export function WhatsAppCaptureModal({
       }
 
       const cleanTargetNumber = whatsappNumber.replace(/\D/g, '')
-      let waLink = `https://wa.me/${cleanTargetNumber}`
-      // Opcional: Adicionar mensagem pré-definida
-      // waLink += `?text=${encodeURIComponent('Olá, gostaria de mais informações.')}`
+      const waLink = `https://wa.me/${cleanTargetNumber}`
 
-      // Abre em nova aba
       window.open(waLink, '_blank', 'noopener,noreferrer')
       onClose()
       setNome('')
@@ -109,17 +106,16 @@ export function WhatsAppCaptureModal({
       return
     }
 
-    if (!whatsappFormId && !formId && !tenantId) {
-      // Se não tem formId (publicado) e nem tenantId, não consegue submeter como lead no backend.
-      // Neste caso extremo, apenas redireciona
+    const hasNoFormAndTenantId = !whatsappFormId && !formId && !tenantId
+    if (hasNoFormAndTenantId) {
       handleOpenWhatsApp()
       return
     }
 
     setIsSubmitting(true)
     try {
-      const answers = whatsappForm
-        ? {} // handled by DynamicForm separately, wait we need to change how this handles dynamic forms
+      const payloadAnswers = whatsappForm
+        ? {}
         : { nome: nome.trim(), whatsapp: whatsapp.trim() }
 
       const response = await fetch('/api/leads', {
@@ -129,7 +125,7 @@ export function WhatsAppCaptureModal({
           form_id: whatsappFormId || formId,
           landing_page_id: landingPageId,
           tenant_id: tenantId,
-          answers,
+          answers: payloadAnswers,
           utm_source: 'whatsapp_modal',
           referrer: typeof window !== 'undefined' ? window.location.href : ''
         })

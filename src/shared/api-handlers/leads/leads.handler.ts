@@ -26,19 +26,19 @@ export const leadsHandler = {
     overrideTenantId?: string
   ) => {
     let tenantId: string | null | undefined = overrideTenantId
+    let isPublicSubmission = false
+    let formSchema: any = null
 
+    const jwtTenantId = await getTenantIdFromJWT()
     if (!tenantId) {
-      tenantId = await getTenantIdFromJWT()
+      tenantId = jwtTenantId
     }
 
-    if (!tenantId) {
-      if (!metadata.form_id) {
-        throw new Error('Form ID is required for public submissions')
-      }
+    if (metadata.form_id) {
       const adminSupabase = createAdminClient()
       const { data: form, error: formError } = await adminSupabase
         .from('forms')
-        .select('tenant_id, is_published')
+        .select('tenant_id, is_published, schema')
         .eq('id', metadata.form_id)
         .single()
 
@@ -46,33 +46,83 @@ export const leadsHandler = {
         throw new Error('Form not found')
       }
 
-      if (!form.is_published) {
+      if (!tenantId && !form.is_published) {
         throw new Error('Form is not published')
       }
 
-      tenantId = form.tenant_id
+      tenantId = tenantId || form.tenant_id
+      formSchema = form.schema
+    } else if (!tenantId) {
+      throw new Error('Form ID is required for public submissions')
     }
 
     if (!tenantId) {
       throw new Error('Tenant ID could not be determined')
     }
 
-    const answers = metadata.answers || data || {}
-    const nome =
-      (answers.nome as string) ||
-      (answers.name as string) ||
-      (answers.fullName as string) ||
-      (answers.nome_completo as string) ||
-      ''
-    const email =
-      (answers.email as string) || (answers.userEmail as string) || ''
-    const whatsapp =
-      (answers.whatsapp as string) ||
-      (answers.phone as string) ||
-      (answers.tel as string) ||
-      ''
+    const isUnauthenticatedRequest = !jwtTenantId && !overrideTenantId
+    if (isUnauthenticatedRequest) {
+      isPublicSubmission = true
+    }
 
-    const { error } = await supabase.from('leads').insert([
+    const answers = metadata.answers || data || {}
+    let nome = ''
+    let email = ''
+    let whatsapp = ''
+
+    const hasDynamicSteps = formSchema && formSchema.steps
+    if (hasDynamicSteps) {
+      const allFields = formSchema.steps.flatMap(
+        (step: any) => step.fields || []
+      )
+
+      const nomeField =
+        allFields.find(
+          (f: any) =>
+            f.type === 'text' && f.label?.toLowerCase().includes('nome')
+        ) || allFields.find((f: any) => f.type === 'text')
+      if (nomeField && answers[nomeField.name]) {
+        nome = answers[nomeField.name] as string
+      }
+
+      const emailField = allFields.find((f: any) => f.type === 'email')
+      if (emailField && answers[emailField.name]) {
+        email = answers[emailField.name] as string
+      }
+
+      const telField = allFields.find((f: any) => f.type === 'tel')
+      if (telField && answers[telField.name]) {
+        whatsapp = answers[telField.name] as string
+      }
+    }
+
+    const hasMissingFallbackNome = !nome
+    if (hasMissingFallbackNome) {
+      nome =
+        (answers.nome as string) ||
+        (answers.name as string) ||
+        (answers.fullName as string) ||
+        (answers.nome_completo as string) ||
+        ''
+    }
+
+    const hasMissingFallbackEmail = !email
+    if (hasMissingFallbackEmail) {
+      email = (answers.email as string) || (answers.userEmail as string) || ''
+    }
+
+    const hasMissingFallbackWhatsapp = !whatsapp
+    if (hasMissingFallbackWhatsapp) {
+      whatsapp =
+        (answers.whatsapp as string) ||
+        (answers.phone as string) ||
+        (answers.tel as string) ||
+        ''
+    }
+
+    const insertClient = isPublicSubmission ? createAdminClient() : supabase
+
+    const { error } = await insertClient.from('leads').insert([
       {
         tenant_id: tenantId,
         nome_completo: nome.toString().trim(),

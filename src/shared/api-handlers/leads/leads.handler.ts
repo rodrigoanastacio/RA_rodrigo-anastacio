@@ -27,7 +27,9 @@ export const leadsHandler = {
   ) => {
     let tenantId: string | null | undefined = overrideTenantId
     let isPublicSubmission = false
-    let formSchema: any = null
+    let formSchema: {
+      steps?: { fields?: { type: string; label?: string; name: string }[] }[]
+    } | null = null
 
     const jwtTenantId = await getTenantIdFromJWT()
     if (!tenantId) {
@@ -72,25 +74,22 @@ export const leadsHandler = {
 
     const hasDynamicSteps = formSchema && formSchema.steps
     if (hasDynamicSteps) {
-      const allFields = formSchema.steps.flatMap(
-        (step: any) => step.fields || []
-      )
+      const allFields = formSchema!.steps!.flatMap((step) => step.fields || [])
 
       const nomeField =
         allFields.find(
-          (f: any) =>
-            f.type === 'text' && f.label?.toLowerCase().includes('nome')
-        ) || allFields.find((f: any) => f.type === 'text')
+          (f) => f.type === 'text' && f.label?.toLowerCase().includes('nome')
+        ) || allFields.find((f) => f.type === 'text')
       if (nomeField && answers[nomeField.name]) {
         nome = answers[nomeField.name] as string
       }
 
-      const emailField = allFields.find((f: any) => f.type === 'email')
+      const emailField = allFields.find((f) => f.type === 'email')
       if (emailField && answers[emailField.name]) {
         email = answers[emailField.name] as string
       }
 
-      const telField = allFields.find((f: any) => f.type === 'tel')
+      const telField = allFields.find((f) => f.type === 'tel')
       if (telField && answers[telField.name]) {
         whatsapp = answers[telField.name] as string
       }

@@ -1,5 +1,6 @@
 import { formsService } from '@/shared/services/forms/forms.service'
 import { landingPagesService } from '@/shared/services/landing-pages/landing-pages.service'
+import { userService } from '@/shared/services/user/user.service'
 import { ArrowLeft, Globe } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -14,13 +15,20 @@ interface PageProps {
 export default async function EditionPage({ params }: PageProps) {
   const { id } = await params
 
-  const [landingPage, { forms }] = await Promise.all([
+  const [landingPage, { forms }, user] = await Promise.all([
     landingPagesService.getLandingPageById(id),
-    formsService.getFormsSummary()
+    formsService.getFormsSummary(),
+    userService.getProfile()
   ])
 
   if (!landingPage) {
     notFound()
+  }
+
+  const branding = {
+    businessName: user?.business_name,
+    businessSlogan: user?.business_slogan,
+    whatsappNumber: user?.whatsapp_number
   }
 
   return (
@@ -79,7 +87,6 @@ export default async function EditionPage({ params }: PageProps) {
         </div>
       </div>
 
-      {/* Editor */}
       <div className="flex-1 min-h-0">
         <LandingPageEditor
           initialSections={landingPage.content as unknown as LPSection[]}
@@ -90,6 +97,7 @@ export default async function EditionPage({ params }: PageProps) {
           initialMetaTitle={landingPage.meta_title ?? undefined}
           initialMetaDescription={landingPage.meta_description ?? undefined}
           availableForms={forms}
+          branding={branding}
         />
       </div>
     </div>

@@ -25,12 +25,17 @@ export interface FooterSectionProps {
   twitter?: string
   youtube?: string
   theme?: 'light' | 'dark' | 'gray'
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 export function FooterSection({
   id,
-  companyName = 'Sua Empresa',
-  description = 'Descricao curta sobre sua missao ou o objetivo desta pagina.',
+  companyName,
+  description,
   email = 'contato@seudominio.com',
   phone,
   address,
@@ -39,8 +44,17 @@ export function FooterSection({
   linkedin = '#',
   twitter,
   youtube,
-  theme = 'light'
+  theme = 'light',
+  branding
 }: FooterSectionProps) {
+  const displayCompanyName =
+    companyName || branding?.businessName || 'Sua Empresa'
+  const displayDescription =
+    description ||
+    branding?.businessSlogan ||
+    'Descricao curta sobre sua missao ou o objetivo desta pagina.'
+  const displayPhone = phone || branding?.whatsappNumber
+
   const isDark = theme === 'dark'
   const isGray = theme === 'gray'
 
@@ -57,19 +71,17 @@ export function FooterSection({
     <footer id={id} className={cn('py-12 md:py-16', bgColor)}>
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          {/* Column 1: Brand */}
           <div className="space-y-4">
             <h3
               className={cn('text-xl font-bold tracking-tight', headingColor)}
             >
-              {companyName}
+              {displayCompanyName}
             </h3>
             <p className={cn('text-sm leading-relaxed max-w-xs', textColor)}>
-              {description}
+              {displayDescription}
             </p>
           </div>
 
-          {/* Column 2: Links */}
           <div className="space-y-4">
             <h4
               className={cn(
@@ -96,7 +108,6 @@ export function FooterSection({
             </nav>
           </div>
 
-          {/* Column 3: Contact */}
           <div className="space-y-4">
             <h4
               className={cn(
@@ -113,10 +124,10 @@ export function FooterSection({
                   <span>{email}</span>
                 </div>
               )}
-              {phone && (
+              {displayPhone && (
                 <div className="flex items-center gap-2">
                   <Phone size={16} />
-                  <span>{phone}</span>
+                  <span>{displayPhone}</span>
                 </div>
               )}
               {address && (
@@ -166,8 +177,8 @@ export function FooterSection({
           )}
         >
           <p>
-            &copy; {new Date().getFullYear()} {companyName}. Todos os direitos
-            reservados.
+            &copy; {new Date().getFullYear()} {displayCompanyName}. Todos os
+            direitos reservados.
           </p>
           <div className="flex gap-6">
             <a href="#" className="hover:underline">

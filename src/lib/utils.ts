@@ -18,3 +18,14 @@ export function getUserDisplayName(
   if (!user) return 'Usuário'
   return user.name || user.email || 'Usuário'
 }
+
+export function resolveMagicLink(
+  link?: string,
+  branding?: { whatsappNumber?: string }
+) {
+  if (link === '#whatsapp' && branding?.whatsappNumber) {
+    const cleanNumber = branding.whatsappNumber.replace(/\D/g, '')
+    return `https://wa.me/${cleanNumber}`
+  }
+  return link || '#'
+}

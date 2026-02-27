@@ -77,10 +77,29 @@ export default async function LandingPage({ params }: LandingPageProps) {
 
   const sections = page.content as LPSection[]
 
+  // Fetch branding from profiles associated with this tenant
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('business_name, business_slogan, whatsapp_number')
+    .eq('tenant_id', page.tenant_id)
+    .limit(1)
+    .single()
+
+  const branding = {
+    businessName: profile?.business_name,
+    businessSlogan: profile?.business_slogan,
+    whatsappNumber: profile?.whatsapp_number
+  }
+
   return (
     <main className="min-h-screen bg-white">
       {sections.map((section) => (
-        <SectionRenderer key={section.id} section={section} form={formSchema} />
+        <SectionRenderer
+          key={section.id}
+          section={section}
+          form={formSchema}
+          branding={branding}
+        />
       ))}
     </main>
   )

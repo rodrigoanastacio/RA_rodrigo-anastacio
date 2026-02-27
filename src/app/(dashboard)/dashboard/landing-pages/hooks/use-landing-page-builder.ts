@@ -58,10 +58,10 @@ export function useLandingPageBuilder({
 
     if (type === 'hero') {
       defaultData = {
-        headline: 'Headline Principal Aqui',
-        subheadline: 'Subtítulo descrevendo sua proposta de valor única.',
-        ctaLabel: 'Saiba Mais',
-        ctaLink: '#',
+        headline: '',
+        subheadline: '',
+        ctaLabel: 'Falar no WhatsApp',
+        ctaLink: '#whatsapp',
         theme: 'light',
         layout: 'centered'
       }
@@ -91,8 +91,8 @@ export function useLandingPageBuilder({
       }
     } else if (type === 'bio') {
       defaultData = {
-        headline: 'Nome do Especialista',
-        subheadline: 'Sua expertise e proposta de valor.',
+        headline: '',
+        subheadline: '',
         bio: [
           'Compartilhe sua jornada e autoridade aqui para gerar confiança em seus leads.',
           'Destaque seus diferenciais e resultados alcançados.'
@@ -101,15 +101,15 @@ export function useLandingPageBuilder({
           'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop',
         alignment: 'left',
         theme: 'light',
-        ctaLabel: 'Saiba Mais'
+        ctaLabel: 'Falar no WhatsApp',
+        ctaLink: '#whatsapp'
       }
     } else if (type === 'footer') {
       defaultData = {
-        companyName: 'Minha Empresa',
-        description:
-          'Breve descrição sobre a missão da empresa ou propósito do site.',
+        companyName: '',
+        description: '',
         email: 'contato@exemplo.com',
-        phone: '(11) 99999-9999',
+        phone: '',
         address: 'São Paulo, SP',
         instagram: 'https://instagram.com',
         linkedin: 'https://linkedin.com',

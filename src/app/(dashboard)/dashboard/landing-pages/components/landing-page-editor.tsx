@@ -14,6 +14,11 @@ interface Props {
   initialMetaTitle?: string
   initialMetaDescription?: string
   availableForms: FormRow[]
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 export default function LandingPageEditor({
@@ -24,7 +29,8 @@ export default function LandingPageEditor({
   initialSlug,
   initialMetaTitle,
   initialMetaDescription,
-  availableForms
+  availableForms,
+  branding
 }: Props) {
   const { update, togglePublish, isSaving } = useLandingPage()
 
@@ -37,6 +43,7 @@ export default function LandingPageEditor({
       initialMetaTitle={initialMetaTitle}
       initialMetaDescription={initialMetaDescription}
       availableForms={availableForms}
+      branding={branding}
       onSave={(sections, pageSettings) =>
         update(id, {
           content: sections,

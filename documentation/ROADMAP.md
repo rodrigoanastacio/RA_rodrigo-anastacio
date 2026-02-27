@@ -7,7 +7,9 @@ Este documento serve como o **backlog estratégico** do sistema. Aqui registramo
 ## 📊 Módulo: Inteligência & Analytics
 
 - [ ] **Definição de Conversão Inteligente**: Implementar lógica para marcar leads como "Convertido" baseado em ações específicas.
-- [ ] **Configuração de ROI**: Tela para definir "Ticket Médio" e cálculo automático de ROI.
+- [ ] **Configuração de ROI**: Tela para definir "Ticket Médio" e cálculo automático de ROI. (Concluído: Campo em Settings)
+- [x] **Projeção de Faturamento no Dashboard**: Usar o Ticket Médio para exibir o valor financeiro do funil de leads. (Concluído)
+- [ ] **Dashboard de Conversão**: Calcular taxa de conversão baseada em leads marcados como fechados vs. total de leads.
 - [ ] **Tendências Temporais**: Gráficos comparativos (Mês Atual vs. Anterior).
 - [ ] **Mapa de Calor Geográfico**: Visualização de demanda por Cidade/Estado.
 
@@ -26,6 +28,8 @@ Este documento serve como o **backlog estratégico** do sistema. Aqui registramo
 - [ ] **Auto-limpeza de Notificações**: Script para deletar notificações lidas com mais de 7 dias.
 - [ ] **Integração Push Notifications**: Notificações via Web Push / Mobile.
 - [ ] **Exportação de Relatórios**: Geração de PDFs e Planilhas dos leads.
+- [x] **Automação de Branding em Landing Pages**: Herdar Nome do Negócio e Slogan do Perfil automaticamente nos templates. (Concluído no Footer)
+- [ ] **WhatsApp Global Redirect**: Configurar botões de CTA das LPs para usar o WhatsApp definido em Settings.
 - [ ] **Automação de WhatsApp**: Templates pré-definidos para disparos rápidos.
 
 ---

@@ -32,6 +32,11 @@ interface LandingPageBuilderProps {
   ) => Promise<{ success: boolean; slug?: string; message?: string }>
   onTogglePublish?: (published: boolean) => Promise<{ success: boolean }>
   isSaving?: boolean
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 export function LandingPageBuilder(props: LandingPageBuilderProps) {
@@ -61,12 +66,9 @@ export function LandingPageBuilder(props: LandingPageBuilderProps) {
 
   return (
     <div className="flex h-full bg-[#f8f9fa] overflow-hidden relative">
-      {/* LEFT SIDEBAR */}
       {!isFullscreen && <SidebarDraggable onAddSection={actions.addSection} />}
 
-      {/* CANVAS */}
       <div className="flex-1 relative flex flex-col min-h-0 overflow-hidden">
-        {/* Fullscreen toggle */}
         <div className="absolute top-3 right-4 z-50">
           <button
             onClick={() => setIsFullscreen(!isFullscreen)}
@@ -97,10 +99,10 @@ export function LandingPageBuilder(props: LandingPageBuilderProps) {
             props.availableForms?.find((f) => f.id === pageSettings.formId)
               ?.schema as unknown as FormSchema
           }
+          branding={props.branding}
         />
       </div>
 
-      {/* RIGHT PANEL */}
       <PropertiesPanel
         selectedSection={selectedSection}
         pageSettings={pageSettings}

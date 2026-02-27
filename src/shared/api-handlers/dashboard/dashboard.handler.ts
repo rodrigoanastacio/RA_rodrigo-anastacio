@@ -10,6 +10,8 @@ export interface DashboardStats {
   activeLeads: number
   opportunities: number
   conversionRate: string
+  activeValue: string
+  totalValue: string
 }
 
 export interface ChartDataPoint {
@@ -19,7 +21,11 @@ export interface ChartDataPoint {
 }
 
 export const dashboardHandler = {
-  getStats: async (supabase: SupabaseClient): Promise<DashboardStats> => {
+  getStats: async (
+    supabase: SupabaseClient,
+    averageTicket?: number | null
+  ): Promise<DashboardStats> => {
+    const ticketValue = averageTicket || 0
     const todayStart = dateHelpers.getTodayStart().toISOString()
     const weekStart = dateHelpers.getWeekStart().toISOString()
     const monthStart = dateHelpers.getMonthStart().toISOString()
@@ -54,6 +60,7 @@ export const dashboardHandler = {
 
     const total = totalLeads || 0
     const won = wonLeads || 0
+    const active = activeLeads || 0
     const rate = total > 0 ? ((won / total) * 100).toFixed(1) + '%' : '0.0%'
 
     return {
@@ -61,9 +68,11 @@ export const dashboardHandler = {
       leadsToday: leadsToday || 0,
       leadsThisWeek: leadsThisWeek || 0,
       leadsThisMonth: leadsThisMonth || 0,
-      activeLeads: activeLeads || 0,
+      activeLeads: active,
       opportunities: won,
-      conversionRate: rate
+      conversionRate: rate,
+      activeValue: (active * ticketValue).toString(),
+      totalValue: (total * ticketValue).toString()
     }
   },
 

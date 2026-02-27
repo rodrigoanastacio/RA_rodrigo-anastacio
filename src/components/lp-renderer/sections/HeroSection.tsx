@@ -2,7 +2,8 @@
 
 import { DynamicForm } from '@/components/forms/dynamic-form'
 import { FormSchema } from '@/components/forms/types'
-import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { cn, resolveMagicLink } from '@/lib/utils'
 import { Check, ClipboardList, Sparkles } from 'lucide-react'
 import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
@@ -20,20 +21,32 @@ export interface HeroSectionProps {
   layout?: 'centered' | 'split'
   benefits?: string[]
   form?: FormSchema
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 export function HeroSection({
   id,
-  headline = 'Transforme sua Gestão Agora',
-  subheadline = 'Potencialize seus resultados com a plataforma mais completa do mercado. Unificamos automação, análise e crescimento em um único lugar.',
+  headline,
+  subheadline,
+  ctaLabel,
+  ctaLink,
   backgroundImage,
   theme = 'light',
   benefits = [],
-  form
+  form,
+  branding
 }: HeroSectionProps) {
+  const displayHeadline =
+    headline || branding?.businessName || 'Titulo da Seção'
+  const displaySubheadline =
+    subheadline || branding?.businessSlogan || 'Subtitulo da Seção'
+
   const searchParams = useSearchParams()
 
-  /* Render headline — wrap *text* in an indigo gradient accent */
   const renderHeadline = (text: string) => {
     if (!text.includes('*')) return text
     return text.split('*').map((part, i) =>
@@ -99,9 +112,7 @@ export function HeroSection({
         isDark ? 'bg-gray-950' : 'bg-white'
       )}
     >
-      {/* Decorative background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Dot grid */}
         <div
           className="absolute inset-0"
           style={{
@@ -109,9 +120,7 @@ export function HeroSection({
             backgroundSize: '28px 28px'
           }}
         />
-        {/* Soft gradient orb — top right */}
         <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-linear-to-br from-[#4F46E5]/10 via-violet-500/5 to-transparent blur-3xl" />
-        {/* Soft gradient orb — bottom left */}
         <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] rounded-full bg-linear-to-tr from-[#4F46E5]/8 to-transparent blur-2xl" />
       </div>
 
@@ -128,9 +137,7 @@ export function HeroSection({
 
       <div className="@container relative w-full max-w-7xl mx-auto px-4 @xl:px-6 @4xl:px-8 py-8 @4xl:py-20 z-10">
         <div className="grid grid-cols-1 @3xl:grid-cols-12 gap-10 @4xl:gap-16 items-center">
-          {/* ── LEFT COLUMN ─────────────────────────────────── */}
           <div className="@3xl:col-span-7 flex flex-col justify-center space-y-7 animate-in slide-in-from-left duration-700">
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full border border-[#4F46E5]/25 bg-linear-to-r from-[#4F46E5]/8 to-violet-500/5 px-4 py-2 w-fit shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#4F46E5]" />
               <span className="text-xs font-semibold text-[#4F46E5] uppercase tracking-wide">
@@ -138,27 +145,24 @@ export function HeroSection({
               </span>
             </div>
 
-            {/* Headline */}
             <h1
               className={cn(
                 'text-4xl @2xl:text-5xl @4xl:text-6xl font-extrabold tracking-tight leading-[1.08]',
                 isDark ? 'text-white' : 'text-gray-900'
               )}
             >
-              {renderHeadline(headline)}
+              {renderHeadline(displayHeadline)}
             </h1>
 
-            {/* Subheadline */}
             <p
               className={cn(
                 'text-base @2xl:text-lg max-w-xl leading-relaxed',
                 isDark ? 'text-gray-400' : 'text-gray-500'
               )}
             >
-              {subheadline}
+              {displaySubheadline}
             </p>
 
-            {/* Benefits */}
             {benefits && benefits.length > 0 && (
               <ul className="flex flex-col gap-3 pt-1">
                 {benefits.map((benefit, i) => (
@@ -186,7 +190,18 @@ export function HeroSection({
               </ul>
             )}
 
-            {/* Social Proof */}
+            {ctaLabel && ctaLink && (
+              <div className="pt-2">
+                <Button
+                  size="lg"
+                  className="bg-[#4F46E5] hover:bg-[#4F46E5]/90 text-white rounded-full px-10 h-13 text-base font-bold transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-[#4F46E5]/25"
+                  asChild
+                >
+                  <a href={resolveMagicLink(ctaLink, branding)}>{ctaLabel}</a>
+                </Button>
+              </div>
+            )}
+
             <div
               className={cn(
                 'flex items-center gap-0 border-t pt-7',
@@ -225,9 +240,7 @@ export function HeroSection({
             </div>
           </div>
 
-          {/* ── RIGHT COLUMN — Form ──────────────────────────── */}
           <div className="@3xl:col-span-5 relative animate-in slide-in-from-right duration-700 delay-100">
-            {/* Glow ring behind card */}
             <div className="absolute -inset-1 rounded-2xl bg-linear-to-br from-[#4F46E5]/20 to-violet-500/10 blur-xl opacity-70 pointer-events-none" />
 
             {form ? (
@@ -239,7 +252,6 @@ export function HeroSection({
                     : 'bg-white border-gray-100/80'
                 )}
               >
-                {/* Indigo accent bar */}
                 <div className="h-1.5 w-full bg-linear-to-r from-[#4F46E5] to-violet-500" />
 
                 <div className="p-6 @4xl:p-8">
@@ -285,7 +297,6 @@ export function HeroSection({
                 </div>
               </div>
             ) : (
-              /* Empty state */
               <div
                 className={cn(
                   'relative rounded-2xl w-full min-h-[380px] flex flex-col items-center justify-center text-center p-8 border-2 border-dashed transition-all',

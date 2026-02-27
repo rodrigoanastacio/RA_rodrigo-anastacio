@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, resolveMagicLink } from '@/lib/utils'
 import { BadgeCheck, Instagram, Linkedin } from 'lucide-react'
 import Image from 'next/image'
 
@@ -15,12 +15,17 @@ export interface BioSectionProps {
   theme?: 'light' | 'dark' | 'gray'
   ctaLabel?: string
   ctaLink?: string
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 export function BioSection({
   id,
-  headline = 'Sobre a Especialista',
-  subheadline = 'Transformando carreiras e negócios através da gestão estratégica.',
+  headline,
+  subheadline,
   bio = [
     'Com mais de 10 anos de experiência no mercado corporativo, ajudei centenas de profissionais a alcançarem cargos de liderança.',
     'Minha metodologia une teoria e prática, focando em resultados tangíveis e crescimento sustentável.'
@@ -29,8 +34,14 @@ export function BioSection({
   alignment = 'left',
   theme = 'light',
   ctaLabel,
-  ctaLink
+  ctaLink,
+  branding
 }: BioSectionProps) {
+  const displayHeadline =
+    headline || branding?.businessName || 'Titulo da Seção'
+  const displaySubheadline =
+    subheadline || branding?.businessSlogan || 'Subtitulo da Seção'
+
   const isDark = theme === 'dark'
   const isGray = theme === 'gray'
 
@@ -48,10 +59,9 @@ export function BioSection({
         <div
           className={cn(
             'grid md:grid-cols-2 gap-12 md:gap-20 items-center',
-            alignment === 'right' && 'md:grid-flow-dense' // Swap columns visually if needed
+            alignment === 'right' && 'md:grid-flow-dense'
           )}
         >
-          {/* Image Column */}
           <div
             className={cn(
               'relative',
@@ -67,13 +77,12 @@ export function BioSection({
               <div className="absolute inset-0 bg-linear-to-t from-black/40 to-transparent z-10" />
               <Image
                 src={imageSrc}
-                alt={headline}
+                alt={displayHeadline}
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
 
-              {/* Optional: Social Proof Badge on Image */}
               <div className="absolute bottom-6 left-6 z-20 bg-white/90 backdrop-blur-sm p-4 rounded-xl shadow-lg border border-white/50 max-w-[200px]">
                 <div className="flex items-center gap-2 mb-1">
                   <div className="flex -space-x-2">
@@ -94,7 +103,6 @@ export function BioSection({
               </div>
             </div>
 
-            {/* Decorative Element */}
             <div
               className={cn(
                 'absolute -z-10 w-full h-full top-6 -left-6 rounded-2xl border-2',
@@ -104,7 +112,6 @@ export function BioSection({
             />
           </div>
 
-          {/* Text Column */}
           <div
             className={cn(
               'space-y-8',
@@ -130,7 +137,7 @@ export function BioSection({
                   isDark ? 'text-white' : 'text-gray-900'
                 )}
               >
-                {headline}
+                {displayHeadline}
               </h2>
 
               <p
@@ -139,7 +146,7 @@ export function BioSection({
                   isDark ? 'text-blue-200' : 'text-blue-600'
                 )}
               >
-                {subheadline}
+                {displaySubheadline}
               </p>
             </div>
 
@@ -161,7 +168,7 @@ export function BioSection({
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
                   asChild
                 >
-                  <a href={ctaLink}>{ctaLabel}</a>
+                  <a href={resolveMagicLink(ctaLink, branding)}>{ctaLabel}</a>
                 </Button>
               )}
 

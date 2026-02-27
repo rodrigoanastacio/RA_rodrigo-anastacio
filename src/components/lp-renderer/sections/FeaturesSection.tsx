@@ -44,6 +44,11 @@ export interface FeaturesSectionProps {
   features?: FeatureItem[]
   columns?: 2 | 3 | 4
   theme?: 'light' | 'dark' | 'gray'
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 export function FeaturesSection({
@@ -71,7 +76,8 @@ export function FeaturesSection({
     }
   ],
   columns = 3,
-  theme = 'light'
+  theme = 'light',
+  branding
 }: FeaturesSectionProps) {
   const isDark = theme === 'dark'
   const isGray = theme === 'gray'

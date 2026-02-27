@@ -186,6 +186,13 @@ export function PropertiesPanel({
                     placeholder="https://..."
                     className="text-xs"
                   />
+                  <p className="text-[10px] text-gray-500 mt-1.5 leading-tight">
+                    💡{' '}
+                    <span className="font-semibold text-gray-700">Dica:</span>{' '}
+                    Use{' '}
+                    <span className="font-bold text-[#4F46E5]">#whatsapp</span>{' '}
+                    para gerar um link automático para o número do seu perfil.
+                  </p>
                 </FieldGroup>
 
                 <FieldGroup label="Benefícios (um por linha)">
@@ -457,6 +464,13 @@ export function PropertiesPanel({
                     placeholder="https://..."
                     className="text-xs"
                   />
+                  <p className="text-[10px] text-gray-500 leading-tight">
+                    💡{' '}
+                    <span className="font-semibold text-gray-700">Dica:</span>{' '}
+                    Use{' '}
+                    <span className="font-bold text-[#4F46E5]">#whatsapp</span>{' '}
+                    para gerar um link automático para o número do seu perfil.
+                  </p>
                 </div>
               </div>
             )}

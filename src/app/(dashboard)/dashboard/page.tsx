@@ -1,8 +1,9 @@
 import { PageHeader } from '@/components/dashboard/PageHeader'
 import { StatCard } from '@/components/dashboard/StatCard'
 import { Summary } from '@/components/dashboard/Summary'
+import { currencyHelpers } from '@/lib/utils/currency-helpers'
 import { dashboardService } from '@/shared/services/dashboard/dashboard.service'
-import { Star, Target, Users } from 'lucide-react'
+import { Banknote, Star, Users, Wallet } from 'lucide-react'
 import { LeadsTimelineChart } from './components/LeadsTimelineChart'
 import { RecentLeads } from './components/RecentLeads'
 import { RevenueChart } from './components/RevenueChart'
@@ -33,12 +34,12 @@ export default async function DashboardPage() {
           trend={{ value: 'Base total', direction: 'neutral' }}
         />
         <StatCard
-          label="Em Negociação"
-          value={stats.activeLeads}
-          icon={Target}
+          label="Valor em Negociação"
+          value={currencyHelpers.format(stats.activeValue)}
+          icon={Wallet}
           iconColor="text-indigo-500"
           iconBg="bg-indigo-50"
-          trend={{ value: 'Ativos no funil', direction: 'neutral' }}
+          trend={{ value: `${stats.activeLeads} ativos`, direction: 'neutral' }}
         />
         <StatCard
           label="Vendas Realizadas"
@@ -49,12 +50,12 @@ export default async function DashboardPage() {
           trend={{ value: `${stats.conversionRate} conv.`, direction: 'up' }}
         />
         <StatCard
-          label="Leads Este Mês"
-          value={stats.leadsThisMonth}
-          icon={Users}
-          iconColor="text-purple-500"
-          iconBg="bg-purple-50"
-          trend={{ value: `${stats.leadsToday} hoje`, direction: 'neutral' }}
+          label="Valor Total do Funil"
+          value={currencyHelpers.format(stats.totalValue)}
+          icon={Banknote}
+          iconColor="text-blue-500"
+          iconBg="bg-blue-50"
+          trend={{ value: 'Potencial total', direction: 'neutral' }}
         />
       </Summary>
 

@@ -31,6 +31,11 @@ interface CanvasPreviewProps {
   handleDragEnd: (event: DragEndEvent) => void
   onAddHero: () => void
   activeForm?: FormSchema
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }
 
 function SortableSection({
@@ -38,13 +43,19 @@ function SortableSection({
   isSelected,
   onClick,
   onDelete,
-  activeForm
+  activeForm,
+  branding
 }: {
   section: LPSection
   isSelected: boolean
   onClick: () => void
   onDelete: () => void
   activeForm?: FormSchema
+  branding?: {
+    businessName?: string
+    businessSlogan?: string
+    whatsappNumber?: string
+  }
 }) {
   const {
     attributes,
@@ -76,7 +87,6 @@ function SortableSection({
         onClick()
       }}
     >
-      {/* Floating toolbar */}
       <div
         className={cn(
           'absolute -top-3.5 left-1/2 -translate-x-1/2 flex items-center gap-0.5 bg-[#4F46E5] text-white z-50 transition-opacity duration-200 shadow-lg',
@@ -85,12 +95,9 @@ function SortableSection({
             : 'opacity-0 group-hover:opacity-100'
         )}
       >
-        {/* Section type label */}
         <span className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-widest border-r border-white/20">
           {section.type}
         </span>
-
-        {/* Drag handle */}
         <div
           {...listeners}
           {...attributes}
@@ -99,10 +106,8 @@ function SortableSection({
           <GripVertical size={13} />
         </div>
 
-        {/* Divider */}
         <div className="w-px h-4 bg-white/20" />
 
-        {/* Delete */}
         <button
           onClick={(e) => {
             e.stopPropagation()
@@ -114,14 +119,17 @@ function SortableSection({
         </button>
       </div>
 
-      {/* Section content */}
       <div
         className={cn(
           'pointer-events-none select-none bg-white overflow-hidden shadow-sm',
           isDragging && 'shadow-xl scale-[1.01]'
         )}
       >
-        <SectionRenderer section={section} form={activeForm} />
+        <SectionRenderer
+          section={section}
+          form={activeForm}
+          branding={branding}
+        />
       </div>
     </div>
   )
@@ -134,7 +142,8 @@ export function CanvasPreview({
   deleteSection,
   handleDragEnd,
   onAddHero,
-  activeForm
+  activeForm,
+  branding
 }: CanvasPreviewProps) {
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -148,7 +157,6 @@ export function CanvasPreview({
       className="flex-1 overflow-y-auto bg-[#f0f2f5] relative flex flex-col"
       onClick={() => setSelectedId(null)}
     >
-      {/* Dot grid background */}
       <div
         className="absolute inset-0 opacity-[0.035] pointer-events-none"
         style={{
@@ -179,7 +187,6 @@ export function CanvasPreview({
               >
                 {sections.length === 0 ? (
                   <div className="text-center max-w-sm">
-                    {/* Empty state icon */}
                     <div className="w-14 h-14 bg-white border border-gray-200 flex items-center justify-center mx-auto mb-5 shadow-sm">
                       <MousePointer2 size={22} className="text-[#4F46E5]" />
                     </div>
@@ -212,6 +219,7 @@ export function CanvasPreview({
                       onClick={() => setSelectedId(section.id)}
                       onDelete={() => deleteSection(section.id)}
                       activeForm={activeForm}
+                      branding={branding}
                     />
                   ))
                 )}

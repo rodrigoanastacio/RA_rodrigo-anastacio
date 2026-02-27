@@ -29,6 +29,8 @@ Este documento serve como o **backlog estratégico** do sistema. Aqui registramo
 - [ ] **Integração Push Notifications**: Notificações via Web Push / Mobile.
 - [ ] **Exportação de Relatórios**: Geração de PDFs e Planilhas dos leads.
 - [x] **Automação de Branding em Landing Pages**: Herdar Nome do Negócio e Slogan do Perfil automaticamente nos templates. (Concluído no Footer)
+- [ ] **Segurança Anti-Spam (API Pública)**: Implementar Rate Limiting ou reCAPTCHA / Cloudflare Turnstile na rota `/api/leads` e afins para proteção de Bypass RLS contra injeção de robôs.
+- [ ] **Mapeamento Explícito de Form Fields (`systemAlias`)**: Atualizar o `useFormSchemaEditor` para injetar metadados como `"systemAlias": "nome" | "email" | "whatsapp"` nos schemas ao invés de depender de inferência por `type='text'` ou match na string `label`. Isso evitará falhas na rota `/api/leads` caso o tenant decida nomear o campo `nome` como "Como podemos te chamar?".
 - [ ] **WhatsApp Global Redirect**: Configurar botões de CTA das LPs para usar o WhatsApp definido em Settings.
 - [ ] **Automação de WhatsApp**: Templates pré-definidos para disparos rápidos.
 

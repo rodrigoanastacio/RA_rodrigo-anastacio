@@ -71,6 +71,42 @@ const path = `${userId}/avatar.png`
 const path = `${tenantId}/avatars/${userId}.png`
 ```
 
+### 3. Public Submissions & RLS Bypass (The "Funnel of Trust")
+
+**Symptom**: You need to accept public data (e.g., a Lead from a Landing Page) into a table locked by RLS (`auth.uid() = tenant_id`). Inserting from the client fails with `42501 (violates row-level security policy)`.
+
+**Root Cause**: RLS rightfully blocks unauthenticated/anonymous inserts to protect tenant data.
+
+**The Fix**:
+Do **NOT** open your RLS policy to anonymous users (this allows malicious inserts to any tenant). Instead, use a Backend Handler to act as a "Gatekeeper" and bypass RLS safely using the Admin Client.
+
+1. **Require a trusted identifier**: The public payload must include a real reference (e.g., `form_id`).
+2. **Validate Ownership & State**: The Server uses `createAdminClient()` to query the DB, ensuring the `form_id` exists, is active/published, and fetches its true `tenant_id`.
+3. **Dynamic Field Mapping**: If relying on visual Form Builders, map generic `field_xxxx` payloads dynamically using the schema (`type="email"`, `type="tel"`) to strict DB columns.
+4. **Admin Insert**: Only after validation, the Server uses the Admin Client to insert the record, forcing the `tenant_id` discovered from the database (ignoring any `tenant_id` sent by the client).
+
+```typescript
+// SECURE PUBLIC INSERT PATTERN
+const adminSupabase = createAdminClient()
+
+// 1. Verify Trust
+const { data: form } = await adminSupabase
+  .from('forms')
+  .select('tenant_id, is_published, schema')
+  .eq('id', payload.form_id)
+  .single()
+
+if (!form || !form.is_published) throw new Error('Action not allowed')
+
+// 2. Bypass RLS securely
+await adminSupabase.from('target_table').insert([
+  {
+    tenant_id: form.tenant_id // Hardcoded from DB, never trust client tenant_id!
+    // ...data
+  }
+])
+```
+
 ---
 
 ## 🛠 Troubleshooting Protocol

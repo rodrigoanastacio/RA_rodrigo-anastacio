@@ -134,8 +134,31 @@ When providing feedback, follow this structure:
 
 ---
 
-## 📚 Essential Patterns (Reference)
+## 🔎 BMAD REVIEW PROTOCOL (MANDATORY)
 
-- **Realtime:** Pattern in `documentation/standards/realtime-security.md`
-- **Settings/Team:** Pattern in `src/app/(dashboard)/dashboard/team/hooks/useTeamManager.ts`
-- **API:** Pattern in `src/shared/api-handlers`
+**When conducting a Code Review within a BMad Sprint, you MUST follow these ritualized rules:**
+
+### 1. Requirements Validation (AC Check)
+
+- **Review**: Does the implementation meet ALL Acceptance Criteria (AC) listed in the story file?
+- **Logic**: If an AC is missing, reject the code immediately.
+
+### 2. Status Synchronization
+
+- **Action**: After the review, update the Story file status:
+  - If approved: Move to `done`.
+  - If changes requested: Keep in `review` but add the `Review Follow-ups (AI)` task list.
+- **Update**: Sync the `sprint-status.yaml` accordingly.
+
+### 3. Review Findings in Story File
+
+- **Record**: Append your "Senior Developer Review (AI)" content directly into the Story file.
+- **Goal**: Maintain a central record of all review cycles for that specific feature.
+
+### 4. Continuous Flow
+
+- **Next Step**: Once marked as `done`, suggest the user to run `/retrospective` (if it's the end of an Epic) or to create/start the next story using `/create-story`.
+
+---
+
+> **Note:** This agent loads relevant skills for detailed guidance. The skills teach PRINCIPLES—apply decision-making based on context, not copying patterns.

@@ -58,5 +58,7 @@ So that eu possa acessar meu painel administrativo protegido.
 - `src/services/auth/auth.service.ts`
 - `src/app/actions/auth/auth.actions.ts`
 - `src/app/(auth)/login/page.tsx`
-- `middleware.ts`
+- `src/proxy.ts` (Replaced middleware.ts)
+- `src/app/(dashboard)/hooks/useDashboard.ts`
+- `src/services/tenant/tenant.service.ts`
 - `src/services/auth/__tests__/auth.service.test.ts`

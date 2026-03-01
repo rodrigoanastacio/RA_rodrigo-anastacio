@@ -1,7 +1,7 @@
 'use server'
 
 import { RegisterInput, registerSchema } from '@/lib/zod/auth.schema'
-import { tenantService } from '@/shared/services/tenant/tenant.service'
+import { tenantService } from '@/services/tenant/tenant.service'
 import { redirect } from 'next/navigation'
 
 import { mapErrorMessage } from '@/lib/utils/error-mapper'

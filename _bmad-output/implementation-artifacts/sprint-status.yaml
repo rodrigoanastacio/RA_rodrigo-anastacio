@@ -37,7 +37,7 @@ story_location: '/Users/dtidigital/Documents/www/projetos/Dayane/saas-gestao-lea
 development_status:
   epic-1: in-progress
   1-1-project-setup-e-fundacao-de-banco-de-dados: done
-  1-2-criacao-de-conta-do-administrador-tenant: in-progress
+  1-2-criacao-de-conta-do-administrador-tenant: done
   1-3-login-e-autenticacao-criptografada: backlog
   1-4-recuperacao-de-senha-segura: backlog
   1-5-adicao-agil-de-membros-sem-e-mail: backlog

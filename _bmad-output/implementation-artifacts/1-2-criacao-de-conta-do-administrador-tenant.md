@@ -1,6 +1,6 @@
 # Story 1.2: Criação de Conta do Administrador (Tenant)
 
-Status: in-progress
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -38,8 +38,9 @@ so that eu tenha uma organização/tenant exclusiva para minha empresa.
   - [x] **MANDATÓRIO**: Validar no navegador se a jornada/fluxo está funcionando conforme o esperado.
   - [x] Correção de Leak de Segurança em notificações (Filtro por Tenant ID).
   - [x] Implementado mapeamento de erros (PT-BR) para feedback amigável.
-- [ ] Review Follow-ups (AI)
-  - [ ] [AI-Review][Medium] Implementar testes de integração automatizados para o fluxo de registro (Tenant + Profile + Auth).
+- [x] Review Follow-ups (AI)
+  - [x] [AI-Review][Medium] Implementar testes de integração automatizados para o fluxo de registro (Tenant + Profile + Auth).
+  - [x] [Architecture][Low] Refatorar pastas de serviços duplicadas: Mover conteúdo de `src/shared/services/tenant` para `src/services/tenant`.
 
 ## Dev Notes
 
@@ -86,11 +87,15 @@ Gemini 2.0 Flash
 - `src/lib/zod/auth.schema.ts`
 - `src/shared/api-handlers/tenant/tenant.handler.ts`
 - `src/shared/api-handlers/user/user.handler.ts`
-- `src/shared/services/tenant/tenant.service.ts`
-- `src/app/actions/auth/auth.actions.ts`
+- `src/services/tenant/tenant.service.ts` (Refatorado de shared)
+- `src/services/tenant/__tests__/tenant.service.test.ts` (Novo teste de integração)
 - `src/app/(auth)/register/page.tsx`
 - `src/app/(auth)/register/components/register-form.tsx`
 - `src/app/(auth)/register/hooks/use-register.ts`
+- `src/app/(auth)/register/__tests__/components/register-form.test.tsx` (Novo teste unitário)
+- `src/lib/utils/__tests__/error-mapper.test.ts` (Novo teste unitário)
+- `jest.config.ts` (Setup de testes)
+- `jest.setup.ts` (Setup de testes)
 - `src/app/(auth)/login/login-actions.tsx` (atualizado com mapErrorMessage)
 - `src/app/(dashboard)/dashboard/actions/notifications.ts` (fix de segurança RLS leak)
 - `src/lib/utils/error-mapper.ts` (novo utilitário de localização)

@@ -1,6 +1,6 @@
+import { loginAction } from '@/app/actions/auth/auth.actions'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { loginAction } from '../login-actions'
 
 export function useLogin() {
   const [email, setEmail] = useState('')

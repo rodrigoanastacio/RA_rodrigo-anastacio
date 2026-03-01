@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import { tenantHandler } from '@/shared/api-handlers/tenant/tenant.handler'
 import { userHandler } from '@/shared/api-handlers/user/user.handler'
 import { TenantSettings } from '@/shared/entities/tenant/tenant.types'
@@ -19,7 +19,10 @@ async function getTenantId(
 
 export const tenantService = {
   getSettings: async () => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) return null
@@ -31,7 +34,10 @@ export const tenantService = {
   },
 
   updateSettings: async (settings: TenantSettings) => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) throw new Error('Unauthorized')
@@ -43,7 +49,10 @@ export const tenantService = {
   },
 
   uploadLogo: async (file: File) => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) throw new Error('Unauthorized')
@@ -84,7 +93,10 @@ export const tenantService = {
     fullName: string
     companyName: string
   }) => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: data.email,

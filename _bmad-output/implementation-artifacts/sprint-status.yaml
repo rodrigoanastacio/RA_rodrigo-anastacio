@@ -38,7 +38,7 @@ development_status:
   epic-1: in-progress
   1-1-project-setup-e-fundacao-de-banco-de-dados: done
   1-2-criacao-de-conta-do-administrador-tenant: done
-  1-3-login-e-autenticacao-criptografada: backlog
+  1-3-login-e-autenticacao-criptografada: done
   1-4-recuperacao-de-senha-segura: backlog
   1-5-adicao-agil-de-membros-sem-e-mail: backlog
   1-6-gestao-de-acessos-e-matriz-rbac: backlog

@@ -1,6 +1,6 @@
 'use client'
 
-import { authService } from '@/services/auth/auth.service'
+import { signOutAction } from '@/app/actions/auth/auth.actions'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -14,8 +14,7 @@ export function useDashboard() {
   const handleLogout = async () => {
     try {
       setIsLoggingOut(true)
-      await authService.signOut()
-      router.push('/login')
+      await signOutAction()
     } catch (error) {
       console.error('Falha ao deslogar:', error)
     } finally {

@@ -1,10 +1,58 @@
-import { api } from '@/lib/api/fetcher'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
+import { LoginInput } from '@/lib/zod/auth.schema'
 
 export const authService = {
-  /**
-   * Solicita o encerramento da sessão via API interna
-   */
+  signIn: async (data: LoginInput) => {
+    // Note: We use dynamic import for server - only evaluate when on server
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password
+    })
+
+    if (error) {
+      throw error
+    }
+
+    return authData
+  },
+
   signOut: async () => {
-    return api.post<{ success: boolean }>('/api/auth/signout', {})
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+    const { error } = await supabase.auth.signOut()
+    if (error) throw error
+  },
+
+  getSession: async () => {
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+    const {
+      data: { session },
+      error
+    } = await supabase.auth.getSession()
+    if (error) throw error
+    return session
+  },
+
+  getUser: async () => {
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
+    if (error) throw error
+    return user
   }
 }

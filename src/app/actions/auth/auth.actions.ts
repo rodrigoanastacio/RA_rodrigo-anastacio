@@ -1,6 +1,12 @@
 'use server'
 
-import { RegisterInput, registerSchema } from '@/lib/zod/auth.schema'
+import {
+  LoginInput,
+  loginSchema,
+  RegisterInput,
+  registerSchema
+} from '@/lib/zod/auth.schema'
+import { authService } from '@/services/auth/auth.service'
 import { tenantService } from '@/services/tenant/tenant.service'
 import { redirect } from 'next/navigation'
 
@@ -30,4 +36,30 @@ export async function signUpAction(data: RegisterInput) {
   }
 
   redirect('/dashboard')
+}
+
+export async function loginAction(data: LoginInput) {
+  const result = loginSchema.safeParse(data)
+
+  if (!result.success) {
+    return {
+      error: 'E-mail ou senha inválidos.'
+    }
+  }
+
+  try {
+    await authService.signIn(result.data)
+  } catch (error: unknown) {
+    console.error('[loginAction] Error:', error)
+    return {
+      error: mapErrorMessage(error)
+    }
+  }
+
+  redirect('/dashboard')
+}
+
+export async function signOutAction() {
+  await authService.signOut()
+  redirect('/login')
 }

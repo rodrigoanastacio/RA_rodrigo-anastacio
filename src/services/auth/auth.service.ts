@@ -3,7 +3,6 @@ import { LoginInput } from '@/lib/zod/auth.schema'
 
 export const authService = {
   signIn: async (data: LoginInput) => {
-    // Note: We use dynamic import for server - only evaluate when on server
     const supabase =
       typeof window === 'undefined'
         ? await (await import('@/lib/supabase/server')).createClient()
@@ -54,5 +53,34 @@ export const authService = {
     } = await supabase.auth.getUser()
     if (error) throw error
     return user
+  },
+
+  resetPasswordForEmail: async (email: string, origin?: string) => {
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+
+    const callbackUrl = `${origin || (typeof window !== 'undefined' ? window.location.origin : '')}/api/auth/callback`
+    const redirectTo = `${callbackUrl}?next=/update-password`
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo
+    })
+
+    if (error) throw error
+  },
+
+  updatePassword: async (password: string) => {
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+
+    const { error } = await supabase.auth.updateUser({
+      password
+    })
+
+    if (error) throw error
   }
 }

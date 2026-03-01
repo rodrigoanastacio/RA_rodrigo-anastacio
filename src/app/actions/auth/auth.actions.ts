@@ -63,3 +63,33 @@ export async function signOutAction() {
   await authService.signOut()
   redirect('/login')
 }
+
+export async function forgotPasswordAction(data: { email: string }) {
+  const { headers } = await import('next/headers')
+  const origin = (await headers()).get('origin') || ''
+
+  try {
+    await authService.resetPasswordForEmail(data.email, origin)
+    return { success: true }
+  } catch (error: unknown) {
+    console.error('[forgotPasswordAction] Error:', error)
+    return {
+      error: mapErrorMessage(error)
+    }
+  }
+}
+
+export async function updatePasswordAction(data: { password: string }) {
+  try {
+    await authService.updatePassword(data.password)
+  } catch (error: unknown) {
+    console.error('[updatePasswordAction] Error:', error)
+    return {
+      error: mapErrorMessage(error)
+    }
+  }
+
+  // Market standard: auto-login after password reset
+  // Supabase usually maintains the session after updatePassword if called with a valid session
+  redirect('/dashboard')
+}

@@ -1,7 +1,6 @@
 'use client'
 
 import { signOutAction } from '@/app/actions/auth/auth.actions'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 /**
@@ -9,7 +8,6 @@ import { useState } from 'react'
  */
 export function useDashboard() {
   const [isLoggingOut, setIsLoggingOut] = useState(false)
-  const router = useRouter()
 
   const handleLogout = async () => {
     try {

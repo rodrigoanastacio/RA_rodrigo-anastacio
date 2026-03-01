@@ -141,5 +141,33 @@ export const userHandler = {
     if (updateError) throw updateError
 
     return { success: true }
+  },
+
+  createProfile: async (
+    supabase: SupabaseClient,
+    data: {
+      id: string
+      full_name: string
+      tenant_id: string
+      role: 'admin' | 'editor' | 'viewer'
+    }
+  ) => {
+    const { data: profile, error } = await supabase
+      .from('profiles')
+      .insert({
+        id: data.id,
+        full_name: data.full_name,
+        tenant_id: data.tenant_id,
+        role: data.role
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('[userHandler.createProfile] Error:', error)
+      throw error
+    }
+
+    return profile
   }
 }

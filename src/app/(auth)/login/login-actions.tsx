@@ -3,9 +3,8 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-/**
- * Server action to handle login logic with Supabase Auth.
- */
+import { mapErrorMessage } from '@/lib/utils/error-mapper'
+
 export async function loginAction(data: { email: string; password: string }) {
   const supabase = await createClient()
   const { email, password } = data
@@ -16,7 +15,7 @@ export async function loginAction(data: { email: string; password: string }) {
   })
 
   if (error) {
-    return { error: error.message }
+    return { error: mapErrorMessage(error) }
   }
 
   redirect('/dashboard')

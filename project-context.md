@@ -33,4 +33,16 @@ Sempre seguir este workflow para a implementação de novas histórias ou tarefa
 - Camada `shared` para lógica de negócio (Entities, Services, Handlers).
 - Camada `app` apenas para roteamento e apresentação.
 - Serialização via `.toPlainObj()` em Entidades.
-- **Clean Code**: Não utilizar comentários no código. Utilizar nomenclaturas bem descritivas.
+
+## Regras Críticas (Aprendizados)
+
+Para evitar erros recorrentes e manter o profissionalismo:
+
+1.  **Zero Logs de Debug**: É TERMINANTEMENTE PROIBIDO realizar commits com `console.log`, `console.error` ou comentários de depuração. O código deve ser limpo e profissional conforme os princípios de Clean Code definidos.
+2.  **Validação de Build e Teste**: Antes de QUALQUER merge para `develop` ou `main`, é MANDATÓRIO executar:
+    - `npm run lint`
+    - `npm run test`
+    - `npm run build` (especialmente importante para detectar erros de pré-renderização).
+3.  **Suspense Boundary**: Qualquer Client Component que utilize hooks de navegação do Next.js (como `useSearchParams`) DEVE ser envolvido em um `<Suspense>` para evitar falhas no build de produção.
+4.  **Ambiente de Teste**: O projeto utiliza `whatwg-fetch` no `jest.setup.ts` para polyfill de fetch. Nunca remova ou altere esta configuração sem validar a suíte de testes de serviços.
+5.  **Merge para Main**: Somente realizar merge para a `main` após a suíte de testes estar 100% verde (PASS) e o build validado.

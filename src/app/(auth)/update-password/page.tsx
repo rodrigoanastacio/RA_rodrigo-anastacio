@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { LayoutTemplate } from 'lucide-react'
+import { PasswordStrength } from './components/password-strength'
 import { useUpdatePassword } from './hooks/use-update-password'
 
 export default function UpdatePasswordPage() {
@@ -12,6 +13,7 @@ export default function UpdatePasswordPage() {
     confirmPassword,
     setConfirmPassword,
     isLoading,
+    isVerifying,
     handleSubmit
   } = useUpdatePassword()
 
@@ -76,6 +78,7 @@ export default function UpdatePasswordPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="h-12 bg-white border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-gray-900 placeholder:text-gray-300 font-medium px-4"
               />
+              <PasswordStrength password={password} />
             </div>
 
             <div className="space-y-2">
@@ -100,10 +103,14 @@ export default function UpdatePasswordPage() {
             <div className="pt-4">
               <Button
                 type="submit"
-                disabled={isLoading}
+                disabled={isLoading || isVerifying}
                 className="w-full h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-extrabold text-sm tracking-widest uppercase shadow-xl shadow-blue-500/20 transition-all active:scale-[0.98]"
               >
-                {isLoading ? 'Salvando...' : 'Salvar Senha'}
+                {isVerifying
+                  ? 'Verificando link...'
+                  : isLoading
+                    ? 'Salvando...'
+                    : 'Salvar Senha'}
               </Button>
             </div>
           </form>

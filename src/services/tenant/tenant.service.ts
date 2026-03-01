@@ -1,5 +1,6 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
 import { tenantHandler } from '@/shared/api-handlers/tenant/tenant.handler'
+import { userHandler } from '@/shared/api-handlers/user/user.handler'
 import { TenantSettings } from '@/shared/entities/tenant/tenant.types'
 import { SupabaseClient } from '@supabase/supabase-js'
 
@@ -18,7 +19,10 @@ async function getTenantId(
 
 export const tenantService = {
   getSettings: async () => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) return null
@@ -30,7 +34,10 @@ export const tenantService = {
   },
 
   updateSettings: async (settings: TenantSettings) => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) throw new Error('Unauthorized')
@@ -42,7 +49,10 @@ export const tenantService = {
   },
 
   uploadLogo: async (file: File) => {
-    const supabase = await createClient()
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
 
     const { data: authUser, error: authError } = await supabase.auth.getUser()
     if (authError || !authUser?.user) throw new Error('Unauthorized')
@@ -75,5 +85,53 @@ export const tenantService = {
     await tenantHandler.updateSettings(supabase, tenantId, updatedSettings)
 
     return publicUrl
+  },
+
+  registerTenantAdmin: async (data: {
+    email: string
+    password: string
+    fullName: string
+    companyName: string
+  }) => {
+    const supabase =
+      typeof window === 'undefined'
+        ? await (await import('@/lib/supabase/server')).createClient()
+        : createBrowserClient()
+
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        data: {
+          full_name: data.fullName
+        }
+      }
+    })
+
+    if (authError) throw authError
+    if (!authData.user) throw new Error('Falha ao criar usuário')
+
+    const slug = data.companyName
+      .toLowerCase()
+      .trim()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+
+    const tenant = await tenantHandler.create(supabase, {
+      name: data.companyName,
+      slug: slug || `tenant-${Date.now()}`
+    })
+
+    await userHandler.createProfile(supabase, {
+      id: authData.user.id,
+      full_name: data.fullName,
+      tenant_id: tenant.id,
+      role: 'admin'
+    })
+
+    return { user: authData.user, tenant }
   }
 }

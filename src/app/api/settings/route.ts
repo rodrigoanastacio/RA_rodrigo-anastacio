@@ -1,4 +1,4 @@
-import { tenantService } from '@/shared/services/tenant/tenant.service'
+import { tenantService } from '@/services/tenant/tenant.service'
 import { NextResponse } from 'next/server'
 
 export async function GET() {

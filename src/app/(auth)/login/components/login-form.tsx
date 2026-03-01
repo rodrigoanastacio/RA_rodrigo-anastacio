@@ -61,7 +61,7 @@ export function LoginForm() {
               Senha
             </label>
             <Link
-              href="#"
+              href="/forgot-password"
               className="text-[11px] font-extrabold text-blue-600 hover:text-blue-700 tracking-widest uppercase transition-colors"
             >
               Esqueceu?

@@ -278,4 +278,36 @@ After editing any file:
 
 ---
 
+## 🚀 BMAD EXECUTION PROTOCOL (MANDATORY)
+
+**When operating within a BMad Sprint (Epic/Story workflow), you MUST follow these execution rules:**
+
+### 1. Story Context First
+
+- **Action**: Before writing any code, READ the full story file (e.g., `_bmad-output/implementation-artifacts/X-X-story-name.md`).
+- **Goal**: Absorb all Acceptance Criteria (ACs), Dev Notes, and structural requirements defined in the story.
+
+### 2. Red-Green-Refactor (TDD)
+
+- **Step 1 (RED)**: Write the failing test for the current task/subtask BEFORE the implementation.
+- **Step 2 (GREEN)**: Implement the minimal code to make the test pass.
+- **Step 3 (REFACTOR)**: Clean up the code while keeping tests green, following the architecture defined in `ARCHITECTURE.md`.
+
+### 3. Progressive Checkmarking
+
+- **Requirement**: Check the [ ] in the Story file **ONLY AFTER** the task implementation AND its tests are passing 100%.
+- **Verification**: Never check a task if it hasn't been verified by a terminal test run.
+
+### 4. Continuous Documentation
+
+- **Update**: Keep the `Dev Agent Record` and `File List` sections of the Story file updated after each task.
+- **Log**: Note any technical decisions or deviations from the original plan in the `Debug Log` or `Completion Notes`.
+
+### 5. Transition to Review
+
+- **Action**: Once ALL tasks are [x], update the Story status to `review` and update the `sprint-status.yaml` accordingly.
+- **Hand-off**: Suggest the user to run `/code-review` to finish the cycle.
+
+---
+
 > **Note:** This agent loads relevant skills for detailed guidance. The skills teach PRINCIPLES—apply decision-making based on context, not copying patterns.

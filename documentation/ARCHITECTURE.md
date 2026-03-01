@@ -15,10 +15,10 @@ graph TD
         Action
     end
 
-    subgraph "Camada de Domínio & Aplicação (Shared)"
-        Service[⚙️ Application Service]
-        Handler[🛠️ Infrastructure (Handlers)]
-        Entities[💎 Domain Entities]
+    subgraph "Camada de Domínio & Aplicação"
+        Service[⚙️ Application Service - src/services]
+        Handler[🛠️ Infrastructure - src/shared/api-handlers]
+        Entities[💎 Domain Entities - src/shared/entities]
     end
 ```
 
@@ -45,7 +45,7 @@ Funções assíncronas que rodam exclusivamente no servidor.
 Onde vive a inteligência da aplicação. Separada em camadas seguindo os princípios de **Domain-Driven Design (DDD)**. Independente do framework.
 
 - **Domain Entities (`/entities`)**: O coração do negócio. Classes TypeScript puras que encapsulam regras, sem importar bancos de dados ou UI.
-- **Application Services (`/services`)**: Casos de uso da aplicação (ex: `teamService.listTeamMembers()`). Orquestra a busca de dados na infraestrutura (Handlers) e instancia/devolve Entidades de Domínio para a Presentation Layer.
+- **Application Services (`/src/services`)**: Casos de uso da aplicação (ex: `tenantService.registerTenantAdmin()`). Orquestra a busca de dados na infraestrutura (Handlers) e instancia/devolve Entidades de Domínio para a Presentation Layer.
 - **Infrastructure Handlers (`/api-handlers`)**: A camada mais suja de backend. Onde mora a integração real com o **Supabase**. Busca dados crus (DTOs) e devolve para os Services. Nunca contém lógica de negócio complexa.
 
 ### 4. Estratégia de Data Fetching

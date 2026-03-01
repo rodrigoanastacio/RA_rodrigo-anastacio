@@ -136,7 +136,7 @@ export function WhatsAppCaptureModal({
         try {
           const errData = await response.json()
           if (errData.error) msg = errData.error
-        } catch (_) {}
+        } catch {}
         throw new Error(msg)
       }
 

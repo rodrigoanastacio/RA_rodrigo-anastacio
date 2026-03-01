@@ -1,6 +1,6 @@
 'use server'
 
-import { tenantService } from '@/shared/services/tenant/tenant.service'
+import { tenantService } from '@/services/tenant/tenant.service'
 import { userService } from '@/shared/services/user/user.service'
 import { revalidatePath } from 'next/cache'
 

@@ -198,5 +198,36 @@ export const tenantHandler = {
     if (updateError) throw updateError
 
     return { success: true }
+  },
+
+  create: async (
+    supabase: SupabaseClient,
+    data: { slug: string; name: string }
+  ): Promise<TenantRow> => {
+    const { data: tenant, error } = await supabase
+      .from('tenants')
+      .insert({
+        slug: data.slug,
+        name: data.name,
+        status: 'active',
+        settings: {
+          branding: {
+            companyName: data.name
+          },
+          features: {
+            custom_lp: false,
+            advanced_analytics: false
+          }
+        }
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('[tenantHandler.create] Error:', error)
+      throw error
+    }
+
+    return tenant as TenantRow
   }
 }

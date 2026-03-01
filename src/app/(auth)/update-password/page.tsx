@@ -6,7 +6,9 @@ import { LayoutTemplate } from 'lucide-react'
 import { PasswordStrength } from './components/password-strength'
 import { useUpdatePassword } from './hooks/use-update-password'
 
-export default function UpdatePasswordPage() {
+import { Suspense } from 'react'
+
+function UpdatePasswordContent() {
   const {
     password,
     setPassword,
@@ -117,5 +119,13 @@ export default function UpdatePasswordPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function UpdatePasswordPage() {
+  return (
+    <Suspense fallback={<div>Carregando...</div>}>
+      <UpdatePasswordContent />
+    </Suspense>
   )
 }

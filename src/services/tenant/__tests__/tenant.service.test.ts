@@ -68,7 +68,7 @@ describe('tenantService.registerTenantAdmin', () => {
 
   it('deve lançar erro se o signUp do auth falhar', async () => {
     const errorMsg = 'Auth failed'
-    const mockError = { message: errorMsg }
+    const mockError = new Error(errorMsg)
 
     mockSupabase.auth.signUp.mockResolvedValueOnce({
       data: { user: null },
@@ -82,6 +82,6 @@ describe('tenantService.registerTenantAdmin', () => {
         fullName: 'User Test',
         companyName: 'Company Test'
       })
-    ).rejects.toEqual(mockError)
+    ).rejects.toThrow(errorMsg)
   })
 })

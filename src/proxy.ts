@@ -2,10 +2,6 @@ import { updateSession } from '@/lib/supabase/middleware'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export async function proxy(request: NextRequest) {
-  if (request.method === 'POST') {
-    console.log('Middleware Processing POST:', request.nextUrl.pathname)
-  }
-
   const { response, user } = await updateSession(request)
 
   if (request.nextUrl.pathname.startsWith('/dashboard')) {

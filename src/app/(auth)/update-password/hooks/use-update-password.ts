@@ -22,7 +22,6 @@ export function useUpdatePassword() {
 
         if (error) {
           toast.error('O link de recuperação parece inválido ou expirou')
-          console.error('[UpdatePassword] Code exchange error:', error.message)
         } else {
           const url = new URL(window.location.href)
           url.searchParams.delete('code')

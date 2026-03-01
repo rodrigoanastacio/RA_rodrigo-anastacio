@@ -43,7 +43,6 @@ export function mapErrorMessage(error: unknown): string {
   }
 
   if (message) {
-    console.warn('[mapErrorMessage] Mensagem original não mapeada:', message)
     return 'Ocorreu um erro ao processar sua solicitação. Verifique os dados e tente novamente.'
   }
 

@@ -1,9 +1,11 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient as createBrowserClient } from '@/lib/supabase/client'
+import { createClient as createServerClient } from '@/lib/supabase/server'
 import { tenantHandler } from '@/shared/api-handlers/tenant/tenant.handler'
 import { userHandler } from '@/shared/api-handlers/user/user.handler'
 import { tenantService } from '../tenant.service'
 
 jest.mock('@/lib/supabase/server')
+jest.mock('@/lib/supabase/client')
 jest.mock('@/shared/api-handlers/tenant/tenant.handler')
 jest.mock('@/shared/api-handlers/user/user.handler')
 
@@ -11,12 +13,14 @@ describe('tenantService.registerTenantAdmin', () => {
   const mockSupabase = {
     auth: {
       signUp: jest.fn()
-    }
+    },
+    from: jest.fn()
   }
 
   beforeEach(() => {
     jest.clearAllMocks()
-    ;(createClient as jest.Mock).mockResolvedValue(mockSupabase)
+    ;(createServerClient as jest.Mock).mockResolvedValue(mockSupabase)
+    ;(createBrowserClient as jest.Mock).mockReturnValue(mockSupabase)
   })
 
   it('deve orquestrar o registro completo com sucesso', async () => {

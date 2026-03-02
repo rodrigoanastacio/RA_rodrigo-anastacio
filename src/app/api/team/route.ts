@@ -1,4 +1,5 @@
 import { teamHandler } from '@/shared/api-handlers/team/team.handler'
+import { teamService } from '@/shared/services/team/team.service'
 import { revalidatePath } from 'next/cache'
 import { NextResponse } from 'next/server'
 
@@ -8,8 +9,14 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function GET() {
   try {
-    const supabase = await createClient()
-    const members = await teamHandler.list(supabase)
+    const supabase = createAdminClient()
+    const profiles = await teamHandler.list(supabase)
+
+    const members = await teamService.enrichMembersWithAuthStatus(
+      supabase,
+      profiles
+    )
+
     return NextResponse.json(members)
   } catch (error: unknown) {
     console.error('Error fetching team members:', error)
@@ -33,11 +40,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: requesterProfile } = await supabase
+    const { data: requesterProfile } = (await supabase
       .from('profiles')
-      .select('role')
+      .select('role, tenant_id')
       .eq('id', user.id)
-      .single()
+      .single()) as any
 
     if (!requesterProfile || requesterProfile.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
@@ -61,7 +68,8 @@ export async function POST(request: Request) {
       id: authData.user.id,
       full_name: body.full_name,
       email: body.email,
-      role: body.role || 'editor'
+      role: body.role || 'editor',
+      tenant_id: requesterProfile.tenant_id
     })
 
     if (profileError) {

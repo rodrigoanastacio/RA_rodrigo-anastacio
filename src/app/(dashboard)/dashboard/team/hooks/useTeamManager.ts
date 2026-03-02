@@ -1,6 +1,6 @@
 import { env } from '@/config/env'
 import { createBrowserClient } from '@supabase/ssr'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { refreshTeamList } from '../actions'
 import { TeamMemberRow } from '../types'
@@ -15,13 +15,20 @@ export function useTeamManager(
     null
   )
 
-  const supabase = createBrowserClient(env.supabase.url, env.supabase.anonKey)
+  const supabase = useMemo(
+    () => createBrowserClient(env.supabase.url, env.supabase.anonKey),
+    []
+  )
+
+  useEffect(() => {
+    setTeamMembers(initialTeamMembers)
+  }, [initialTeamMembers])
 
   useEffect(() => {
     if (!tenantId) return
 
     const channel = supabase
-      .channel(`team-list-${tenantId}`)
+      .channel(`team_changes_${tenantId}`)
       .on(
         'postgres_changes',
         {
@@ -32,7 +39,9 @@ export function useTeamManager(
         },
         async () => {
           const updatedMembers = await refreshTeamList()
-          setTeamMembers(updatedMembers)
+          if (updatedMembers) {
+            setTeamMembers(updatedMembers)
+          }
         }
       )
       .subscribe()

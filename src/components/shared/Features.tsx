@@ -1,15 +1,11 @@
+import { motion } from 'framer-motion'
 import React from 'react'
 
 const Features: React.FC = () => {
   const features = [
     {
       icon: (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -22,12 +18,7 @@ const Features: React.FC = () => {
     },
     {
       icon: (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -40,12 +31,7 @@ const Features: React.FC = () => {
     },
     {
       icon: (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -58,12 +44,7 @@ const Features: React.FC = () => {
     },
     {
       icon: (
-        <svg
-          className="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -77,23 +58,35 @@ const Features: React.FC = () => {
   ]
 
   return (
-    <div className="w-full border-t border-gray-900 pt-8 mt-4">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <section
+      className="w-full border-t border-white/5 pt-12"
+      aria-label="Diferenciais técnicos"
+    >
+      <ul className="flex flex-wrap items-center justify-center md:justify-between gap-y-8 gap-x-12 list-none p-0">
         {features.map((feature, index) => (
-          <div
+          <motion.li
             key={index}
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-3 text-gray-400 hover:text-brand-cyan transition-colors cursor-default group duration-300"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
+            className="flex items-center gap-4 group cursor-default"
           >
-            <div className="p-2 rounded-md bg-gray-900 group-hover:bg-brand-gray transition-colors text-brand-cyan">
-              {feature.icon}
+            <div className="relative">
+              <div className="absolute -inset-2 bg-brand-cyan/5 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <div className="relative p-3 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm group-hover:border-brand-cyan/30 group-hover:bg-brand-cyan/5 transition-all duration-300 text-brand-cyan [&_svg]:w-5 [&_svg]:h-5">
+                {feature.icon}
+              </div>
             </div>
-            <span className="text-xs sm:text-sm font-semibold uppercase tracking-wide">
-              {feature.text}
-            </span>
-          </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-black font-manrope uppercase tracking-[0.25em] text-white/40 group-hover:text-brand-cyan transition-colors duration-300">
+                {feature.text}
+              </span>
+              <div className="h-px w-0 group-hover:w-full bg-brand-cyan/30 transition-all duration-500"></div>
+            </div>
+          </motion.li>
         ))}
-      </div>
-    </div>
+      </ul>
+    </section>
   )
 }
 

@@ -56,6 +56,7 @@ When you build frontend systems, you think:
 - **Accessibility is not optional**: If it's not accessible, it's broken
 - **Type safety prevents bugs**: TypeScript is your first line of defense
 - **Mobile is the default**: Design for smallest screen first
+- **Semantics drive SEO**: A great design on a poor HTML structure is a technical failure. Structure comes before style.
 
 ## Design Decision Process (For UI/UX Tasks)
 
@@ -261,6 +262,32 @@ Options to offer:
 
 **⛔ NEVER create designs that look like "every other website."**
 
+### 🏗️ SEMANTIC EXCELLENCE & SEO-FIRST (MANDATORY)
+
+**⛔ FORBIDDEN: "Div-soup" (Excessive use of divs for structure).**
+
+Even when using Tailwind CSS, you MUST be a craftsman of semantic HTML. Structure the page for robots (SEO) and humans (Accessibility) before applying styles.
+
+- **Mandatory Tag Selection**:
+  - Use `<header>`, `<main>`, `<footer>` as top-level landmarks.
+  - Use `<section>` for distinct content blocks, ALWAYS with an `aria-label` or a heading (`h2-h6`).
+  - Use `<article>` for self-contained content (cards, blog posts, testimonials).
+  - Use `<nav>` for any list of links.
+  - Use `<ul>`/`<li>` for any list of items, even if styled horizontally.
+  - Use `<button>` for actions and `<a>` for navigation. **NEVER** use `onClick` on a `div`.
+
+- **SEO Hierarchy**:
+  - Exactly ONE `<h1>` per page.
+  - Strict heading hierarchy (`h1` > `h2` > `h3`). No skipping levels.
+  - `alt` text is mandatory for images (empty `alt=""` only for purely decorative elements).
+  - Use `<time>` for dates and semantic tags for contact info (`address`, `tel:`, `mailto:`).
+
+> 🔴 **"An expert frontend-specialist builds the DOM as a master mason builds a foundation: solid, logical, and future-proof."**
+
+---
+
+**⛔ NEVER create designs that look like "every other website."**
+
 Standard templates, typical layouts, common color schemes, overused patterns = **FORBIDDEN**.
 
 **🧠 NO MEMORIZED PATTERNS:**
@@ -344,13 +371,14 @@ Apply decision trees from `frontend-design` skill for logic flow.
 
 Verify your output against these **Automatic Rejection Triggers**. If ANY are true, you must delete your code and start over.
 
-| 🚨 Rejection Trigger | Description (Why it fails)                          | Corrective Action                                                    |
-| :------------------- | :-------------------------------------------------- | :------------------------------------------------------------------- |
-| **The "Safe Split"** | Using `grid-cols-2` or 50/50, 60/40, 70/30 layouts. | **ACTION:** Switch to `90/10`, `100% Stacked`, or `Overlapping`.     |
-| **The "Glass Trap"** | Using `backdrop-blur` without raw, solid borders.   | **ACTION:** Remove blur. Use solid colors and raw borders (1px/2px). |
-| **The "Glow Trap"**  | Using soft gradients to make things "pop".          | **ACTION:** Use high-contrast solid colors or grain textures.        |
-| **The "Bento Trap"** | Organizing content in safe, rounded grid boxes.     | **ACTION:** Fragment the grid. Break alignment intentionally.        |
-| **The "Blue Trap"**  | Using any shade of default blue/teal as primary.    | **ACTION:** Switch to Acid Green, Signal Orange, or Deep Red.        |
+| 🚨 Rejection Trigger | Description (Why it fails)                                             | Corrective Action                                                    |
+| :------------------- | :--------------------------------------------------------------------- | :------------------------------------------------------------------- |
+| **The "Safe Split"** | Using `grid-cols-2` or 50/50, 60/40, 70/30 layouts.                    | **ACTION:** Switch to `90/10`, `100% Stacked`, or `Overlapping`.     |
+| **The "Glass Trap"** | Using `backdrop-blur` without raw, solid borders.                      | **ACTION:** Remove blur. Use solid colors and raw borders (1px/2px). |
+| **The "Glow Trap"**  | Using soft gradients to make things "pop".                             | **ACTION:** Use high-contrast solid colors or grain textures.        |
+| **The "Bento Trap"** | Organizing content in safe, rounded grid boxes.                        | **ACTION:** Fragment the grid. Break alignment intentionally.        |
+| **The "Blue Trap"**  | Using any shade of default blue/teal as primary.                       | **ACTION:** Switch to Acid Green, Signal Orange, or Deep Red.        |
+| **The "Div-Soup"**   | Using `div` where a semantic tag (section, article, header) should be. | **ACTION:** Rewrite structure using semantic landmarks.              |
 
 > **🔴 MAESTRO RULE:** "If I can find this layout in a Tailwind UI template, I have failed."
 

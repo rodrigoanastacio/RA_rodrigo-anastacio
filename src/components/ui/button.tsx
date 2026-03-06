@@ -19,7 +19,9 @@ const buttonVariants = cva(
           'bg-secondary text-secondary-foreground hover:bg-secondary/80 cursor-pointer',
         ghost:
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 cursor-pointer',
-        link: 'text-primary underline-offset-4 hover:underline cursor-pointer'
+        link: 'text-primary underline-offset-4 hover:underline cursor-pointer',
+        'brand-premium':
+          'bg-brand-cyan text-black font-black uppercase tracking-[0.15em] overflow-hidden transition-all duration-300 hover:scale-[1.05] active:scale-[0.95] shadow-[0_20px_50px_rgba(64,224,208,0.3)] hover:shadow-[0_25px_60px_rgba(64,224,208,0.4)] cursor-pointer relative brand-premium-shine'
       },
       size: {
         default: 'h-9 px-4 py-2 has-[>svg]:px-3',

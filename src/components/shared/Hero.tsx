@@ -8,9 +8,8 @@ import HeroText from './HeroText'
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative w-full py-20 lg:py-32 flex flex-col gap-24 overflow-visible">
-      {/* Background System */}
-      <div className="absolute inset-0 overflow-hidden rounded-3xl">
+    <header className="relative w-full py-20 lg:py-32 flex flex-col gap-24 overflow-visible">
+      <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
         <motion.div
           initial={{ scale: 1.1, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.5 }}
@@ -19,19 +18,17 @@ const Hero: React.FC = () => {
         >
           <Image
             src="/assets/bg-hero.png"
-            alt="Background"
+            alt=""
             fill
             className="object-cover object-center"
             priority
           />
         </motion.div>
 
-        {/* Deep Overlays for Cinematic Look - Moved after/on top of image */}
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div className="absolute inset-0 bg-linear-to-b from-blue-900/20 via-transparent to-black z-10"></div>
         <div className="absolute inset-0 bg-linear-to-r from-black via-transparent to-transparent z-10"></div>
 
-        {/* Dynamic Glows */}
         <motion.div
           animate={{
             opacity: [0.1, 0.2, 0.1]
@@ -41,42 +38,27 @@ const Hero: React.FC = () => {
         ></motion.div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-20">
-        {/* Left Column: Typography */}
-        <motion.div
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="relative"
-        >
-          <HeroText />
-        </motion.div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-24 relative z-20">
+        <div className="flex flex-col items-center">
+          <motion.div
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }}
+            className="w-full"
+          >
+            <HeroText />
+          </motion.div>
+        </div>
 
-        {/* Right Column: Visual Element - Hidden on mobile since the portrait was removed */}
         <motion.div
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="relative hidden lg:flex justify-center lg:justify-end items-center lg:-mt-20"
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
         >
-          {/* Portrait Container - Only for Decorative Glow on Desktop */}
-          <div className="relative lg:w-[550px] aspect-square flex items-center justify-center">
-            {/* Decorative Background Blur */}
-            <div className="absolute inset-0 bg-brand-cyan/10 rounded-full blur-[100px] animate-pulse"></div>
-          </div>
+          <Features />
         </motion.div>
       </div>
-
-      {/* Bottom Interface Elements */}
-      <motion.div
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.8 }}
-        className="relative z-20"
-      >
-        <Features />
-      </motion.div>
-    </div>
+    </header>
   )
 }
 

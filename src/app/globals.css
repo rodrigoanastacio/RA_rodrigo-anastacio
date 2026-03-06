@@ -15,13 +15,13 @@
 
   --color-rose-50: #eae0df;
 
-  /* SaaS Branding Colors */
   --color-lp-primary: #0b3fda;
   --color-lp-bg-light: #f5f6f8;
   --color-lp-bg-dark: #101422;
   --color-deep-navy: #08298a;
   --color-graphite: #333333;
   --color-brand-cyan: #40e0d0;
+  --color-brand-silver: #e2e2e2;
   --font-manrope: var(--font-manrope);
   --font-inter: var(--font-inter);
   --font-playfair: var(--font-playfair);
@@ -39,6 +39,57 @@
   }
   .animate-fade-in-up {
     animation: fade-in-up 0.8s ease-out forwards;
+  }
+  .animate-shine {
+    animation: shine 3s infinite;
+  }
+  .text-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+    color: transparent;
+  }
+  .text-outline-cyan {
+    -webkit-text-stroke: 1px var(--color-brand-cyan);
+    color: transparent;
+  }
+  .brand-premium-shine {
+    position: relative;
+    overflow: hidden;
+  }
+  .brand-premium-shine::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(255, 255, 255, 0.5),
+      transparent
+    );
+    transform: skewX(-30deg) translateX(-150%);
+    animation: shine-alt 3s infinite;
+    pointer-events: none;
+  }
+}
+
+@keyframes shine-alt {
+  0% {
+    transform: skewX(-30deg) translateX(-150%);
+  }
+  50%,
+  100% {
+    transform: skewX(-30deg) translateX(250%);
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%);
+  }
+  50%,
+  100% {
+    transform: translateX(100%);
   }
 }
 
@@ -112,7 +163,6 @@
 :root {
   --radius: 0.75rem;
 
-  /* Modern Color Palette */
   --background: #f9fafb;
   --foreground: #111827;
   --card: #ffffff;
@@ -120,38 +170,30 @@
   --popover: #ffffff;
   --popover-foreground: #111827;
 
-  /* Primary - Vibrant Blue */
   --primary: #4f46e5;
   --primary-foreground: #ffffff;
 
-  /* Secondary */
   --secondary: #f3f4f6;
   --secondary-foreground: #111827;
 
-  /* Muted */
   --muted: #f3f4f6;
   --muted-foreground: #6b7280;
 
-  /* Accent */
   --accent: #e0e7ff;
   --accent-foreground: #4f46e5;
 
-  /* Destructive */
   --destructive: #ef4444;
 
-  /* Borders */
   --border: #e5e7eb;
   --input: #e5e7eb;
   --ring: #4f46e5;
 
-  /* Chart colors */
   --chart-1: #4f46e5;
   --chart-2: #10b981;
   --chart-3: #f59e0b;
   --chart-4: #f43f5e;
   --chart-5: #8b5cf6;
 
-  /* Sidebar */
   --sidebar: #ffffff;
   --sidebar-foreground: #111827;
   --sidebar-primary: #4f46e5;
@@ -202,7 +244,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-manrope), sans-serif;
   }
 
   .pain-section-bg {
@@ -216,9 +258,9 @@
   }
   .gradient-bg {
     background: radial-gradient(
-      circle at top right,
-      rgba(11, 63, 218, 0.03),
-      transparent
+      circle at 50% 50%,
+      rgba(64, 224, 208, 0.12),
+      transparent 60%
     );
   }
 }

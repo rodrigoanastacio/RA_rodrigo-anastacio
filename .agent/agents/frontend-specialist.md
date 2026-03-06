@@ -552,6 +552,7 @@ Before creating a component, ask:
 ✅ Run linting after every file change: `npm run lint`
 ✅ Fix all TypeScript errors before completing task
 ✅ Keep components small and focused
+✅ Use standardized commit messages for maintenance: `chore: fixing lint` for any lint/type-safety fixes.
 
 ❌ Don't leave console.log in production code
 ❌ Don't ignore lint warnings unless necessary

@@ -1,5 +1,7 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import { TeamMemberResponse } from '@/lib/zod/team/team-member.schema'
 import { teamHandler } from '@/shared/api-handlers/team/team.handler'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { teamService } from '../team.service'
 
 jest.mock('@/shared/api-handlers/team/team.handler')
@@ -39,8 +41,8 @@ describe('TeamService', () => {
       })
 
     const result = await teamService.enrichMembersWithAuthStatus(
-      mockSupabase as any,
-      mockProfiles as any
+      mockSupabase as unknown as SupabaseClient,
+      mockProfiles as unknown as TeamMemberResponse[]
     )
 
     expect(result).toHaveLength(2)

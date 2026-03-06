@@ -40,11 +40,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    interface RequesterProfile {
+      role: string | null
+      tenant_id: string | null
+    }
+
     const { data: requesterProfile } = (await supabase
       .from('profiles')
       .select('role, tenant_id')
       .eq('id', user.id)
-      .single()) as any
+      .single()) as { data: RequesterProfile | null }
 
     if (!requesterProfile || requesterProfile.role !== 'admin') {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })

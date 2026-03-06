@@ -1,4 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { teamHandler } from '../team.handler'
 
 jest.mock('@/lib/supabase/admin', () => ({
@@ -36,7 +37,10 @@ describe('TeamHandler', () => {
     mockSupabase.order.mockReturnThis()
     mockSupabase.eq.mockResolvedValue({ data: mockProfiles, error: null })
 
-    const result = await teamHandler.list(mockSupabase as any, 'tenant-123')
+    const result = await teamHandler.list(
+      mockSupabase as unknown as SupabaseClient,
+      'tenant-123'
+    )
 
     expect(mockSupabase.from).toHaveBeenCalledWith('profiles')
     expect(mockSupabase.eq).toHaveBeenCalledWith('tenant_id', 'tenant-123')
@@ -56,7 +60,10 @@ describe('TeamHandler', () => {
       error: null
     })
 
-    const result = await teamHandler.invite(mockSupabase as any, mockInviteData)
+    const result = await teamHandler.invite(
+      mockSupabase as unknown as SupabaseClient,
+      mockInviteData
+    )
 
     expect(mockSupabase.auth.admin.inviteUserByEmail).toHaveBeenCalledWith(
       'novo@gmail.com',
@@ -80,7 +87,10 @@ describe('TeamHandler', () => {
     })
 
     await expect(
-      teamHandler.invite(mockSupabase as any, mockInviteData)
+      teamHandler.invite(
+        mockSupabase as unknown as SupabaseClient,
+        mockInviteData
+      )
     ).rejects.toThrow('Rate Limit Exceeded')
   })
 })

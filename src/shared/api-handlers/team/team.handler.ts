@@ -9,7 +9,7 @@ export const teamHandler = {
   ): Promise<TeamMemberResponse[]> => {
     let query = supabase
       .from('profiles')
-      .select('*')
+      .select('id, full_name, email, role, avatar_url, created_at, updated_at, tenant_id')
       .is('deleted_at', null)
       .order('full_name', { ascending: true })
 

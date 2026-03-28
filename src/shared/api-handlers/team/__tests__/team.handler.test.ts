@@ -43,6 +43,7 @@ describe('TeamHandler', () => {
     )
 
     expect(mockSupabase.from).toHaveBeenCalledWith('profiles')
+    expect(mockSupabase.select).toHaveBeenCalledWith('id, full_name, email, role, avatar_url, created_at, updated_at, tenant_id')
     expect(mockSupabase.eq).toHaveBeenCalledWith('tenant_id', 'tenant-123')
     expect(result).toHaveLength(2)
     expect(result[0].full_name).toBe('Ana')

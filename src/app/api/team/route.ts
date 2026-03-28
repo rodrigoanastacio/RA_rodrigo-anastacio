@@ -9,11 +9,36 @@ import { createClient } from '@/lib/supabase/server'
 
 export async function GET() {
   try {
-    const supabase = createAdminClient()
-    const profiles = await teamHandler.list(supabase)
+    const supabaseServer = await createClient()
+    const {
+      data: { user }
+    } = await supabaseServer.auth.getUser()
+
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const supabaseAdmin = createAdminClient()
+
+    const { data: requesterProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('tenant_id')
+      .eq('id', user.id)
+      .single()
+
+    const tenantId = requesterProfile?.tenant_id
+
+    if (!tenantId) {
+      return NextResponse.json(
+        { error: 'No tenant associated with user' },
+        { status: 400 }
+      )
+    }
+
+    const profiles = await teamHandler.list(supabaseAdmin, tenantId)
 
     const members = await teamService.enrichMembersWithAuthStatus(
-      supabase,
+      supabaseAdmin,
       profiles
     )
 
@@ -55,7 +80,16 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const body = await request.json()
+    const rawBody = await request.json()
+
+    const { teamMemberSchema } = await import('@/lib/zod/team/team-member.schema')
+    const parsedBody = teamMemberSchema.safeParse(rawBody)
+
+    if (!parsedBody.success) {
+      return NextResponse.json({ error: parsedBody.error.flatten() }, { status: 400 })
+    }
+
+    const body = parsedBody.data
 
     const { data: authData, error: authError } =
       await supabase.auth.admin.inviteUserByEmail(body.email, {
@@ -114,7 +148,7 @@ export async function DELETE(request: Request) {
 
     const { data: requesterProfile } = await supabase
       .from('profiles')
-      .select('role')
+      .select('role, tenant_id')
       .eq('id', user.id)
       .single()
 
@@ -130,6 +164,16 @@ export async function DELETE(request: Request) {
         { error: 'User ID is required' },
         { status: 400 }
       )
+    }
+
+    const { data: targetProfile } = await supabase
+      .from('profiles')
+      .select('tenant_id')
+      .eq('id', id)
+      .single()
+
+    if (!targetProfile || targetProfile.tenant_id !== requesterProfile.tenant_id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
     await teamHandler.delete(supabase, id)

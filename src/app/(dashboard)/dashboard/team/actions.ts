@@ -14,7 +14,17 @@ export async function refreshTeamList(): Promise<TeamMemberRow[]> {
   const {
     data: { user }
   } = await supabase.auth.getUser()
-  const tenantId = user?.user_metadata?.tenant_id
+  
+  if (!user) return []
+
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('tenant_id')
+    .eq('id', user.id)
+    .is('deleted_at', null)
+    .single()
+
+  const tenantId = profile?.tenant_id
 
   if (!tenantId) {
     console.error('refreshTeamList: No tenant_id found for user')

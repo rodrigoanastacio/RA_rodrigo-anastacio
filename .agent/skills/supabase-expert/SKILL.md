@@ -107,6 +107,34 @@ await adminSupabase.from('target_table').insert([
 ])
 ```
 
+### 4. Admin Client Data Leakage (Cross-Tenant Exposure)
+
+**Symptom**: An API endpoint that lists data (e.g., team members, users, settings) is returning data from all organizations/tenants instead of just the requester's tenant.
+
+**Root Cause**: The API route is using `createAdminClient()` (service role key) to fetch data. Since the admin client completely bypasses Row Level Security (RLS), it ignores the existing database policies that normally isolate tenant data. If no manual filter is applied, it fetches everything.
+
+**The Fix**:
+When using the Admin Client for operations that read or list data in a multi-tenant application, you **MUST manually enforce tenant isolation** by explicitly filtering by `tenant_id`.
+
+1. Safely retrieve the requester's true `tenant_id` from their session or profile.
+2. Pass it to the query and force an `.eq('tenant_id', requesterTenantId)` statement.
+
+```typescript
+// WRONG: Leaks data across all tenants
+const adminSupabase = createAdminClient()
+const { data: allUsers } = await adminSupabase.from('profiles').select('*')
+
+// CORRECT: Manually enforces tenant isolation
+const supabaseServer = await createClient() // user session
+const { data: { user } } = await supabaseServer.auth.getUser()
+const { data: profile } = await adminSupabase.from('profiles').select('tenant_id').eq('id', user.id).single()
+
+const { data: myUsers } = await adminSupabase
+  .from('profiles')
+  .select('*')
+  .eq('tenant_id', profile.tenant_id) // The crucial manual filter
+```
+
 ---
 
 ## 🛠 Troubleshooting Protocol

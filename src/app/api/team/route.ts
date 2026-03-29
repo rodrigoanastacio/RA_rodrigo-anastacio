@@ -168,12 +168,28 @@ export async function DELETE(request: Request) {
 
     const { data: targetProfile } = await supabase
       .from('profiles')
-      .select('tenant_id')
+      .select('role, tenant_id')
       .eq('id', id)
       .single()
 
     if (!targetProfile || targetProfile.tenant_id !== requesterProfile.tenant_id) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
+
+    if (targetProfile.role === 'admin') {
+      const { count } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('tenant_id', requesterProfile.tenant_id)
+        .eq('role', 'admin')
+        .is('deleted_at', null)
+
+      if (count !== null && count <= 1) {
+        return NextResponse.json(
+          { error: 'A operação não pode ser concluída pois a equipe deve ter no mínimo 1 administrador.' },
+          { status: 400 }
+        )
+      }
     }
 
     await teamHandler.delete(supabase, id)

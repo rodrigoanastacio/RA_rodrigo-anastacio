@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { teamHandler } from '@/shared/api-handlers/team/team.handler'
 import { teamService } from '@/shared/services/team/team.service'
 import { DELETE, GET, POST } from '../route'
+import { PUT } from '../[id]/route'
 
 jest.mock('@/lib/supabase/server', () => ({
   createClient: jest.fn()
@@ -15,7 +16,8 @@ jest.mock('@/lib/supabase/admin', () => ({
 jest.mock('@/shared/api-handlers/team/team.handler', () => ({
   teamHandler: {
     list: jest.fn(),
-    delete: jest.fn()
+    delete: jest.fn(),
+    update: jest.fn()
   }
 }))
 
@@ -53,6 +55,7 @@ describe('/api/team', () => {
   const mockAdminFrom = jest.fn().mockReturnThis()
   const mockAdminSelect = jest.fn().mockReturnThis()
   const mockAdminEq = jest.fn().mockReturnThis()
+  const mockAdminIs = jest.fn().mockReturnThis()
   const mockAdminSingle = jest.fn()
   const mockAdminAuthInvite = jest.fn()
   const mockAdminUpsert = jest.fn()
@@ -62,6 +65,7 @@ describe('/api/team', () => {
     from: mockAdminFrom,
     select: mockAdminSelect,
     eq: mockAdminEq,
+    is: mockAdminIs,
     single: mockAdminSingle,
     upsert: mockAdminUpsert,
     auth: {
@@ -183,6 +187,66 @@ describe('/api/team', () => {
       expect(teamHandler.delete).toHaveBeenCalledWith(
         mockSupabaseAdmin,
         'target-123'
+      )
+    })
+  })
+
+  describe('PUT', () => {
+    it('deve retornar 403 se tentar atualizar um usuario de outro tenant', async () => {
+      mockAuthGetUser.mockResolvedValueOnce({
+        data: { user: { id: 'user-admin' } }
+      })
+
+      // requester
+      mockAdminSingle.mockResolvedValueOnce({
+        data: { role: 'admin', tenant_id: 'tenant-A' }
+      })
+      // target
+      mockAdminSingle.mockResolvedValueOnce({ data: { tenant_id: 'tenant-B', role: 'editor' } })
+
+      const req = new Request('http://localhost:3000/api/team/id', {
+        method: 'PUT',
+        body: JSON.stringify({ full_name: 'Test', role: 'editor' })
+      })
+
+      const response = await PUT(req, { params: Promise.resolve({ id: 'target-123' }) })
+      const data = await response.json()
+
+      expect(response.status).toBe(403)
+      expect(data.error).toBe('Forbidden')
+      expect(teamHandler.update).not.toHaveBeenCalled()
+    })
+
+    it('deve atualizar usuario do mesmo tenant_id com sucesso', async () => {
+      mockAuthGetUser.mockResolvedValueOnce({
+        data: { user: { id: 'user-admin' } }
+      })
+
+      // requester
+      mockAdminSingle.mockResolvedValueOnce({
+        data: { role: 'admin', tenant_id: 'tenant-A' }
+      })
+      // target
+      mockAdminSingle.mockResolvedValueOnce({ data: { tenant_id: 'tenant-A', role: 'editor' } })
+
+      ;(teamHandler.update as jest.Mock).mockResolvedValueOnce({
+        success: true
+      })
+
+      const req = new Request('http://localhost:3000/api/team/id', {
+        method: 'PUT',
+        body: JSON.stringify({ full_name: 'Test Update', role: 'editor' })
+      })
+
+      const response = await PUT(req, { params: Promise.resolve({ id: 'target-123' }) })
+      const data = await response.json()
+
+      expect(response.status).toBe(200)
+      expect(data.success).toBe(true)
+      expect(teamHandler.update).toHaveBeenCalledWith(
+        mockSupabaseAdmin,
+        'target-123',
+        { full_name: 'Test Update', role: 'editor' }
       )
     })
   })
